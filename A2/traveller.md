@@ -35,14 +35,47 @@
 - placeChar
 
 ```java
+// Returns the amount of nodes in anetwork
+// PRE: 
+// POST: Integer value of the amount of nodes
+// Ex: Node<N> n = new Traveller<N>();
+//     N char = new Character();
+//     n.placeChar(char);
+//     assert(char, n.ch);
+public void placeChar(T char);
+```
+
+```java
+// Returns a boolean statement whether or not a node has a character or not
+// PRE: a given node must be present
+// POST: whether or not the node has a character on it
+// Ex: Node<N> n = new Traveller<N>();
+//     N char = new Character();
+//     n.placeChar(char);
+//     assert(char, n.ch);
+public void placeChar(T char);
+```
+
+```java
+// Places nodes to construct a network of edges
+// PRE: nothing
+// POST: nodes that will form the town
+// Ex: Node<N> n = new Traveller<N>();
+//     N char = new Character();
+//     n.placeChar(char);
+//     assert(char, n.ch);
+public void Construct(List<Node>);
+```
+
+```java
 // Places character at a node
 // PRE: that node is empty
-// POST: node is not empty
-// Ex: Node<T> n1 = new Stack<T>();
-//     T elem = new T();
-//     s.push(elem);
-//     assert(elem, s.peek());
-public void placeChar(T elem);
+// POST: node is not empty 
+// Ex: Node<N> n = new Traveller<N>();
+//     N char = new Character();
+//     n.placeChar(char);
+//     assert(char, n.ch);
+public void placeChar(T char);
 ```
 
 ## Behaviour
