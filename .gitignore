@@ -1,4 +1,5 @@
 .vscode/
+.settings/
 
 # Credit: https://github.com/github/gitignore/blob/master/Java.gitignore
 # Compiled class file
@@ -39,7 +40,4 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 A2/.project
-A2/.settings/org.eclipse.jdt.apt.core.prefs
-A2/.settings/org.eclipse.jdt.core.prefs
-A2/.settings/org.eclipse.m2e.core.prefs
 A2/.classpath

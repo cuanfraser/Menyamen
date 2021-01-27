@@ -1,0 +1,1 @@
+cat test/example1 | java -jar target/a2-1.0-SNAPSHOT-jar-with-dependencies.jar --sum
