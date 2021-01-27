@@ -1,4 +1,9 @@
+package a2;
+
 import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 public class a2 {
 
@@ -24,6 +29,9 @@ public class a2 {
         
         Scanner stdin = new Scanner(System.in);
 
+        while (stdin.hasNext()) {
+            System.out.println(stdin.next());
+        }
 
         stdin.close();
     }
