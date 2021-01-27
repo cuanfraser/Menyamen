@@ -5,12 +5,23 @@
 **Package Name:** Traveller  
 
 ## Data
-
-- Each town as a named node
-  - Public static void class Node
-    - Character (String)
++---------------+
+| Node          |
++---------------+
+| String town   |
+| Character ch  |--+
+|               |  |
++---------------+  |
+                   v
+            +-------------+
+            | Character   |
+            +-------------+
+            | String name |
+            |             |
+            +-------------+
+- The class Node contains: 
+    - Character (character)
     - Town Name (String)
-- The placement of a named character in a town
 - The destination town
 - The town of origin
 
