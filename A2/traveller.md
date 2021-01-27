@@ -6,11 +6,11 @@
 
 ## Data
   +---------------+   
-  | Node          |   
+  | Node          |     
   +---------------+    
-  | String town   |   
-  | Character ch  |--+   
-  |               |  |  
+  | String town   |     
+  | Character ch  |--+     
+  |               |  |    
   +---------------+  |   
                      v   
               +-------------+   
