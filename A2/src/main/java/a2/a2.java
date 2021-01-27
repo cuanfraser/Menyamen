@@ -9,13 +9,15 @@ public class a2 {
 
     public static void main(String[] args) {
 
+        int sum;
+
         // Command line arguments
         if (args.length > 0) {
             if (args[0].equals("--sum")) {
-                // TODO
+                sum = 1;
             }
             else if (args[0].equals("--product")) {
-                // TODO
+                sum = 0;
             }
             else {
                 System.err.println("Must include command line arguments of '--sum' or '--product'");
@@ -29,10 +31,13 @@ public class a2 {
         
         Scanner stdin = new Scanner(System.in);
 
-        while (stdin.hasNext()) {
-            System.out.println(stdin.next());
+        StringBuilder inputBuilder = new StringBuilder();
+        while (stdin.hasNextLine()) {
+            inputBuilder.append(stdin.nextLine());
         }
 
+        System.out.println(inputBuilder.toString());
+        
         stdin.close();
     }
 
