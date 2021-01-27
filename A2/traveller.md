@@ -5,6 +5,7 @@
 **Package Name:** Traveller  
 
 ## Data
+```
   +---------------+   
   | Node          |     
   +---------------+    
@@ -19,6 +20,7 @@
               | String name |   
               |             |   
               +-------------+   
+```
 - The class Node contains: 
     - Character (character)
     - Town Name (String)
