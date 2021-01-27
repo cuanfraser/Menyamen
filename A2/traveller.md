@@ -42,7 +42,7 @@
 //     N char = new Character();
 //     n.placeChar(char);
 //     assert(char, n.ch);
-public void placeChar(T char);
+public void Size(N List<Node>);
 ```
 
 ```java
@@ -53,7 +53,7 @@ public void placeChar(T char);
 //     N char = new Character();
 //     n.placeChar(char);
 //     assert(char, n.ch);
-public void placeChar(T char);
+public void isEmpty(N Node);
 ```
 
 ```java
@@ -64,7 +64,7 @@ public void placeChar(T char);
 //     N char = new Character();
 //     n.placeChar(char);
 //     assert(char, n.ch);
-public void Construct(List<Node>);
+public void Construct(N List<Node>);
 ```
 
 ```java
