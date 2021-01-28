@@ -35,18 +35,19 @@ The package Traveller will be  implemented in the language Java (version 1.8). T
 - isEmpty?
 - Construct
 - placeChar
+- Route
 
 ```java
 // Returns the amount of nodes in a network
 // POST: Integer value of the amount of nodes, or 0 if none
-public void Size(N List<Node>);
+public Integer Size(N List<Node>);
 ```
 
 ```java
 // Returns a boolean statement whether or not a node has a character or not
 // PRE: a given node must be present
 // POST: whether or not the node has a character on it
-public void isEmpty(N Node);
+public boolean isEmpty(N Node);
 ```
 
 ```java
@@ -60,6 +61,12 @@ public void Construct(N List<Node>);
 // PRE: that node is empty
 // POST: node is not empty 
 public void placeChar(T char, N node);
+```
+```java
+// Returns a boolean value whether or not a route is found for a character.
+// PRE: a given character, and the destination node 
+// POST: boolean value whether or not the path is found
+public boolean Route(T char, N node);
 ```
 
 ## Behaviour
