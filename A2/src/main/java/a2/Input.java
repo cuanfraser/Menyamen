@@ -7,16 +7,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Input {
+    private static boolean product = false;
+    private static boolean sum = false;
+    private static boolean verbose = false;
 
     public static void main(String[] args) {
-
-        boolean product = false;
-        boolean sum = false;
 
         // Command line arguments
         if (args.length > 0) {
             if (args[0].equals("--sum")) {
-                product = true;
+                sum = true;
             } else if (args[0].equals("--product")) {
                 product = true;
             } else {
@@ -38,13 +38,15 @@ public class Input {
 
         // Parse Input
         String input = inputBuilder.toString();
-        System.out.println(input);
+        if (verbose)
+            System.out.println(input);
         int openArrays = 0;
         int openObjects = 0;
         List<String> processd = new ArrayList<String>();
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            // System.out.println(i + ":" + input.charAt(i) + ":" + temp.toString());
+            if (verbose)
+                System.out.println(i + ":" + input.charAt(i) + ":" + temp.toString());
             // Start of an Array
             if (input.charAt(i) == '[') {
                 if (openArrays == 0 && openObjects == 0) {
@@ -98,7 +100,8 @@ public class Input {
             processd.add(temp.toString());
         }
 
-        System.out.println(processd.toString());
+        if (verbose)
+            System.out.println(processd.toString());
 
         JSONArray output = new JSONArray();
 
@@ -109,13 +112,6 @@ public class Input {
         }
 
         System.out.println(output.toString());
-
-        // Scanner tokeniser = new Scanner(input).useDelimiter("(?=\\[)|(?<=\\])");
-        // while (tokeniser.hasNext()) {
-        // System.out.println("new" + tokeniser.next());
-        // }
-        // tokeniser.close();
-
     }
 
     /**
@@ -133,22 +129,76 @@ public class Input {
         if (jsonString.length() <= 0) {
             throw new IllegalArgumentException("Given empty jsonString.");
         }
+        // Array
         if (jsonString.charAt(0) == '[') {
-            //TODO
+            JSONArray array = new JSONArray(jsonString);
+            outJSON.put("object", array);
+            int total = arith(array);
+            outJSON.put("total", total);
+            return outJSON;
 
+        // Object
         } else if (jsonString.charAt(0) == '{') {
-            //TODO
+            JSONObject object = new JSONObject(jsonString);
+            outJSON.put("object", object);
+            int total = arith(object);
+            outJSON.put("total", total);
+            return outJSON;
+
+        // Integer
         } else {
             int num;
             try {
                 num = Integer.parseInt(jsonString);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Given Illegal jsonString.");
+                throw new IllegalArgumentException("Given Illegal NumJSON in jsonString.");
             }
-            outJSON.append("object", num);
-            outJSON.append("payload", num);
+            outJSON.put("object", num);
+            outJSON.put("total", num);
         }
         return outJSON;
     }
 
+    private static int arith(Object object) throws IllegalArgumentException{
+        if (object instanceof Integer) {
+            return (int) object;
+        }
+        if (object instanceof String) {
+            if (sum) {
+                return 0;
+            }
+            else if (product) {
+                return 1;
+            }
+            else {
+                throw new RuntimeException("Not sum or product");
+            }
+        }
+        if (object instanceof JSONObject) {
+            JSONObject json = (JSONObject)object;
+            return arith(json.get("payload"));
+        }
+        if (object instanceof JSONArray) {
+            int total = 0;
+            JSONArray arr = (JSONArray) object;
+            if (sum) {
+                for (int i = 0; i < arr.length(); i++) {
+
+                    total += arith(arr.get(i));
+                }
+            }
+            else if (product) {
+                total = 1;
+                for (int i = 0; i < arr.length(); i++) {
+                    total *= arith(arr.get(i));
+                }
+            }
+
+            return total;
+        }
+        else {
+            throw new IllegalArgumentException("Not valid NumJSON: " + object.toString() + " " + object.getClass().getName());
+        }
+
+    }
 }
