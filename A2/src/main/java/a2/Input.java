@@ -42,6 +42,7 @@ public class Input {
             System.out.println(input);
         int openArrays = 0;
         int openObjects = 0;
+        int openStrings = 0;
         List<String> processd = new ArrayList<String>();
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
@@ -90,7 +91,21 @@ public class Input {
                     }
                     temp = new StringBuilder();
                 }
-                // General Character
+                // String
+            } else if (input.charAt(i) == '"') {
+                if (openArrays == 0 && openObjects == 0) {
+                    if (temp.length() > 0) {
+                        processd.add(temp.toString());
+                    }
+                    temp = new StringBuilder();
+
+                    if (openStrings == 1) {
+                        openStrings--;
+                    } else if (openStrings == 0) {
+                        openStrings++;
+                    }
+                }
+
             } else {
                 temp.append(input.charAt(i));
             }
@@ -116,8 +131,11 @@ public class Input {
 
     /**
      * Converts String parsed from input into JSONObject.
-     * @param sum Is the programming running from "--sum" command line arguments.
-     * @param product Is the programming running from "--product" command line arguments.
+     * 
+     * @param sum        Is the programming running from "--sum" command line
+     *                   arguments.
+     * @param product    Is the programming running from "--product" command line
+     *                   arguments.
      * @param jsonString The String from input to be parsed.
      * @return JSONObject from input string.
      * @throws IllegalArgumentException
@@ -137,7 +155,7 @@ public class Input {
             outJSON.put("total", total);
             return outJSON;
 
-        // Object
+            // Object
         } else if (jsonString.charAt(0) == '{') {
             JSONObject object = new JSONObject(jsonString);
             outJSON.put("object", object);
@@ -145,38 +163,55 @@ public class Input {
             outJSON.put("total", total);
             return outJSON;
 
-        // Integer
+            // Integer
         } else {
+            if (verbose)
+                System.out.println("Else input: " + jsonString);
             int num;
             try {
                 num = Integer.parseInt(jsonString);
+                outJSON.put("object", num);
+                outJSON.put("total", num);
+            } catch (NumberFormatException ne) {
+                outJSON.put("object", jsonString);
+                if (sum)
+                    outJSON.put("total", 0);
+                if (product)
+                    outJSON.put("total", 1);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Given Illegal NumJSON in jsonString.");
             }
-            outJSON.put("object", num);
-            outJSON.put("total", num);
         }
         return outJSON;
     }
 
-    private static int arith(Object object) throws IllegalArgumentException{
+    /**
+     * Handles arithmatic for sum and product of NumJSON Values.
+     * 
+     * @param object The NumJSON Value.
+     * @return int of arithmatic for sum or product.
+     * @throws IllegalArgumentException object is not a valid NumJSON.
+     * @throws RuntimeException         Sum and Product fields both false.
+     */
+    private static int arith(Object object) throws IllegalArgumentException, RuntimeException {
         if (object instanceof Integer) {
             return (int) object;
         }
         if (object instanceof String) {
             if (sum) {
                 return 0;
-            }
-            else if (product) {
+            } else if (product) {
                 return 1;
-            }
-            else {
+            } else {
                 throw new RuntimeException("Not sum or product");
             }
         }
         if (object instanceof JSONObject) {
-            JSONObject json = (JSONObject)object;
-            return arith(json.get("payload"));
+            JSONObject json = (JSONObject) object;
+            if (json.has("payload"))
+                return arith(json.get("payload"));
+            else
+                return 0;
         }
         if (object instanceof JSONArray) {
             int total = 0;
@@ -186,8 +221,7 @@ public class Input {
 
                     total += arith(arr.get(i));
                 }
-            }
-            else if (product) {
+            } else if (product) {
                 total = 1;
                 for (int i = 0; i < arr.length(); i++) {
                     total *= arith(arr.get(i));
@@ -195,9 +229,9 @@ public class Input {
             }
 
             return total;
-        }
-        else {
-            throw new IllegalArgumentException("Not valid NumJSON: " + object.toString() + " " + object.getClass().getName());
+        } else {
+            throw new IllegalArgumentException(
+                    "Not valid NumJSON: " + object.toString() + " " + object.getClass().getName());
         }
 
     }
