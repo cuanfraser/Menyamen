@@ -2,7 +2,10 @@
 
 **Goal:** Find a route for a specified character to reach a designated town without running into any other characters.  
 **Language:** Java 8 (openjdk version "1.8.0_262")  
-**Package Name:** Traveller  
+**Package Name:** Traveller 
+
+The package Traveller will be  implemented in the language Java (version 1.8). The goal of this package is to find a route for a specified character to reach a designated town without running into any other characters. Our interface will consist of the class Node which will hold the String name of the town, and a Character. The Character class will contain a String with the characters name. Therefore, each town has a node with a specified name, and each character has a specified name. We also need to specify the node or town that the specified character starts at and the node that is that character's destination. The operations that we will need will include a ‘Size’ function, an ‘isEmpty?’ function, a ‘Construct’ function, and a ‘placeChar’ function. The ‘Size’ operation returns the amount of nodes in a given network of nodes, it returns 0 if there are none. This function will help to route a path because we know a character can only travel through nodes that are empty. The ‘isEmpty?’ function returns a boolean value whether or not the node has a character or not. So given a node this function specifies if there is a character on it or not. The function ‘Construct’ takes a list of Nodes and creates a network of nodes in order to track the paths available. The ‘placeChar’ function places a character at a node only if that node is empty, once placed the node is no longer empty. Important behavior to remember is that if a node is not empty then a character can not be placed at that node. In conclusion, using these operations our interface will be able to run a route operation that will correctly detect if a route is possible or not, i.e. whether a character is blocking the path or not.  
+
 
 ## Data
 ```
@@ -27,21 +30,15 @@
 - The destination town
 - The town of origin
 
-## Operation
-
+## Operations
 - Size
 - isEmpty?
 - Construct
 - placeChar
 
 ```java
-// Returns the amount of nodes in anetwork
-// PRE: 
-// POST: Integer value of the amount of nodes
-// Ex: Node<N> n = new Traveller<N>();
-//     N char = new Character();
-//     n.placeChar(char);
-//     assert(char, n.ch);
+// Returns the amount of nodes in a network
+// POST: Integer value of the amount of nodes, or 0 if none
 public void Size(N List<Node>);
 ```
 
@@ -49,21 +46,12 @@ public void Size(N List<Node>);
 // Returns a boolean statement whether or not a node has a character or not
 // PRE: a given node must be present
 // POST: whether or not the node has a character on it
-// Ex: Node<N> n = new Traveller<N>();
-//     N char = new Character();
-//     n.placeChar(char);
-//     assert(char, n.ch);
 public void isEmpty(N Node);
 ```
 
 ```java
 // Places nodes to construct a network of edges
-// PRE: nothing
 // POST: nodes that will form the town
-// Ex: Node<N> n = new Traveller<N>();
-//     N char = new Character();
-//     n.placeChar(char);
-//     assert(char, n.ch);
 public void Construct(N List<Node>);
 ```
 
@@ -71,11 +59,7 @@ public void Construct(N List<Node>);
 // Places character at a node
 // PRE: that node is empty
 // POST: node is not empty 
-// Ex: Node<N> n = new Traveller<N>();
-//     N char = new Character();
-//     n.placeChar(char);
-//     assert(char, n.ch);
-public void placeChar(T char);
+public void placeChar(T char, N node);
 ```
 
 ## Behaviour

@@ -13,7 +13,7 @@ public class Input {
         boolean product = false;
         boolean sum = false;
 
-        // Command line arguments
+        // Command line arguments, sum or product must be an argument entered
         if (args.length > 0) {
             if (args[0].equals("--sum")) {
                 product = true;
@@ -45,6 +45,7 @@ public class Input {
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             // System.out.println(i + ":" + input.charAt(i) + ":" + temp.toString());
+
             // Start of an Array
             if (input.charAt(i) == '[') {
                 if (openArrays == 0 && openObjects == 0) {
@@ -138,6 +139,7 @@ public class Input {
 
         } else if (jsonString.charAt(0) == '{') {
             //TODO
+
         } else {
             int num;
             try {
