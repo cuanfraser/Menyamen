@@ -22,20 +22,20 @@ public class Server {
         ServerSocket ss = new ServerSocket(8000);
         Socket s = ss.accept();
 
-        System.out.println("client connected");
-
         InputStreamReader in = new InputStreamReader(s.getInputStream());
         BufferedReader bf = new BufferedReader(in);
 
-        String str = bf.readLine();
-        System.out.println("client :" + str);
+        String inputBfStr = bf.readLine();
+        if (verbose)
+            System.out.println("client :" + inputBfStr);
 
-        Scanner stdin = new Scanner(str);
+        Scanner scanner = new Scanner(inputBfStr);
         StringBuilder inputBuilder = new StringBuilder();
-        while (stdin.hasNext()) {
-            inputBuilder.append(stdin.next());
+        while (scanner.hasNext()) {
+            inputBuilder.append(scanner.next());
         }
-        stdin.close();
+        scanner.close();
+
 
         List<String> processd = parser(inputBuilder.toString());
 
@@ -50,10 +50,11 @@ public class Server {
             output.put(obj);
         }
 
-        System.out.println(output.toString());
+        if (verbose)
+            System.out.println(output.toString());
 
         PrintWriter pr = new PrintWriter(s.getOutputStream());
-        pr.println("yes");
+        pr.println(output.toString());
         pr.flush();
 
         ss.close();
@@ -79,6 +80,11 @@ public class Server {
         for (int i = 0; i < input.length(); i++) {
             if (verbose)
                 System.out.println(i + ":" + input.charAt(i) + ":" + temp.toString());
+            if (openArrays == 0 && openObjects == 0 && input.charAt(i) == 'E') {
+                if (input.substring(i, i+3).equals("END")) {
+                    break;
+                }
+            }
             // Start of an Array
             if (input.charAt(i) == '[') {
                 if (openArrays == 0 && openObjects == 0) {
