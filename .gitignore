@@ -51,3 +51,5 @@ A2/.classpath
 # Editor-based HTTP Client requests
 /httpRequests/
 .idea/
+A2/test/example2
+A2/test/test2
