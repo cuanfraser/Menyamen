@@ -1,12 +1,11 @@
 package server;
 
-import java.util.List;
-
 public class Character {
-    String characterName;
-    String currentTown;
+    public String characterName;
+    public String currentTown;
 
-    public static void main(String[] args) {
-        Character character = new Character();
+    public Character(String characterName, String currentTown){
+        this.characterName = characterName;
+        this.currentTown = currentTown;
     }
 }
