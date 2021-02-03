@@ -40,9 +40,9 @@ public final class App {
             inputArr.put(obj);
         }
 
-        //JSONArray output = verify(inputArr);
+        JSONArray output = verify(inputArr);
 
-        System.out.println(inputArr.toString());
+        System.out.println(output.toString());
 
     }
 
@@ -91,32 +91,38 @@ public final class App {
         return processd;
     }
 
+    /**
+     * Verifies if JSON Input Commands meets spec.
+     * @param arr JSONArray Input.
+     * @return Valid JSONArray Output.
+     */
     private static JSONArray verify(JSONArray arr) {
         if (arr.length() == 0) {
             throw new IllegalStateException("Empty Input (No network)");
         }
 
         JSONArray newArr = new JSONArray();
-        boolean roadsCommandFound = false;
 
         for (int i = 0; i < arr.length(); i++) {
             JSONObject current;
             String command = "";
             try {
-                current = arr.getJSONObject(0);
+                current = arr.getJSONObject(i);
                 command = current.getString("command");
             } catch (JSONException e) {
                 throw new IllegalArgumentException("Invalid JSON Input: " + e);
             }
-            System.out.println(current);
-            if (command.equals("roads")) {
-                if (roadsCommandFound) {
-                    throw new IllegalArgumentException("Can't have two roads commands");
-                }
-                else {
-                    roadsCommandFound = true;
+            //System.out.println(current + "num: " + i);
+            if (i == 0) {
+                if (command.equals("roads")) {
                     newArr.put(current);
                 }
+                else {
+                    throw new IllegalArgumentException("Must have roads command first");
+                }
+            }
+            if (command.equals("roads") && i > 0) {
+                throw new IllegalArgumentException("Can't have two roads commands");
                 
             } else if (command.equals("place")) {
                 JSONObject params = current.getJSONObject("params");
