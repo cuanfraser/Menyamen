@@ -28,7 +28,6 @@ public final class App {
 
     /**
      * Main method.
-     * 
      * @param args The arguments of the program.
      */
     public static void main(String[] args) {
@@ -77,14 +76,34 @@ public final class App {
             }
             outStream.println(create);
 
-            // TODO: FROM HERE
-
             // Processing Phase
+
+            List<JSONObject> characters = new ArrayList<JSONObject>();
+
             while (stdin.hasNextLine()) {
                 String line = stdin.nextLine();
+
+                JSONObject testObj = new JSONObject(line);
+                if (testObj.has("command")) {
+                    if (testObj.getString("command").equals("passage-safe?")) {
+                        JSONObject batch = makeBatchRequest(characters, testObj);
+                        outStream.println(batch);
+                        characters = new ArrayList<JSONObject>();
+                    }
+                    else if (testObj.getString("command").equals("place")) {
+                        characters.add(testObj);
+                    }
+
+                } else {
+                    JSONObject error = new JSONObject();
+                    error.put("error", "not a request");
+                    error.put("object", testObj);
+                    System.err.println(error.toString());
+                    System.exit(-1);
+                }
+
                 String received = inStream.readLine();
                 System.out.println(received);
-
             }
             stdin.close();
 
@@ -112,7 +131,7 @@ public final class App {
      * @return Valid JSONObject Output.
      * @throws IllegalArgumentException
      */
-    private static JSONObject makeCreateRequest(String input) throws IllegalArgumentException{
+    private static JSONObject makeCreateRequest(String input) throws IllegalArgumentException {
         JSONObject inputObject;
         JSONObject outputObject;
         try {
@@ -145,11 +164,41 @@ public final class App {
                 outputObject = new JSONObject();
                 outputObject.put("towns", towns.toArray());
                 outputObject.put("roads", inputObject.getJSONObject("params"));
-            }
-            else throw new IllegalArgumentException("First command not 'roads'");
+            } else
+                throw new IllegalArgumentException("First command not 'roads'");
         } catch (JSONException e) {
             throw new IllegalArgumentException("First request should be a well-formed Create request");
         }
         return outputObject;
+    }
+
+    /**
+     * Makes a batch request using a list of place commands and a passage-safe command.
+     * @param chars List of place commands as JSONObjects.
+     * @param safe Passage-safe command as JSONObject.
+     * @return Batch request as JSONObject.
+     */
+    private static JSONObject makeBatchRequest(List<JSONObject> chars, JSONObject safe) {
+        JSONObject output = new JSONObject();
+        List<JSONObject> newChars = new ArrayList<JSONObject>();
+
+        for (int i = 0; i < chars.size(); i++) {
+            JSONObject current = chars.get(i);
+            JSONObject params = current.getJSONObject("params");
+            JSONObject character = new JSONObject();
+            character.put("name", params.getString("character"));
+            character.put("town", params.getString("town"));
+            newChars.add(character);            
+        }
+
+        output.put("characters", newChars.toArray());
+
+        JSONObject query = new JSONObject();
+        query.put("character", safe.getString("character"));
+        query.put("destination", safe.getString("town"));
+        output.put("query", query);
+
+        return output;
+
     }
 }
