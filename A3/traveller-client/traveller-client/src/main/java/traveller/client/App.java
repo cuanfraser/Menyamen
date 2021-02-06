@@ -18,31 +18,17 @@ public final class App {
 
     /**
      * Main method.
-     *
+     * 
      * @param args The arguments of the program.
      */
     public static void main(String[] args) {
-
         // STDIN Input
-        /*int defaultPort = 8000;
-        String defaultHost = "127.0.0.1";
-        String defaultUsername = "Glorifrir Flintshoulder";
-        Socket default = new Socket(defaultIP, defaultPort);
-
-        OutputStream outToServer = socket.getOutputStream();
-        InputStream inFromServer = socket.getInputStream();*/
-
-
-
         Scanner stdin = new Scanner(System.in);
         StringBuilder inputBuilder = new StringBuilder();
         while (stdin.hasNextLine()) {
             inputBuilder.append(stdin.nextLine());
         }
         stdin.close();
-
-        String inputInitial = inputBuilder.toString();
-
 
         List<String> parsedStr = parser(inputBuilder.toString());
 
@@ -58,13 +44,11 @@ public final class App {
 
         System.out.println(output.toString());
 
-
     }
-
 
     /**
      * Processes a string containing JSON and returns List broken down JSON.
-     *
+     * 
      * @param input Input JSON String to Parse
      * @return Parsed JSON output in List<String>
      */
@@ -139,7 +123,7 @@ public final class App {
             }
             if (command.equals("roads") && i > 0) {
                 throw new IllegalArgumentException("Can't have two roads commands");
-
+                
             } else if (command.equals("place")) {
                 JSONObject params = current.getJSONObject("params");
                 String town = params.getString("town");
