@@ -17,7 +17,7 @@ import org.json.JSONObject;
  * Main class.
  */
 public final class App {
-    private static boolean verbose;
+    private static boolean verbose = false;
     private static String ip = "127.0.0.1";
     private static int port = 8000;
     private static String username = "Glorifrir Flintshoulder";
@@ -72,7 +72,7 @@ public final class App {
             String createString = stdin.nextLine();
             JSONObject create = makeCreateRequest(createString);
             if (verbose) {
-                System.out.println(create.toString());
+                System.out.println("Create: " + create.toString());
             }
             outStream.println(create);
 
@@ -163,10 +163,11 @@ public final class App {
 
                 outputObject = new JSONObject();
                 outputObject.put("towns", towns.toArray());
-                outputObject.put("roads", inputObject.getJSONObject("params"));
+                outputObject.put("roads", params);
             } else
                 throw new IllegalArgumentException("First command not 'roads'");
         } catch (JSONException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("First request should be a well-formed Create request");
         }
         return outputObject;
@@ -194,8 +195,9 @@ public final class App {
         output.put("characters", newChars.toArray());
 
         JSONObject query = new JSONObject();
-        query.put("character", safe.getString("character"));
-        query.put("destination", safe.getString("town"));
+        JSONObject safeParams = safe.getJSONObject("params");
+        query.put("character", safeParams.getString("character"));
+        query.put("destination", safeParams.getString("town"));
         output.put("query", query);
 
         return output;
