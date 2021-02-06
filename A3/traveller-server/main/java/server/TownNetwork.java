@@ -2,6 +2,7 @@ package server;
 
 import java.util.*;
 
+
 public class TownNetwork {
     public List<Town> allTowns;
     public List<Character> allCharacters;
@@ -20,6 +21,7 @@ public class TownNetwork {
         }
     }
 
+    //re-places a character already at a town (throws exception if town is not in the network) or places a new character
     public void Place(String characterName, String destinationTownName) throws Exception{
         Town destinationTown = allTowns.stream().filter((s) -> s.townName.equals(destinationTownName)).findFirst().get();
         if(destinationTown == null) {
@@ -46,14 +48,12 @@ public class TownNetwork {
         }
     }
 
+    //Determines if there is an empty path from the current town to the destination town
     public boolean canMove(String characterName, String destinationTownName) throws Exception {
         Town destinationTown = allTowns.stream().filter((s) -> s.townName.equals(destinationTownName)).findFirst().get();
         if(destinationTown == null) {
             throw new IllegalArgumentException("This town does not exist");
         }
-
-        //find all towns between destination and character's town which don't have a character .. there should be some sort of recursion
-        //to find a route .. ie find all the towns that are adjacent to the two towns
 
         Character character = allCharacters.stream().filter((c) -> c.characterName.equals(characterName)).findFirst().get();
         Town currentTown = allTowns.stream().filter((s) -> s.townName.equals(character.characterName)).findFirst().get();
@@ -62,6 +62,7 @@ public class TownNetwork {
 
     }
 
+    //Helper function that finds towns that have no characters placed on them
     public List<Town> findEmptyAdjacentTowns(Town destinationTown){
         List<Town> validTowns = new ArrayList<Town>();
         for(String townName : destinationTown.townsAdjacent){
@@ -72,6 +73,7 @@ public class TownNetwork {
         return validTowns;
     }
 
+    //Helper function that recursively finds if two paths overlap
     public boolean areEmptyNeighboringTowns(Town a, Town b) {
         List<Town> ATowns = this.findEmptyAdjacentTowns(a);
         List<Town> BTowns = this.findEmptyAdjacentTowns(b);

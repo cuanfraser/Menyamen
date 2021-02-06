@@ -1,5 +1,6 @@
 package server;
 
+
 public class Character {
     public String characterName;
     public String currentTown;
