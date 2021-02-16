@@ -19,9 +19,6 @@ public class OpenTile implements Tile {
         this.isOccupied = isOccupied;
         this.gameObject = gameObject;
     }
-
-
-
     
     public GameObject getGameObject() {
         return gameObject;
@@ -48,4 +45,25 @@ public class OpenTile implements Tile {
     public Point getPos() {
         return pos;
     }
+
+    // Credit: https://www.geeksforgeeks.org/overriding-equals-method-in-java/
+    @Override
+    public boolean equals(Object o) { 
+        // If the object is compared with itself then return true   
+        if (o == this) { 
+            return true; 
+        } 
+    
+        /* Check if o is an instance of OpenTile or not 
+            "null instanceof [type]" also returns false */
+        if (!(o instanceof OpenTile)) { 
+            return false; 
+        } 
+            
+        // typecast o to OpenTile so that we can compare data members  
+        OpenTile c = (OpenTile) o; 
+            
+        // Compare the data members and return accordingly  
+        return pos == c.pos ;
+    } 
 }
