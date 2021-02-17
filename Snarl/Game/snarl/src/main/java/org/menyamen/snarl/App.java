@@ -22,18 +22,18 @@ public final class App {
     public static void main(String[] args) {
 
         Room room1 = new Room(new Point(0, 0));
-        Room room2 = new Room(new Point(15, 0));
+        Room room2 = new Room(new Point(15, 0), 10, 7);
 
         List<Room> testRooms= new ArrayList<Room>();
         testRooms.add(room1);
         testRooms.add(room2);
 
-        Hallway hallway1 = new Hallway(new Point(0, 15), new Point(10, 15));
+        Hallway hallway1 = new Hallway(new Point(10, 2), new Point(14, 2));
 
         List<Hallway> testHallways = new ArrayList<Hallway>();
         testHallways.add(hallway1);
 
-        Level testLevel = new Level(testRooms, testHallways, 40, 20);
+        Level testLevel = new Level(testRooms, testHallways, 40, 11);
 
         String printed = testLevel.print();
 

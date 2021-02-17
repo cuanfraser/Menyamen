@@ -5,6 +5,8 @@ import java.awt.Point;
 public class Wall implements Tile {
     private Point pos;
 
+    public Wall() {}
+
     public Wall(int x, int y) {
         this.pos = new Point(x, y);
     }
