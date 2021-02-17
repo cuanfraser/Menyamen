@@ -2,6 +2,8 @@ package org.menyamen.snarl.tiles;
 
 import java.awt.Point;
 
+import org.menyamen.snarl.objects.GameObject;
+
 public class Door implements Tile {
     private Point pos;
 
@@ -21,6 +23,16 @@ public class Door implements Tile {
     @Override
     public char toChar() {
         return '/';
+    }
+
+    @Override
+    public GameObject getGameObject() {
+        return null;
+    }
+
+    @Override
+    public Boolean setGameObject(GameObject object) {
+        return false;
     }
     
 }

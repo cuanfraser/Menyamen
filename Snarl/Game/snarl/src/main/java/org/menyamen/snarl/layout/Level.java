@@ -3,6 +3,8 @@ package org.menyamen.snarl.layout;
 import java.util.HashMap;
 import java.util.List;
 
+import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
 import org.menyamen.snarl.tiles.Wall;
 
@@ -149,6 +151,15 @@ public class Level {
 
     }
 
+    public Boolean addObject(GameObject object, Point position) {
+        if (map.containsKey(position)) {
+            if (map.get(position) instanceof OpenTile) {
+                return map.get(position).setGameObject(object);
+            }
+        }
+        return false;
+    }
+
     /**
      * Print Level as ASCII String.
      * @return Level as ASCII String.
@@ -160,7 +171,12 @@ public class Level {
                 Point pos = new Point(j, i);
                 if (map.containsKey(pos)) {
                     Tile curTile = map.get(pos);
-                    builder.append(curTile.toChar());
+                    if (curTile.getGameObject() != null) {
+                        builder.append(curTile.getGameObject().toChar());
+                    }
+                    else {
+                        builder.append(curTile.toChar());
+                    }
                 }
                 else {
                     builder.append(' ');

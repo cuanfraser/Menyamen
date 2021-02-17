@@ -20,12 +20,15 @@ public class OpenTile implements Tile {
         this.gameObject = gameObject;
     }
     
+    @Override
     public GameObject getGameObject() {
         return gameObject;
     }
 
-    public void setGameObject(GameObject gameObject) {
+    @Override
+    public Boolean setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
+        return true;
     }
 
     public Boolean getIsOccupied() {

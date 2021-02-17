@@ -63,13 +63,28 @@ public class Room {
 
         tiles = new ArrayList<Tile>();
 
+        // Potential Random Generator for Objects
+        //List<Point> objectPoints = new ArrayList<Point>();
+        // Random random = new Random();
+
+        // // Generate Point list for Objects
+        // for (GameObject currentObject : objects) {
+            
+        //     int x = origin.x + random.nextInt(horizontalSize - 2);
+        //     int y = origin.y - random.nextInt(verticalSize - 2);
+        //     Point randomPoint = new Point(x, y);
+        //     objectPoints.add(randomPoint);
+        // }
+
         for (int i = 0; i < verticalSize; i++) {
             for (int j = 0; j < horizontalSize; j++) {
                 Point pos = new Point(origin);
                 pos.translate(j, i);
+                // Add Walls on ddges
                 if (i == 0 || i == (verticalSize - 1) || j == 0 || j == (horizontalSize - 1)) {
                     tiles.add(new Wall(j, i));
                 }
+                // Add OpenTiles elsewhere
                 else {
                     tiles.add(new OpenTile(j, i));
                 }
