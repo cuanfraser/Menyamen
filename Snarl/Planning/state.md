@@ -1,7 +1,7 @@
-#SNARL GAME STATES
-####FULL STATE - GAME MANAGER 
+# SNARL GAME STATES  
+#### FULL STATE - GAME MANAGER   
 
-#####METHODS:
+##### METHODS:  
 ```java
      // Generates map for Level from List of Rooms and List of Hallways if valid
      void generateLevel() 
@@ -41,7 +41,7 @@
      */
     protected List<Tile> generateTiles() throws IllegalArgumentException
 ```
-#####DATA:
+##### DATA:  
 ```java
 - List of rooms (World generation)
 - List of hallways
