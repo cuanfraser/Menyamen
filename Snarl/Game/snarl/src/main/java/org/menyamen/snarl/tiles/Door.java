@@ -9,6 +9,10 @@ public class Door implements Tile {
         this.pos = new Point(x, y);
     }
 
+    public Door(Point pos) {
+        this.pos = pos;
+    }
+
     @Override
     public Point getPos() {
         return pos;

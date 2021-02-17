@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.menyamen.snarl.tiles.Tile;
+import org.menyamen.snarl.tiles.Wall;
 
 import java.awt.Point;
 
@@ -46,6 +47,9 @@ public class Level {
                 for (Tile singleTile : tiles) {
                     map.put(singleTile.getPos(), singleTile);
                 }
+                for (Tile singleDoor : singleHallway.getDoors()) {
+                    map.put(singleDoor.getPos(), singleDoor);
+                }
             }
         }
     }
@@ -78,6 +82,17 @@ public class Level {
      */
     public Boolean validHallwayPlacement(Hallway hallway) {
         List<Tile> tilesNeeded = hallway.getTiles();
+        List<Point> waypoints = hallway.getWaypoints();
+
+        if (!nextTo(waypoints.get(0), new Wall())) {
+            return false;
+        }
+
+        if (!nextTo(waypoints.get(waypoints.size() - 1), new Wall())) {
+            return false;
+        }
+
+
         for (Tile currentTile : tilesNeeded) {
             if (map.containsKey(currentTile.getPos())) {
                 return false;
@@ -87,6 +102,51 @@ public class Level {
             }
         }
         return true;
+    }
+
+    /**
+     * Is given Point in map next to a Tile of the same Class as given tile (above, below, left 
+     * or right of given Point).
+     * @param point Point to check around on map.
+     * @param tile Tile of Class type to check for (e.g. Wall, OpenTile, Door).
+     * @return True if specified type is found, False if not.
+     */
+    private Boolean nextTo(Point point, Tile tile) {
+        Point above = new Point(point);
+        above.translate(0, -1);
+        Point below = new Point(point);
+        below.translate(0, 1);
+        Point left = new Point(point);
+        left.translate(-1, 0);
+        Point right = new Point(point);
+        right.translate(1, 0);
+
+        if (map.containsKey(above)) {
+            Tile ta = map.get(above);
+            if (ta.getClass() == tile.getClass()) {
+                return true;
+            }
+        }
+        if (map.containsKey(below)) {
+            Tile tb = map.get(below);
+            if (tb.getClass() == tile.getClass()) {
+                return true;
+            }
+        }
+        if (map.containsKey(left)) {
+            Tile tl = map.get(left);
+            if (tl.getClass() == tile.getClass()) {
+                return true;
+            }
+        }
+        if (map.containsKey(right)) {
+            Tile tr = map.get(right);
+            if (tr.getClass() == tile.getClass()) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     /**
