@@ -46,6 +46,10 @@ public class Hallway {
         tiles = new ArrayList<Tile>();
         doors = new ArrayList<Tile>();
 
+        // Up (U), Down (D), Left (L), Right (R)
+        char prevDir = ' ';
+
+        // Loop Waypoints
         for (int i = 0; i + 1 < waypoints.size(); i++) {
 
             int x1 = waypoints.get(i).x;
@@ -71,11 +75,26 @@ public class Hallway {
                         Tile door = new Door(x2 + 1, y2);
                         doors.add(door);
                     }
+                    //Loop path
                     for (int j = x1; j <= x2; j++) {
-                        tiles.add(new Wall(j, y1 - 1));
-                        tiles.add(new OpenTile(j, y1));
-                        tiles.add(new Wall(j, y1 + 1));
+                        // Start of Waypoint Special Case for Turns
+                        if (j == x1 && i != 0) {
+                            if (prevDir == 'D') {
+                                // Add Bottom Left Wall
+                                tiles.add(new Wall(j - 1, y1 + 1));
+                                tiles.add(new OpenTile(j, y1));
+                                tiles.add(new Wall(j, y1 + 1));
+                            }
+                        }
+                        // TODO: Further Special Cases
+                        else {
+                            tiles.add(new Wall(j, y1 - 1));
+                            tiles.add(new OpenTile(j, y1));
+                            tiles.add(new Wall(j, y1 + 1));
+                        }
+
                     }
+                    prevDir = 'R';
                 }
                 // Going left
                 else {
@@ -90,10 +109,12 @@ public class Hallway {
                         doors.add(door);
                     }
                     for (int j = x2; j <= x1; j++) {
+                        // TODO: Further Special Cases
                         tiles.add(new Wall(j, y1 - 1));
                         tiles.add(new OpenTile(j, y1));
                         tiles.add(new Wall(j, y1 + 1));
                     }
+                    prevDir = 'L';
                 }
             }
             // Equal x cord, vertical hallway
@@ -111,10 +132,24 @@ public class Hallway {
                         doors.add(door);
                     }
                     for (int j = y1; j <= y2; j++) {
-                        tiles.add(new Wall(x1 - 1, j));
-                        tiles.add(new OpenTile(x1, j));
-                        tiles.add(new Wall(x1 + 1, j));
+                        // Start of Waypoint Special Case for Turns
+                        if (j == y1 && i != 0) {
+                            if (prevDir == 'R') {
+                                // Add Top Right Wall
+                                tiles.add(new Wall(x1 + 1, j - 1));
+                                tiles.add(new OpenTile(x1, j));
+                                tiles.add(new Wall(x1 + 1, j));
+                            }
+                            // TODO: Further Special Cases
+                        }
+                        else {
+                            tiles.add(new Wall(x1 - 1, j));
+                            tiles.add(new OpenTile(x1, j));
+                            tiles.add(new Wall(x1 + 1, j));
+                        }
                     }
+                    prevDir = 'D';
+                        
                 }
                 // Going up
                 else {
@@ -129,10 +164,12 @@ public class Hallway {
                         doors.add(door);
                     }
                     for (int j = y2; j <= y1; j++) {
+                        // TODO: Further Special Cases
                         tiles.add(new Wall(x1 - 1, j));
                         tiles.add(new OpenTile(x1, j));
                         tiles.add(new Wall(x1 + 1, j));
                     }
+                    prevDir = 'U';
                 }
             }
         }

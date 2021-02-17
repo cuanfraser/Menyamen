@@ -77,8 +77,8 @@ public final class App {
         GameObject ex2Key = new Key();
         GameObject ex2Portal = new ExitPortal();
 
-        ex2TestLevel.addObject(ex2Key, new Point(4, 7));
-        ex2TestLevel.addObject(ex2Portal, new Point(19, 2));
+        ex2TestLevel.addObject(ex2Key, new Point(2, 1));
+        ex2TestLevel.addObject(ex2Portal, new Point(22, 13));
         
 
         String ex2Printed = ex2TestLevel.print();
