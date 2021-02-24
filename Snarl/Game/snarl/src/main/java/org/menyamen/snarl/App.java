@@ -129,9 +129,9 @@ public final class App {
         ex4TestRooms.add(ex4Room2);
 
         List<Point> waypoints3 = new ArrayList<Point>();
-        waypoints3.add(new Point(4, 16));
+        waypoints3.add(new Point(5, 16));
         waypoints3.add(new Point(11, 16));
-        waypoints3.add(new Point(11, 4));
+        waypoints3.add(new Point(11, 5));
 
         Hallway ex4Hallway1 = new Hallway(waypoints3);
 
