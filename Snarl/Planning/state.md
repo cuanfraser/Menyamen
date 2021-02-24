@@ -3,7 +3,7 @@
 Here are the methods and data that will be available to the full state Game Manager. The full state will be able to access a list of players, a list of rooms, a list of hallways, a list of adversaries, the game object locations (key and exit), all the levels, the cartesian location of every room, and the location of every player or adversary. The game manager will act as a sort of server for our game and hold all the data necessary to initiate the game, validate a list of players, place the game objects, place the adversaries, place the players, generate the tiles to create the board of rooms and hallways.  
 ##### METHODS:  
 ```java
-     // Generates map for Level from List of Rooms and List of Hallways if valid, palces players, adversaries, and game objects (key and exit)
+     // Generates map for Level from List of Rooms and List of Hallways if valid, places players, adversaries, and game objects (key and exit)
      void generateLevel() 
     
      /**

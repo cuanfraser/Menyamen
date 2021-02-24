@@ -41,7 +41,7 @@ public class Hallway {
      * @return Tiles generated.
      * @throws IllegalArgumentException if a waypoint is not vertical/horizontal.
      */
-    protected List<Tile> generateTiles() throws IllegalArgumentException{
+    protected List<Tile> generateTiles() throws IllegalArgumentException {
 
         tiles = new ArrayList<Tile>();
         doors = new ArrayList<Tile>();
@@ -85,8 +85,21 @@ public class Hallway {
                                 tiles.add(new OpenTile(j, y1));
                                 tiles.add(new Wall(j, y1 + 1));
                             }
+                            if (prevDir == 'U') {
+                                // Add Top Left Wall
+                                tiles.add(new Wall(j, y1 + 1));
+                                tiles.add(new OpenTile(j, y1));
+                                tiles.add(new Wall(j + 1, y1));
+                            }
+
+                            if (prevDir == 'L') {
+
+                                throw new IllegalArgumentException("Can not go right to left");
+                            }
+
                         }
-                        // TODO: Further Special Cases
+
+                        // Going further right
                         else {
                             tiles.add(new Wall(j, y1 - 1));
                             tiles.add(new OpenTile(j, y1));
@@ -96,6 +109,7 @@ public class Hallway {
                     }
                     prevDir = 'R';
                 }
+
                 // Going left
                 else {
                     // Add first door
@@ -109,14 +123,35 @@ public class Hallway {
                         doors.add(door);
                     }
                     for (int j = x2; j <= x1; j++) {
-                        // TODO: Further Special Cases
-                        tiles.add(new Wall(j, y1 - 1));
-                        tiles.add(new OpenTile(j, y1));
-                        tiles.add(new Wall(j, y1 + 1));
+                        // Start of Waypoint Special Case for Turns
+                        if (j == x2 && i != 0) {
+                            if (prevDir == 'D') {
+                                // Add Top Left Wall
+                                tiles.add(new Wall(j, y1 + 1));
+                                tiles.add(new OpenTile(j, y1));
+                                tiles.add(new Wall(j + 1, y1));
+                            }
+                            if (prevDir == 'U') {
+                                // Add Bottom Left Wall
+                                tiles.add(new Wall(j - 1, y1 + 1));
+                                tiles.add(new OpenTile(j, y1));
+                                tiles.add(new Wall(j, y1 + 1));
+                            }
+                            if (prevDir == 'R') {
+                                throw new IllegalArgumentException("Can not go left to right");
+                            }
+                        }
+                        // Going further left
+                        else {
+                            tiles.add(new Wall(j, y1 - 1));
+                            tiles.add(new OpenTile(j, y1));
+                            tiles.add(new Wall(j, y1 + 1));
+                        }
                     }
                     prevDir = 'L';
                 }
             }
+
             // Equal x cord, vertical hallway
             else if (x1 == x2) {
                 // Going down
@@ -138,10 +173,19 @@ public class Hallway {
                                 // Add Top Right Wall
                                 tiles.add(new Wall(x1 + 1, j - 1));
                                 tiles.add(new OpenTile(x1, j));
-                                tiles.add(new Wall(x1 + 1, j));
+                                tiles.add(new Wall(x1, j + 1));
                             }
-                            // TODO: Further Special Cases
+                            if (prevDir == 'L') {
+                                // Add Bottom Right Wall
+                                tiles.add(new Wall(x1 - 1, j + 1));
+                                tiles.add(new OpenTile(x1, j));
+                                tiles.add(new Wall(x1 - 1, j));
+                            }
+                            if (prevDir == 'U') {
+                                throw new IllegalArgumentException("Can not go down to up");
+                            }
                         }
+                        //keep going down
                         else {
                             tiles.add(new Wall(x1 - 1, j));
                             tiles.add(new OpenTile(x1, j));
@@ -149,8 +193,8 @@ public class Hallway {
                         }
                     }
                     prevDir = 'D';
-                        
                 }
+
                 // Going up
                 else {
                     // Add first door
@@ -163,18 +207,35 @@ public class Hallway {
                         Tile door = new Door(x2, y2 - 1);
                         doors.add(door);
                     }
+                    // Start of Waypoint Special Case for Turns
                     for (int j = y2; j <= y1; j++) {
-                        // TODO: Further Special Cases
-                        tiles.add(new Wall(x1 - 1, j));
-                        tiles.add(new OpenTile(x1, j));
-                        tiles.add(new Wall(x1 + 1, j));
+                        if (j == y2 && i != 0) {
+                            if (prevDir == 'R') {
+                                tiles.add(new Wall(x1 - 1, j + 1));
+                                tiles.add(new OpenTile(x1, j));
+                                tiles.add(new Wall(x1 + 1, j + 1));
+                            }
+                            if (prevDir == 'L') {
+                                tiles.add(new Wall(x1 + 1, j - 1));
+                                tiles.add(new OpenTile(x1, j));
+                                tiles.add(new Wall(x1 - 1, j - 1));
+                            }
+                            if (prevDir == 'D') {
+                                throw new IllegalArgumentException("Can not go up to down");
+                            }
+                        }
+                        //keep going up
+                        else {
+                            tiles.add(new Wall(x1 - 1, j));
+                            tiles.add(new OpenTile(x1, j));
+                            tiles.add(new Wall(x1 + 1, j));
+                        }
+                        prevDir = 'U';
                     }
-                    prevDir = 'U';
                 }
             }
         }
-
-        return tiles;
+            return tiles;
 
     }
 
@@ -189,5 +250,5 @@ public class Hallway {
     protected List<Tile> getDoors() {
         return this.doors;
     }
-    
+
 }

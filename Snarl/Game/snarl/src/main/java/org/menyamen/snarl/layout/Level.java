@@ -60,7 +60,7 @@ public class Level {
             if (validRoomPlacement(singleRoom)) {
                 singleRoom.addToMap(map, sizeX, sizeY);
             }
-            
+
         }
         for (Hallway singleHallway: hallways) {
             if (validHallwayPlacement(singleHallway)) {
@@ -106,7 +106,9 @@ public class Level {
         List<Point> waypoints = hallway.getWaypoints();
 
         if (!nextTo(waypoints.get(0), new Wall())) {
+            System.out.println("not working");
             return false;
+
         }
 
         if (!nextTo(waypoints.get(waypoints.size() - 1), new Wall())) {
@@ -126,7 +128,7 @@ public class Level {
     }
 
     /**
-     * Is given Point in map next to a Tile of the same Class as given tile (above, below, left 
+     * Is given Point in map next to a Tile of the same Class as given tile (above, below, left
      * or right of given Point).
      * @param point Point to check around on map.
      * @param tile Tile of Class type to check for (e.g. Wall, OpenTile, Door).
