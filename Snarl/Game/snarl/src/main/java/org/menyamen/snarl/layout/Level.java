@@ -1,5 +1,6 @@
 package org.menyamen.snarl.layout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +17,24 @@ public class Level {
     private HashMap<Point, Tile> map;
     private int sizeX;
     private int sizeY;
+
+    /**
+     * Construct Level from single Room and Size of Level.
+     * @param rooms Rooms to add to Level.
+     * @param hallways Hallways to add to Level.
+     * @param x Horizontal size of Level.
+     * @param y Vertical size of Level.
+     */
+    public Level(Room room, int x, int y) {
+        List<Room> temp = new ArrayList<Room>();
+        temp.add(room);
+        this.rooms = temp;
+        this.hallways = new ArrayList<Hallway>();
+        this.sizeX = x;
+        this.sizeY = y;
+        this.map = new HashMap<Point,Tile>();
+        this.generate();
+    }
 
     /**
      * Construct Level from Rooms, Hallways and Size of Level.
@@ -161,6 +180,15 @@ public class Level {
     }
 
     /**
+     * Utilty function to add tile to map.
+     * @param tile Tile to add.
+     */
+    protected void addTile(Tile tile) {
+        Point pos = tile.getPos();
+        map.put(pos, tile);
+    }
+
+    /**
      * Print Level as ASCII String.
      * @return Level as ASCII String.
      */
@@ -171,7 +199,13 @@ public class Level {
                 Point pos = new Point(j, i);
                 if (map.containsKey(pos)) {
                     Tile curTile = map.get(pos);
-                    if (curTile.getGameObject() != null) {
+                    if (curTile.getPlayer() != null) {
+                        builder.append(curTile.getPlayer().toChar());
+                    }
+                    else if(curTile.getAdversary() != null) {
+                        builder.append(curTile.getAdversary().toChar());
+                    }
+                    else if (curTile.getGameObject() != null) {
                         builder.append(curTile.getGameObject().toChar());
                     }
                     else {

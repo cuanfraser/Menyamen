@@ -2,6 +2,8 @@ package org.menyamen.snarl.tiles;
 
 import java.awt.Point;
 
+import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.objects.GameObject;
 
 public class Door implements Tile {
@@ -32,6 +34,26 @@ public class Door implements Tile {
 
     @Override
     public Boolean setGameObject(GameObject object) {
+        return false;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
+
+    @Override
+    public Boolean setPlayer(Player player) {
+        return false;
+    }
+
+    @Override
+    public Adversary getAdversary() {
+        return null;
+    }
+
+    @Override
+    public Boolean setAdversary(Adversary adversary) {
         return false;
     }
     

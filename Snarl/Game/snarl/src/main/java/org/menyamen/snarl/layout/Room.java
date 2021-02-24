@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
 import org.menyamen.snarl.tiles.Wall;
@@ -40,6 +41,20 @@ public class Room {
         this.horizontalSize = horizontalSize;
         this.verticalSize = verticalSize;
         this.generateTiles();
+    }
+
+    /**
+     * Create Rectangular Room of given size at given origin Point using given layout.
+     * @param origin Point for (x,y) coordinates of upper-left position.
+     * @param horizontalSize Horizontal Size.
+     * @param verticalSize Vertical Size.
+     * @param layout 2D Array of ints where 0: Wall, 1: OpenTile, 2: Door.
+     */
+    public Room(Point origin, int horizontalSize, int verticalSize, int[][] layout) {
+        this.origin = origin;
+        this.horizontalSize = horizontalSize;
+        this.verticalSize = verticalSize;
+        this.useLayout(layout);
     }
 
     /**
@@ -93,6 +108,32 @@ public class Room {
         return tiles;
     }
 
+    protected List<Tile> useLayout(int[][] layout) throws IllegalArgumentException {
+        this.tiles = new ArrayList<Tile>();
+
+        for(int i = 0; i < layout.length; i++) {
+            for (int k = 0; k < layout[i].length; k++) {
+                Tile newTile;
+                Point currentPoint = new Point(origin);
+                currentPoint.translate(k, i);
+                if (layout[i][k] == 0) {
+                    newTile = new Wall(currentPoint);
+                }
+                else if (layout[i][k] == 1) {
+                    newTile = new OpenTile(currentPoint);
+                }
+                else if (layout[i][k] == 2) {
+                    newTile = new Door(currentPoint);
+                }
+                else {
+                    throw new IllegalArgumentException("Invalid layout");
+                }
+                this.tiles.add(newTile);
+            }
+        }
+        return this.tiles;
+    }
+
     /**
      * Alternative option to generating tiles and adding to Map in Level is giving the Room the 
      * Map itself.
@@ -125,6 +166,10 @@ public class Room {
 
     protected int getVerticalSize() {
         return this.verticalSize;
+    }
+
+    protected List<Tile> getTiles() {
+        return this.tiles;
     }
 
 

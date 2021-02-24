@@ -2,6 +2,8 @@ package org.menyamen.snarl.tiles;
 
 import java.awt.Point;
 
+import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.objects.GameObject;
 
 /**
@@ -25,7 +27,7 @@ public interface Tile {
      * Get GameObject from Tile.
      * @return GameObject if found in Class, null otherwise.
      */
-    public GameObject getGameObject();
+    GameObject getGameObject();
 
     /**
      * Adds GameObject to Tile. Returns true if added, false if not valid for Class.
@@ -33,4 +35,31 @@ public interface Tile {
      * @return True if added, false if not valid for Class.
      */
     Boolean setGameObject(GameObject object);
+
+    /**
+     * Get Player from Tile.
+     * @return Player if found in Class, null otherwise.
+     */
+    Player getPlayer();
+
+    /**
+     * Adds Player to Tile. Returns true if added, false if not valid for Class.
+     * @param player Player to add.
+     * @return True if added, false if not valid for Class.
+     */
+    Boolean setPlayer(Player player);
+
+    /**
+     * Get Adversary from Tile.
+     * @return Adversary if found in Class, null otherwise.
+     */
+    Adversary getAdversary();
+
+    /**
+     * Adds Adversary to Tile. Returns true if added, false if not valid for Class.
+     * @param adversary Adversary to add.
+     * @return True if added, false if not valid for Class.
+     */
+    Boolean setAdversary(Adversary adversary);
+
 }

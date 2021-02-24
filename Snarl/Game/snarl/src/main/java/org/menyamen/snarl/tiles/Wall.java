@@ -2,8 +2,8 @@ package org.menyamen.snarl.tiles;
 
 import java.awt.Point;
 
-import javax.crypto.NullCipher;
-
+import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.objects.GameObject;
 
 public class Wall implements Tile {
@@ -14,6 +14,10 @@ public class Wall implements Tile {
 
     public Wall(int x, int y) {
         this.pos = new Point(x, y);
+    }
+
+    public Wall(Point pos) {
+        this.pos = pos;
     }
 
     @Override
@@ -57,5 +61,25 @@ public class Wall implements Tile {
     @Override
     public GameObject getGameObject() {
         return null;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
+
+    @Override
+    public Boolean setPlayer(Player player) {
+        return false;
+    }
+
+    @Override
+    public Adversary getAdversary() {
+        return null;
+    }
+
+    @Override
+    public Boolean setAdversary(Adversary adversary) {
+        return false;
     }
 }

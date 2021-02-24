@@ -2,12 +2,21 @@ package org.menyamen.snarl.tiles;
 
 import java.awt.Point;
 
+import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.objects.GameObject;
 
 public class OpenTile implements Tile {
     private Boolean isOccupied;
     private GameObject gameObject;
+    private Player player;
+    private Adversary adversary;
     private Point pos;
+
+    public OpenTile(Point pos) {
+        this.pos = pos;
+        this.isOccupied = false;
+    }
 
     public OpenTile(int x, int y) {
         this.pos = new Point(x, y);
@@ -68,5 +77,27 @@ public class OpenTile implements Tile {
             
         // Compare the data members and return accordingly  
         return pos == c.pos ;
-    } 
+    }
+
+    @Override
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    @Override
+    public Boolean setPlayer(Player player) {
+        this.player = player;
+        return true;
+    }
+
+    @Override
+    public Adversary getAdversary() {
+        return this.adversary;
+    }
+
+    @Override
+    public Boolean setAdversary(Adversary adversary) {
+        this.adversary = adversary;
+        return true;
+    }
 }
