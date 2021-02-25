@@ -1,6 +1,7 @@
 package org.menyamen.snarl.layout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,7 +59,11 @@ public class Level {
     public void generate() {
         for (Room singleRoom : rooms) {
             if (validRoomPlacement(singleRoom)) {
-                singleRoom.addToMap(map, sizeX, sizeY);
+                //singleRoom.addToMap(map, sizeX, sizeY);
+                List<Tile> tiles = singleRoom.getTiles();
+                for (Tile singleTile : tiles) {
+                    map.put(singleTile.getPos(), singleTile);
+                }
             }
 
         }
@@ -106,7 +111,6 @@ public class Level {
         List<Point> waypoints = hallway.getWaypoints();
 
         if (!nextTo(waypoints.get(0), new Wall())) {
-            System.out.println("not working");
             return false;
 
         }
@@ -170,6 +174,50 @@ public class Level {
         }
         return false;
 
+    }
+
+    public List<Point> traversablePoints(Point point) {
+
+        List<Point> output = new ArrayList<Point>();
+
+        Point above = new Point(point);
+        above.translate(0, -1);
+        Point below = new Point(point);
+        below.translate(0, 1);
+        Point left = new Point(point);
+        left.translate(-1, 0);
+        Point right = new Point(point);
+        right.translate(1, 0);
+        Point twoAbove = new Point(point);
+        twoAbove.translate(0, -2);
+        Point twoBelow = new Point(point);
+        twoBelow.translate(0, 2);
+        Point twoLeft = new Point(point);
+        twoLeft.translate(-2, 0);
+        Point twoRight = new Point(point);
+        twoRight.translate(2, 0);
+        Point aboveRight = new Point(point);
+        aboveRight.translate(1, -1);
+        Point aboveLeft = new Point(point);
+        aboveLeft.translate(-1, -1);
+        Point belowRight = new Point(point);
+        belowRight.translate(1, 1);
+        Point belowLeft = new Point(point);
+        belowLeft.translate(-1, 1);
+
+        List<Point> testArray = new ArrayList<Point>(Arrays.asList(
+            above, below, left, right, twoAbove, twoBelow, twoLeft, twoRight,
+            aboveRight, aboveLeft, belowRight, belowLeft
+        ));
+
+        for (Point curPoint : testArray) {
+            Tile curTile = map.get(curPoint);
+            if (!(curTile instanceof Wall)) {
+                output.add(curPoint);
+            }
+        }
+
+        return output;
     }
 
     public Boolean addObject(GameObject object, Point position) {

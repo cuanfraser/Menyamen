@@ -95,19 +95,25 @@ public class Room {
             for (int j = 0; j < horizontalSize; j++) {
                 Point pos = new Point(origin);
                 pos.translate(j, i);
-                // Add Walls on ddges
+                // Add Walls on edges
                 if (i == 0 || i == (verticalSize - 1) || j == 0 || j == (horizontalSize - 1)) {
-                    tiles.add(new Wall(j, i));
+                    tiles.add(new Wall(pos));
                 }
                 // Add OpenTiles elsewhere
                 else {
-                    tiles.add(new OpenTile(j, i));
+                    tiles.add(new OpenTile(pos));
                 }
             }
         }
         return tiles;
     }
 
+    /**
+     * Use Layout for Room from 2D Array of Ints from Milestone 3
+     * @param layout 2D Array of ints for layout.
+     * @return List of Tiles needed for Room.
+     * @throws IllegalArgumentException Invalid int value.
+     */
     protected List<Tile> useLayout(int[][] layout) throws IllegalArgumentException {
         this.tiles = new ArrayList<Tile>();
 
@@ -132,6 +138,20 @@ public class Room {
             }
         }
         return this.tiles;
+    }
+
+    /**
+     * Checks if specified Point is inside Room by checking tiles.
+     * @param point Specified Point to check for.
+     * @return True if in tiles, false otherwise.
+     */
+    public Boolean inRoom(Point point) {
+        for (Tile curTile : tiles) {
+            if (curTile.getPos().equals(point)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -1,0 +1,2 @@
+Source code for testRoom exec is:
+org.menyamen.snarl.layout.TestRoom
