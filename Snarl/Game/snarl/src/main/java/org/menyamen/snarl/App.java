@@ -118,38 +118,5 @@ public final class App {
 
         System.out.println("Example 3:");
         System.out.println(ex3Printed);
-
-        // Example 4
-
-        Room ex4Room1 = new Room(new Point(0, 0), 5, 20);
-        Room ex4Room2 = new Room(new Point(10, 0), 5, 5);
-
-        List<Room> ex4TestRooms= new ArrayList<Room>();
-        ex4TestRooms.add(ex4Room1);
-        ex4TestRooms.add(ex4Room2);
-
-        List<Point> waypoints3 = new ArrayList<Point>();
-        waypoints3.add(new Point(5, 16));
-        waypoints3.add(new Point(11, 16));
-        waypoints3.add(new Point(11, 5));
-
-        Hallway ex4Hallway1 = new Hallway(waypoints3);
-
-        List<Hallway> ex4TestHallways = new ArrayList<Hallway>();
-        ex4TestHallways.add(ex4Hallway1);
-
-        Level ex4TestLevel = new Level(ex4TestRooms, ex4TestHallways, 30, 30);
-
-        GameObject ex4Key = new Key();
-        GameObject ex4Portal = new ExitPortal();
-
-        ex4TestLevel.addObject(ex4Key, new Point(11, 1));
-        ex4TestLevel.addObject(ex4Portal, new Point(1, 1));
-
-
-        String ex4Printed = ex4TestLevel.print();
-
-        System.out.println("Example 4:");
-        System.out.println(ex4Printed);
     }
 }
