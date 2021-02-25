@@ -226,16 +226,16 @@ public class Hallway {
                         }
                         //keep going up
                         else {
-                            tiles.add(new Wall(x1 - 1, j));
-                            tiles.add(new OpenTile(x1, j));
                             tiles.add(new Wall(x1 + 1, j));
+                            tiles.add(new OpenTile(x1, j));
+                            tiles.add(new Wall(x1 - 1, j - 1));
                         }
                         prevDir = 'U';
                     }
                 }
             }
         }
-            return tiles;
+        return tiles;
 
     }
 
