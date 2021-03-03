@@ -51,7 +51,7 @@ public final class TestRoom {
         }
 
         Room room = new Room(origin, roomCols, roomRows, layout);
-        Level level = new Level(room, origin.x + roomCols + 5, origin.y + roomRows + 5);
+        Level level = new Level(room);
 
         JSONArray outputArray = new JSONArray();
 

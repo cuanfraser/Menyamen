@@ -21,7 +21,7 @@ public class Level {
     private int sizeY;
 
     /**
-     * Construct Level from single Room and Size of Level.
+     * Construct Level from single Room.
      * @param rooms Rooms to add to Level.
      * @param hallways Hallways to add to Level.
      */
@@ -35,7 +35,7 @@ public class Level {
     }
 
     /**
-     * Construct Level from Rooms, Hallways and Size of Level.
+     * Construct Level from Rooms, Hallways.
      * @param rooms Rooms to add to Level.
      * @param hallways Hallways to add to Level.
      */

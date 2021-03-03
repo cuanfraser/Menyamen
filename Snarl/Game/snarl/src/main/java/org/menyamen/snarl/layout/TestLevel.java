@@ -64,8 +64,9 @@ public class TestLevel {
         GameObject exit = new ExitPortal();
         Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
         
-        //Level level = new Level(rooms, hallways));
-        
+        Level level = new Level(rooms, hallways);
+
+        System.out.println(level.print());       
 
     }
 
