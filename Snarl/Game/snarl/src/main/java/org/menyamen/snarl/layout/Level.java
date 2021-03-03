@@ -24,16 +24,12 @@ public class Level {
      * Construct Level from single Room and Size of Level.
      * @param rooms Rooms to add to Level.
      * @param hallways Hallways to add to Level.
-     * @param x Horizontal size of Level.
-     * @param y Vertical size of Level.
      */
-    public Level(Room room, int x, int y) {
+    public Level(Room room) {
         List<Room> temp = new ArrayList<Room>();
         temp.add(room);
         this.rooms = temp;
         this.hallways = new ArrayList<Hallway>();
-        this.sizeX = x;
-        this.sizeY = y;
         this.map = new HashMap<Point,Tile>();
         this.generate();
     }
@@ -42,14 +38,10 @@ public class Level {
      * Construct Level from Rooms, Hallways and Size of Level.
      * @param rooms Rooms to add to Level.
      * @param hallways Hallways to add to Level.
-     * @param x Horizontal size of Level.
-     * @param y Vertical size of Level.
      */
-    public Level(List<Room> rooms, List<Hallway> hallways, int x, int y) {
+    public Level(List<Room> rooms, List<Hallway> hallways) {
         this.rooms = rooms;
         this.hallways = hallways;
-        this.sizeX = x;
-        this.sizeY = y;
         this.map = new HashMap<Point,Tile>();
         this.generate();
     }
@@ -58,15 +50,24 @@ public class Level {
      * Generates map for Level from List of Rooms and List of Hallways.
      */
     public void generate() {
+        int largestX = 0;
+        int largestY = 0;
+
+        // Add Rooms
         for (Room singleRoom : rooms) {
             if (validRoomPlacement(singleRoom)) {
                 List<Tile> tiles = singleRoom.getTiles();
                 for (Tile singleTile : tiles) {
-                    map.put(singleTile.getPos(), singleTile);
+                    Point currentPoint = singleTile.getPos();
+                    largestX = currentPoint.x > largestX ? currentPoint.x : largestX;
+                    largestY = currentPoint.y > largestY ? currentPoint.y : largestY;
+                    map.put(currentPoint, singleTile);
                 }
             }
 
         }
+
+        // Add Hallways
         for (Hallway singleHallway: hallways) {
             if (!validHallwayPlacement(singleHallway)) {
                 throw new IllegalStateException("Hallway illegal placement. Start: " + 
@@ -75,10 +76,16 @@ public class Level {
             else {
                 List<Tile> tiles = singleHallway.getTiles();
                 for (Tile singleTile : tiles) {
-                    map.put(singleTile.getPos(), singleTile);
+                    Point currentPoint = singleTile.getPos();
+                    largestX = currentPoint.x > largestX ? currentPoint.x : largestX;
+                    largestY = currentPoint.y > largestY ? currentPoint.y : largestY;
+                    map.put(currentPoint, singleTile);
                 }
             }
         }
+
+        sizeX = largestX + 1;
+        sizeY = largestY + 1;
     }
 
     /**
@@ -134,9 +141,6 @@ public class Level {
                 else {
                     return false;
                 }
-            }
-            if (currentPos.x > sizeX || currentPos.y > sizeY) {
-                return false;
             }
         }
         return true;

@@ -40,7 +40,7 @@ public final class App {
         List<Hallway> testHallways = new ArrayList<Hallway>();
         testHallways.add(hallway1);
 
-        Level testLevel = new Level(testRooms, testHallways, 40, 11);
+        Level testLevel = new Level(testRooms, testHallways);
 
         GameObject key = new Key();
         GameObject portal = new ExitPortal();
@@ -74,7 +74,7 @@ public final class App {
         List<Hallway> ex2TestHallways = new ArrayList<Hallway>();
         ex2TestHallways.add(ex2Hallway1);
 
-        Level ex2TestLevel = new Level(ex2TestRooms, ex2TestHallways, 40, 20);
+        Level ex2TestLevel = new Level(ex2TestRooms, ex2TestHallways);
 
         GameObject ex2Key = new Key();
         GameObject ex2Portal = new ExitPortal();
