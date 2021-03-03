@@ -21,8 +21,6 @@ buildNumber.properties
 #
 # Visual Studio Code
 #
-.settings/
 .classpath
 .factorypath
 .project
-.vscode/
