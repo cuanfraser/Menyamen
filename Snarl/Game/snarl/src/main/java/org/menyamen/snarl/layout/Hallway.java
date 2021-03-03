@@ -3,7 +3,6 @@ package org.menyamen.snarl.layout;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
 import org.menyamen.snarl.tiles.Wall;

@@ -7,6 +7,9 @@ import java.awt.Point;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.menyamen.snarl.objects.ExitPortal;
+import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.objects.Key;
 
 public class TestLevel {
 
@@ -36,8 +39,33 @@ public class TestLevel {
         JSONArray hallwayList = levelJSON.getJSONArray("hallways");
         JSONArray objectList = levelJSON.getJSONArray("objects");
 
+        // Convert JSON Lists
         List<Room> rooms = jsonToListRoom(roomList);
         List<Hallway> hallways = jsonToListHallways(hallwayList);
+
+
+        // JSONObjects
+
+        JSONObject keyJSON = objectList.getJSONObject(0);
+        JSONObject exitJSON = objectList.getJSONObject(1);
+
+        if (!keyJSON.getString("type").equals("key")) {
+            throw new IllegalArgumentException("Wrong type of object. Expected key, got: " + 
+                keyJSON.getString("type"));
+        }
+        
+        if (!exitJSON.getString("type").equals("exit")) {
+            throw new IllegalArgumentException("Wrong type of object. Expected exit, got: " + 
+                keyJSON.getString("type"));
+        }
+
+        GameObject key = new Key();
+        Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
+        GameObject exit = new ExitPortal();
+        Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
+        
+        //Level level = new Level(rooms, hallways));
+        
 
     }
 
@@ -79,7 +107,7 @@ public class TestLevel {
 
             // Check all items are Rooms
             String type = currentRoom.getString("type");
-            if (!type.equalsIgnoreCase("room")) {
+            if (!type.equals("room")) {
                 throw new IllegalArgumentException("Wrong type of object in room list: " + type);
             } 
 
@@ -117,7 +145,7 @@ public class TestLevel {
 
             // Check all items are Rooms
             String type = currentJSON.getString("type");
-            if (!type.equalsIgnoreCase("hallway")) {
+            if (!type.equals("hallway")) {
                 throw new IllegalArgumentException("Wrong type of object in hallway list: " + type);
             } 
 
