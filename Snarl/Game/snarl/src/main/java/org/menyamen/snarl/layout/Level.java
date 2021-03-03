@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
 import org.menyamen.snarl.tiles.Wall;
@@ -59,7 +60,6 @@ public class Level {
     public void generate() {
         for (Room singleRoom : rooms) {
             if (validRoomPlacement(singleRoom)) {
-                //singleRoom.addToMap(map, sizeX, sizeY);
                 List<Tile> tiles = singleRoom.getTiles();
                 for (Tile singleTile : tiles) {
                     map.put(singleTile.getPos(), singleTile);
@@ -68,13 +68,14 @@ public class Level {
 
         }
         for (Hallway singleHallway: hallways) {
-            if (validHallwayPlacement(singleHallway)) {
+            if (!validHallwayPlacement(singleHallway)) {
+                throw new IllegalStateException("Hallway illegal placement. Start: " + 
+                    singleHallway.getStart().toString());
+            }
+            else {
                 List<Tile> tiles = singleHallway.getTiles();
                 for (Tile singleTile : tiles) {
                     map.put(singleTile.getPos(), singleTile);
-                }
-                for (Tile singleDoor : singleHallway.getDoors()) {
-                    map.put(singleDoor.getPos(), singleDoor);
                 }
             }
         }
@@ -108,23 +109,33 @@ public class Level {
      */
     public Boolean validHallwayPlacement(Hallway hallway) {
         List<Tile> tilesNeeded = hallway.getTiles();
-        List<Point> waypoints = hallway.getWaypoints();
 
-        if (!nextTo(waypoints.get(0), new Wall())) {
+        if (! (map.get(hallway.getStart()) instanceof Door)) {
             return false;
-
         }
 
-        if (!nextTo(waypoints.get(waypoints.size() - 1), new Wall())) {
+        if (! (map.get(hallway.getEnd()) instanceof Door)) {
             return false;
         }
 
 
         for (Tile currentTile : tilesNeeded) {
-            if (map.containsKey(currentTile.getPos())) {
-                return false;
+            Point currentPos = currentTile.getPos();
+            if (map.containsKey(currentPos)) {
+                if (map.get(currentPos) instanceof Wall && currentTile instanceof Wall) {
+                    continue;
+                }
+                if (currentPos.equals(hallway.getStart())) {
+                    continue;
+                }
+                if (currentPos.equals(hallway.getEnd())) {
+                    continue;
+                }
+                else {
+                    return false;
+                }
             }
-            if (currentTile.getPos().x > sizeX || currentTile.getPos().y > sizeY) {
+            if (currentPos.x > sizeX || currentPos.y > sizeY) {
                 return false;
             }
         }

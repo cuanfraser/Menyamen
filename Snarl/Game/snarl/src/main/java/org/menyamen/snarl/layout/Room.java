@@ -154,27 +154,27 @@ public class Room {
         return false;
     }
 
-    /**
-     * Alternative option to generating tiles and adding to Map in Level is giving the Room the 
-     * Map itself.
-     * @param map HashMap representing Level.
-     * @param sizeX Horizontal Size of Level.
-     * @param sizeY Vertical Size of Level.
-     */
-    public void addToMap(HashMap<Point, Tile> map, int sizeX, int sizeY) {
-        for (int i = 0; i < verticalSize; i++) {
-            for (int j = 0; j < horizontalSize; j++) {
-                Point pos = new Point(origin);
-                pos.translate(j, i);
-                if (i == 0 || i == (verticalSize - 1) || j == 0 || j == (horizontalSize - 1)) {
-                    map.put(pos, new Wall(j, i));
+    public Boolean addDoor(Point point) {
+        Door door = new Door(point);
+        for(int i = 0; i < tiles.size(); i++) {
+            Tile tile = tiles.get(i);
+            if (tile.getPos().equals(point)) {
+                if (! (tile instanceof Wall)) {
+                    return false;
                 }
                 else {
-                    map.put(pos, new OpenTile(j, i));
+                    tiles.set(i, door);
+                    return true;
                 }
             }
         }
+        return false;
     }
+
+    public Boolean addDoor(int x, int y) {
+        return this.addDoor(new Point(x, y));
+    }
+
 
     protected Point getOrigin() {
         return this.origin;

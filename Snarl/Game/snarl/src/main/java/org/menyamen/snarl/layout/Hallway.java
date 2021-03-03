@@ -11,9 +11,10 @@ import org.menyamen.snarl.tiles.Wall;
 import java.awt.Point;
 
 public class Hallway {
+    private Point start;
+    private Point end;
     private List<Point> waypoints;
     private List<Tile> tiles;
-    private List<Tile> doors;
 
     /**
      * Create Hallway from given start Point to given end Point.
@@ -21,9 +22,9 @@ public class Hallway {
      * @param end Point to end Hallway.
      */
     public Hallway(Point start, Point end) {
+        this.start = start;
+        this.end = end;
         this.waypoints = new ArrayList<Point>();
-        this.waypoints.add(start);
-        this.waypoints.add(end);
         this.generateTiles();
     }
 
@@ -31,7 +32,9 @@ public class Hallway {
      * Create Hallway from given Waypoints.
      * @param waypoints List of Waypoints to create Hallway from.
      */
-    public Hallway(List<Point> waypoints) {
+    public Hallway(Point start, Point end, List<Point> waypoints) {
+        this.start = start;
+        this.end = end;
         this.waypoints = waypoints;
         this.generateTiles();
     }
@@ -44,19 +47,21 @@ public class Hallway {
     protected List<Tile> generateTiles() throws IllegalArgumentException {
 
         tiles = new ArrayList<Tile>();
-        doors = new ArrayList<Tile>();
+
+        List<Point> points = this.waypoints;
+        points.add(0, start);
+        points.add(end);
 
         // Up (U), Down (D), Left (L), Right (R)
         char prevDir = ' ';
 
-        // Loop Waypoints
-        for (int i = 0; i + 1 < waypoints.size(); i++) {
+        // Loop Points
+        for (int i = 0; i + 1 < points.size(); i++) {
 
-            int x1 = waypoints.get(i).x;
-            int y1 = waypoints.get(i).y;
-            int x2 = waypoints.get(i + 1).x;
-            int y2 = waypoints.get(i + 1).y;
-
+            int x1 = points.get(i).x;
+            int y1 = points.get(i).y;
+            int x2 = points.get(i + 1).x;
+            int y2 = points.get(i + 1).y;
             if (x1 == x2 && y1 == y2) {
                 throw new IllegalArgumentException("Hallways can only be Horizontal or Vertical");
             }
@@ -65,16 +70,6 @@ public class Hallway {
             if (y1 == y2) {
                 // Going right
                 if (x2 - x1 >= 0) {
-                    // Add first door
-                    if (i == 0) {
-                        Tile door = new Door(x1 - 1, y1);
-                        doors.add(door);
-                    }
-                    // Add last door
-                    if (i + 1 == waypoints.size() - 1) {
-                        Tile door = new Door(x2 + 1, y2);
-                        doors.add(door);
-                    }
                     //Loop path
                     for (int j = x1; j <= x2; j++) {
                         // Start of Waypoint Special Case for Turns
@@ -112,16 +107,6 @@ public class Hallway {
 
                 // Going left
                 else {
-                    // Add first door
-                    if (i == 0) {
-                        Tile door = new Door(x1 + 1, y1);
-                        doors.add(door);
-                    }
-                    // Add last door
-                    if (i + 1 == waypoints.size() - 1) {
-                        Tile door = new Door(x2 - 1, y2);
-                        doors.add(door);
-                    }
                     for (int j = x2; j <= x1; j++) {
                         // Start of Waypoint Special Case for Turns
                         if (j == x2 && i != 0) {
@@ -156,16 +141,6 @@ public class Hallway {
             else if (x1 == x2) {
                 // Going down
                 if (y2 - y1 >= 0) {
-                    // Add first door
-                    if (i == 0) {
-                        Tile door = new Door(x1, y1 - 1);
-                        doors.add(door);
-                    }
-                    // Add last door
-                    if (i + 1 == waypoints.size() - 1) {
-                        Tile door = new Door(x2, y2 + 1);
-                        doors.add(door);
-                    }
                     for (int j = y1; j <= y2; j++) {
                         // Start of Waypoint Special Case for Turns
                         if (j == y1 && i != 0) {
@@ -197,16 +172,6 @@ public class Hallway {
 
                 // Going up
                 else {
-                    // Add first door
-                    if (i == 0) {
-                        Tile door = new Door(x1, y1 + 1);
-                        doors.add(door);
-                    }
-                    // Add last door
-                    if (i + 1 == waypoints.size() - 1) {
-                        Tile door = new Door(x2, y2 - 1);
-                        doors.add(door);
-                    }
                     // Start of Waypoint Special Case for Turns
                     for (int j = y2; j <= y1; j++) {
                         if (j == y2 && i != 0) {
@@ -247,8 +212,12 @@ public class Hallway {
         return this.tiles;
     }
 
-    protected List<Tile> getDoors() {
-        return this.doors;
+    protected Point getStart() {
+        return this.start;
+    }
+
+    protected Point getEnd() {
+        return this.end;
     }
 
 }

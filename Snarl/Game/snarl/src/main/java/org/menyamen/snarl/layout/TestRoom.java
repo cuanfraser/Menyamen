@@ -3,7 +3,6 @@ package org.menyamen.snarl.layout;
 import java.util.List;
 import java.util.Scanner;
 import java.awt.Point;
-import java.time.Year;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,9 +30,12 @@ public final class TestRoom {
 
         JSONArray arrayInput = new JSONArray(inputBuilder.toString());
 
+        // (room) JSONObject input
         JSONObject roomJSON = arrayInput.getJSONObject(0);
+        // (point) input
         Point testPoint = fromRowCol(arrayInput.getJSONArray(1));
 
+        // Break down (room)
         Point origin = fromRowCol(roomJSON.getJSONArray("origin"));
         int roomRows = roomJSON.getJSONObject("bounds").getInt("rows");
         int roomCols = roomJSON.getJSONObject("bounds").getInt("columns");
