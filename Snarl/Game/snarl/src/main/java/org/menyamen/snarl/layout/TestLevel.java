@@ -36,10 +36,16 @@ public class TestLevel {
         JSONArray hallwayList = levelJSON.getJSONArray("hallways");
         JSONArray objectList = levelJSON.getJSONArray("objects");
 
-        List<Room> rooms = 
+        List<Room> rooms = jsonToListRoom(roomList);
+        List<Hallway> hallways = jsonToListHallways(hallwayList);
 
     }
 
+    /**
+     * Convert Point to (point) JSON
+     * @param point
+     * @return
+     */
     public static JSONArray toRowCol(Point point) {
         JSONArray converted = new JSONArray();
         converted.put(point.y);
@@ -47,6 +53,11 @@ public class TestLevel {
         return converted;
     }
 
+    /**
+     * Convert (point) JSON to Point
+     * @param rowCol
+     * @return
+     */
     public static Point fromRowCol(JSONArray rowCol) {
         int row = rowCol.getInt(0);
         int col = rowCol.getInt(1);
@@ -54,6 +65,12 @@ public class TestLevel {
         return converted;
     }
 
+    /**
+     * Convert JSONArray of room-list to List<Room>
+     * @param roomList
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static List<Room> jsonToListRoom(JSONArray roomList) throws IllegalArgumentException {
         List<Room> outputList = new ArrayList<Room>();
 
@@ -87,6 +104,11 @@ public class TestLevel {
         return outputList;
     }
 
+    /**
+     * Convert JSONArray of hallway-list to List<Hallway>
+     * @param hallwayList
+     * @return
+     */
     public static List<Hallway> jsonToListHallways(JSONArray hallwayList) {
         List<Hallway> outputList = new ArrayList<Hallway>();
 
@@ -106,8 +128,12 @@ public class TestLevel {
             List<Point> waypoints = new ArrayList<Point>();
 
             for (int k = 0; k < waypointsJSON.length(); k++) {
-
+                Point converted = fromRowCol(waypointsJSON.getJSONArray(k));
+                waypoints.add(converted);
             }
+
+            Hallway hallway = new Hallway(from, to, waypoints);
+            outputList.add(hallway);
         }
 
         return outputList;
