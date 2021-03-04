@@ -305,7 +305,8 @@ public class Level {
         for (Room room : rooms) {
             if (room.inRoom(point)) {
 
-                return "room";
+                return null;
+
             }
         }
         for (Hallway hallway : hallways) {
@@ -314,7 +315,7 @@ public class Level {
                 Point end = hallway.getEnd();
 
 
-                return "hallway";
+                return null;
             }
         }
 
