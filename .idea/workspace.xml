@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb412ad8-25d3-4c3b-93b7-efa8d9c0b707" name="Default Changelist" comment="fixed example 2 missing wall (Hallway going down case)" />
+    <list default="true" id="fb412ad8-25d3-4c3b-93b7-efa8d9c0b707" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1612046736773</updated>
-      <workItem from="1612046740120" duration="76282000" />
+      <workItem from="1612046740120" duration="77080000" />
     </task>
     <task id="LOCAL-00001" summary="a3">
       <created>1612143210103</created>
@@ -217,7 +217,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614827816805</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fixed example 2 missing wall (Hallway going down case)">
+      <created>1614828089557</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1614828089557</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,11 +260,11 @@
       <screen x="0" y="25" width="1680" height="947" />
     </state>
     <state x="278" y="210" key="#com.intellij.ide.util.MemberChooser/0.25.1680.947@0.25.1680.947" timestamp="1612234141605" />
-    <state x="429" y="79" key="CommitChangelistDialog2" timestamp="1614827872484">
+    <state x="429" y="79" key="CommitChangelistDialog2" timestamp="1614828089437">
       <screen x="0" y="25" width="1680" height="947" />
     </state>
     <state x="688" y="49" key="CommitChangelistDialog2/0.0.1680.1050@0.0.1680.1050" timestamp="1614207855920" />
-    <state x="429" y="79" key="CommitChangelistDialog2/0.25.1680.947@0.25.1680.947" timestamp="1614827872484" />
+    <state x="429" y="79" key="CommitChangelistDialog2/0.25.1680.947@0.25.1680.947" timestamp="1614828089437" />
     <state x="108" y="125" width="1480" height="746" key="DiffContextDialog" timestamp="1612564809182">
       <screen x="0" y="25" width="1680" height="947" />
     </state>
@@ -286,16 +293,16 @@
       <screen x="0" y="25" width="1680" height="947" />
     </state>
     <state x="656" y="77" key="SettingsEditor/0.25.1680.947@0.25.1680.947" timestamp="1614823468872" />
-    <state x="873" y="235" key="Vcs.Push.Dialog.v2" timestamp="1614827818496">
+    <state x="873" y="235" key="Vcs.Push.Dialog.v2" timestamp="1614828070778">
       <screen x="0" y="25" width="1680" height="947" />
     </state>
     <state x="873" y="233" key="Vcs.Push.Dialog.v2/0.0.1680.1050@0.0.1680.1050" timestamp="1614207860610" />
-    <state x="873" y="235" key="Vcs.Push.Dialog.v2/0.25.1680.947@0.25.1680.947" timestamp="1614827818496" />
-    <state x="657" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1614827839766">
+    <state x="873" y="235" key="Vcs.Push.Dialog.v2/0.25.1680.947@0.25.1680.947" timestamp="1614828070778" />
+    <state x="657" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1614827985389">
       <screen x="0" y="25" width="1680" height="947" />
     </state>
     <state x="657" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1680.1050@0.0.1680.1050" timestamp="1614811767907" />
-    <state x="657" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1680.947@0.25.1680.947" timestamp="1614827839766" />
+    <state x="657" y="416" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1680.947@0.25.1680.947" timestamp="1614827985389" />
     <state x="167" y="255" width="597" height="490" key="find.popup" timestamp="1612278287604">
       <screen x="0" y="25" width="1680" height="947" />
     </state>
