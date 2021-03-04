@@ -17,7 +17,7 @@ public class Hallway {
 
     /**
      * Create Hallway from given start Point to given end Point.
-     * 
+     *
      * @param start Point to start Hallway.
      * @param end   Point to end Hallway.
      */
@@ -30,7 +30,7 @@ public class Hallway {
 
     /**
      * Create Hallway from given Waypoints.
-     * 
+     *
      * @param waypoints List of Waypoints to create Hallway from.
      */
     public Hallway(Point start, Point end, List<Point> waypoints) {
@@ -42,7 +42,7 @@ public class Hallway {
 
     /**
      * Generates the tiles needed for the Hallway.
-     * 
+     *
      * @return Tiles generated.
      * @throws IllegalArgumentException if a waypoint is not vertical/horizontal.
      */
@@ -121,12 +121,14 @@ public class Hallway {
                                 tiles.add(new Wall(j, y1 + 1));
                                 tiles.add(new OpenTile(j, y1));
                                 tiles.add(new Wall(j + 1, y1));
+                                tiles.add(new Wall(j + 1, y1 + 1));
                             }
                             if (prevDir == 'U') {
                                 // Add Bottom Left Wall
                                 tiles.add(new Wall(j - 1, y1 + 1));
                                 tiles.add(new OpenTile(j, y1));
                                 tiles.add(new Wall(j, y1 + 1));
+                                tiles.add(new Wall(j + 1, y1 + 1));
                             }
                             if (prevDir == 'R') {
                                 throw new IllegalArgumentException("Can not go left to right");
@@ -162,9 +164,10 @@ public class Hallway {
                                 tiles.add(new Wall(x1 + 1, j));
                             }
                             if (prevDir == 'L') {
-                                tiles.add(new Wall(x1 - 1, j + 1));
                                 tiles.add(new OpenTile(x1, j));
+                                tiles.add(new Wall(x1 - 1, j + 1));
                                 tiles.add(new Wall(x1 - 1, j));
+                                tiles.add(new Wall(x1, j + 1));
                             }
                             if (prevDir == 'U') {
                                 throw new IllegalArgumentException("Can not go down to up");
@@ -172,7 +175,7 @@ public class Hallway {
                         }
                         // keep going down
                         else {
-                            tiles.add(new Wall(x1 - 1, j));
+                            tiles.add(new Wall(x1 - 1, j + 1));
                             tiles.add(new OpenTile(x1, j));
                             tiles.add(new Wall(x1 + 1, j + 1));
                         }
@@ -192,11 +195,13 @@ public class Hallway {
                                 tiles.add(new Wall(x1 - 1, j + 1));
                                 tiles.add(new OpenTile(x1, j));
                                 tiles.add(new Wall(x1 + 1, j + 1));
+                                tiles.add(new Wall(x1, j + 1));
                             }
                             if (prevDir == 'L') {
                                 tiles.add(new Wall(x1 - 1, j + 1));
                                 tiles.add(new OpenTile(x1, j));
                                 tiles.add(new Wall(x1, j + 1));
+                                tiles.add(new Wall(x1 - 1, j));
                             }
                             if (prevDir == 'D') {
                                 throw new IllegalArgumentException("Can not go up to down");
