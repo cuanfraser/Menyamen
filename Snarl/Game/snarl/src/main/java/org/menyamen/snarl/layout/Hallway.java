@@ -222,6 +222,20 @@ public class Hallway {
 
     }
 
+    public Boolean inHallwayAsOpenTile(Point point) {
+        for (Tile curTile : tiles) {
+            if (curTile.getPos().equals(point)) {
+                if (curTile instanceof OpenTile) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
     protected List<Point> getWaypoints() {
         return this.waypoints;
     }
