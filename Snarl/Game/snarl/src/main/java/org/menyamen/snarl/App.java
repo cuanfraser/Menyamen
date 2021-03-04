@@ -24,7 +24,7 @@ public final class App {
      */
     public static void main(String[] args) {
 
-        // Example 1
+        // Example 1 testing
 
         Room room1 = new Room(new Point(0, 0));
         room1.addDoor(9, 2);
