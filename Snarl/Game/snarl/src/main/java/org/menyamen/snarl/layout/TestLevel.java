@@ -65,6 +65,8 @@ public class TestLevel {
         Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
 
         Level level = new Level(rooms, hallways);
+        level.addObject(key, keyPoint);
+        level.addObject(exit, exitPoint);
 
         // Output
         Boolean traversable = level.isTraversable(testPoint);
@@ -82,7 +84,7 @@ public class TestLevel {
             output.put("object", JSONObject.NULL);
         }
         else {
-            output.put("object", object);
+            output.put("object", object.toString());
         }
         output.put("type", type);
         output.put("reachable", reachableJSON);

@@ -260,6 +260,11 @@ public class Level {
         map.put(pos, tile);
     }
 
+    /**
+     * Return Room containing given Point.
+     * @param point Point to get Room for.
+     * @return Room containing Point.
+     */
     protected Room getRoomForPoint(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
@@ -291,6 +296,11 @@ public class Level {
         }
     }
     
+    /**
+     * Returns List of origins of Rooms that are immediatly reachable from given Room using Hallways.
+     * @param room Room to check from.
+     * @return List of Origins of Rooms.
+     */
     public List<Point> reachableFromRoom(Room room) {
         List<Point> output = new ArrayList<Point>();
 
@@ -360,6 +370,11 @@ public class Level {
         return tile.getGameObject();
     }
 
+    /**
+     * Return String representation of where given Point is.
+     * @param point Point to check location.
+     * @return String of where Point is.
+     */
     public String whereIsPoint(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
