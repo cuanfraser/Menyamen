@@ -66,7 +66,24 @@ public class TestLevel {
 
         Level level = new Level(rooms, hallways);
 
-        System.out.println(level.print());       
+        // Output
+        Boolean traversable = level.isTraversable(testPoint);
+        GameObject object = level.getObject(testPoint);
+        String type = level.whereIsPoint(testPoint);
+
+        JSONObject output = new JSONObject();
+        output.put("traversable", traversable);
+        if (object == null) {
+            output.put("object", JSONObject.NULL);
+        }
+        else {
+            output.put("object", object);
+        }
+        output.put("type", type);
+
+        System.out.println(output.toString());
+
+        //System.out.println(level.print());
 
     }
 

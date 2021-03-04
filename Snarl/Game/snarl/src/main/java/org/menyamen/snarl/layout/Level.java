@@ -123,7 +123,7 @@ public class Level {
 
         if (! (map.get(hallway.getEnd()) instanceof Door)) {
             System.out.println(map.get(hallway.getEnd()).toChar());
-            
+
             return false;
         }
 
@@ -193,6 +193,11 @@ public class Level {
 
     }
 
+    /**
+     * Returns List<Point> of Traversable Points within a Cardinal move.
+     * @param point Point to check from.
+     * @return List<Point> of Traversable Points.
+     */
     public List<Point> traversablePoints(Point point) {
 
         List<Point> output = new ArrayList<Point>();
@@ -253,6 +258,50 @@ public class Level {
     protected void addTile(Tile tile) {
         Point pos = tile.getPos();
         map.put(pos, tile);
+    }
+
+    /**
+     * Returns True if Tile at given Point is OpenTile or Door.
+     * @param point Point to test.
+     * @return True if OpenTile or Door, False otherwise.
+     */
+    public Boolean isTraversable(Point point) {
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return false;
+        }
+        if (tile instanceof OpenTile || tile instanceof Door) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public GameObject getObject(Point point) {
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return null;
+        }
+        return tile.getGameObject();
+    }
+
+    public String whereIsPoint(Point point) {
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return "void";
+        }
+        for (Room room : rooms) {
+            if (room.inRoom(point)) {
+                return "room";
+            }
+        }
+        for (Hallway hallway : hallways) {
+            if (hallway.inHallwayAsOpenTile(point)) {
+                return "hallway";
+            }
+        }
+        return "void";
     }
 
     /**
