@@ -2,8 +2,8 @@
 /**
  * Specifies The interface for a Player component which:
  * - allows a player to move 2 grid units away in any cardinal or diagonal direction
- * - determines the end of a level versus the end of the game
- * - knows when to reject invalid game states. 
+ * - Players should provide a unique name when registering
+ * - Players needs to communicate the chosen action to the Game Manager 
  */
 public interface RuleChecker {
 
@@ -24,6 +24,14 @@ public interface RuleChecker {
    */
   void move(Point start, Point end) throws IllegalArgumentException;
 
+    /**
+    * Return a boolean that validates or invalidates a player based on their username being unique 
+    *
+    * @param name String username that is to be validated
+    * @return boolean if a player is valid or not
+    */
+   boolean validateName(String name);
+
   /**
     * Void function that acts like a switch case that updates the Game Manager as the Player makes moves.
     *
@@ -31,6 +39,9 @@ public interface RuleChecker {
     * @throws IllegalArgumentException if the game state is invalid
     */
    public void update() throws IllegalArgumentException;
+
+
+
 
 }
 ```

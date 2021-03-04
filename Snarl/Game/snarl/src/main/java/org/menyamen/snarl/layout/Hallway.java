@@ -145,9 +145,9 @@ public class Hallway {
                         if (j == y1 && i != 0) {
                             if (prevDir == 'R') {
                                 // Add Top Right Wall
-                                tiles.add(new Wall(x1 + 1, j - 1));
+                                tiles.add(new Wall(x1 + 1, j + 1));
                                 tiles.add(new OpenTile(x1, j));
-                                tiles.add(new Wall(x1, j + 1));
+                                tiles.add(new Wall(x1 + 1, j - 1));
                             }
                             if (prevDir == 'L') {
                                 // Add Bottom Right Wall
@@ -163,7 +163,7 @@ public class Hallway {
                         else {
                             tiles.add(new Wall(x1 - 1, j));
                             tiles.add(new OpenTile(x1, j));
-                            tiles.add(new Wall(x1 + 1, j));
+                            tiles.add(new Wall(x1 + 1, j + 1));
                         }
                     }
                     prevDir = 'D';
