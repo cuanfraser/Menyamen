@@ -172,7 +172,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.menyamen.snarl.App</mainClass>
+              <mainClass>org.menyamen.snarl.layout.TestLevel</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

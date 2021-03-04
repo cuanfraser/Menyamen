@@ -260,6 +260,19 @@ public class Level {
         map.put(pos, tile);
     }
 
+    protected Room getRoomForPoint(Point point) {
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return null;
+        }
+        for (Room room : rooms) {
+            if (room.inRoom(point)) {
+                return room;
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns True if Tile at given Point is OpenTile or Door.
      * @param point Point to test.
@@ -276,6 +289,37 @@ public class Level {
         else {
             return false;
         }
+    }
+
+    /**
+     * Returns List of origins of Rooms that are immediatly reachable from Point's Hallway/Room.
+     * @param point Point to check from.
+     * @return List of Origins of Rooms.
+     */
+    public List<Point> reachable(Point point) {
+        List<Point> output = new ArrayList<Point>();
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return output;
+        }
+        for (Room room : rooms) {
+            if (room.inRoom(point)) {
+
+                return "room";
+            }
+        }
+        for (Hallway hallway : hallways) {
+            if (hallway.inHallwayAsOpenTile(point)) {
+                Point start = hallway.getStart();
+                Point end = hallway.getEnd();
+
+
+                return "hallway";
+            }
+        }
+
+
+        return output;
     }
 
     public GameObject getObject(Point point) {
