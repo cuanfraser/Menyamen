@@ -7,9 +7,9 @@ import java.util.List;
 import org.menyamen.snarl.layout.Hallway;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.layout.Room;
-import org.menyamen.snarl.objects.ExitPortal;
-import org.menyamen.snarl.objects.GameObject;
-import org.menyamen.snarl.objects.Key;
+import org.menyamen.snarl.gameobjects.ExitPortal;
+import org.menyamen.snarl.gameobjects.GameObject;
+import org.menyamen.snarl.gameobjects.Key;
 
 /**
  * Main Class

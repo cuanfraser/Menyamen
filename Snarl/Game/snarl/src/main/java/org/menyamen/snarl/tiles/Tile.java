@@ -4,7 +4,7 @@ import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
-import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.gameobjects.GameObject;
 
 /**
  * Interface for Tiles which represent any tile on a Level.

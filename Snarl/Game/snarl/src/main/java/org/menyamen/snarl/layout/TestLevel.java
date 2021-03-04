@@ -7,9 +7,9 @@ import java.awt.Point;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.menyamen.snarl.objects.ExitPortal;
-import org.menyamen.snarl.objects.GameObject;
-import org.menyamen.snarl.objects.Key;
+import org.menyamen.snarl.gameobjects.ExitPortal;
+import org.menyamen.snarl.gameobjects.GameObject;
+import org.menyamen.snarl.gameobjects.Key;
 
 public class TestLevel {
 

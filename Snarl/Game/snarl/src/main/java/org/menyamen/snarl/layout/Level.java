@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.menyamen.snarl.objects.GameObject;
+import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
