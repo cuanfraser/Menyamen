@@ -1,7 +1,7 @@
 ```java
 /**
  * Specifies The interface for the Game Manager which:
- * - validates and accepts players with unique name to the game 
+ * - validates and accepts players with unique names into the game 
  * - and starts a game with a single level, which will be provided. 
  */
 public interface GameManager {
@@ -13,14 +13,14 @@ public interface GameManager {
    * @param level The single level at which the game starts
    * @throws IllegalArgumentException if the level is not possible or a Player has an invalid name
    */
-  public void startGame(List<Player> players, Level level) throws IllegalArgumentException;
+   void startGame(List<Player> players, Level level) throws IllegalArgumentException;
 
    /**
-   * Return a boolean that validates or invalidates a player based on their username being unique 
+   * Registers a Player only after validating if the username is unique 
    *
-   * @return boolean if a player is valid or not
+   * @param player Player whose name is going to validated 
    */
-  boolean validatePlayer(Player player);
+  void register(Player player);
 
    /**
    * Void function that acts like a switch case that updates the game as the Player makes moves.
@@ -28,7 +28,7 @@ public interface GameManager {
    * @return the updated game state
    * @throws IllegalArgumentException if the game state is invalid
    */
-  public void update() throws IllegalArgumentException;
+   void update() throws IllegalArgumentException;
 
 
 }
