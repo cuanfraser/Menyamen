@@ -54,7 +54,7 @@ public final class App {
 
         System.out.println(printed);
 
-        // Example 2
+        // Example 2 test
 
         Room ex2Room1 = new Room(new Point(0, 0), 5, 5);
         ex2Room1.addDoor(4, 2);
