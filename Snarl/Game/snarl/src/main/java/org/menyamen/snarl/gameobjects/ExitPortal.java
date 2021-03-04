@@ -1,4 +1,4 @@
-package org.menyamen.snarl.objects;
+package org.menyamen.snarl.gameobjects;
 
 public class ExitPortal implements GameObject {
 
