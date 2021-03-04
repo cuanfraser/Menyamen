@@ -122,6 +122,8 @@ public class Level {
         }
 
         if (! (map.get(hallway.getEnd()) instanceof Door)) {
+            System.out.println(map.get(hallway.getEnd()).toChar());
+            
             return false;
         }
 

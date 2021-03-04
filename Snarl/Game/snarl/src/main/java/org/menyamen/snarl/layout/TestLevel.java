@@ -59,11 +59,11 @@ public class TestLevel {
                 keyJSON.getString("type"));
         }
 
-        GameObject key = new Key();
-        Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
-        GameObject exit = new ExitPortal();
-        Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
-        
+        // GameObject key = new Key();
+        // Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
+        // GameObject exit = new ExitPortal();
+        // Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
+
         Level level = new Level(rooms, hallways);
 
         System.out.println(level.print());       
@@ -120,7 +120,7 @@ public class TestLevel {
             JSONArray layoutJSON = currentRoom.getJSONArray("layout");
             int[][] layout = new int[roomRows][roomCols];
             for (int k = 0; k < roomRows; k++) {
-                JSONArray currentRow = layoutJSON.getJSONArray(i);
+                JSONArray currentRow = layoutJSON.getJSONArray(k);
                 for (int m = 0; m < roomCols; m++) {
                     layout[k][m] = currentRow.getInt(m);
                 }
