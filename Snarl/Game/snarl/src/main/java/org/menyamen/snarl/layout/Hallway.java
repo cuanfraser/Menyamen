@@ -177,7 +177,7 @@ public class Hallway {
                         else {
                             tiles.add(new Wall(x1 - 1, j + 1));
                             tiles.add(new OpenTile(x1, j));
-                            tiles.add(new Wall(x1 + 1, j + 1));
+                            tiles.add(new Wall(x1 + 1, j));
                         }
                     }
                     prevDir = 'D';
