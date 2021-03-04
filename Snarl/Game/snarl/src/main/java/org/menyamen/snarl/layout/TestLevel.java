@@ -59,10 +59,10 @@ public class TestLevel {
                 keyJSON.getString("type"));
         }
 
-        // GameObject key = new Key();
-        // Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
-        // GameObject exit = new ExitPortal();
-        // Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
+        GameObject key = new Key();
+        Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
+        GameObject exit = new ExitPortal();
+        Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
 
         Level level = new Level(rooms, hallways);
 
@@ -70,6 +70,11 @@ public class TestLevel {
         Boolean traversable = level.isTraversable(testPoint);
         GameObject object = level.getObject(testPoint);
         String type = level.whereIsPoint(testPoint);
+        List<Point> reachable = level.reachableFromPoint(testPoint);
+        JSONArray reachableJSON = new JSONArray();
+        for (Point curPoint : reachable) {
+            reachableJSON.put(toRowCol(curPoint));
+        }
 
         JSONObject output = new JSONObject();
         output.put("traversable", traversable);
@@ -80,6 +85,7 @@ public class TestLevel {
             output.put("object", object);
         }
         output.put("type", type);
+        output.put("reachable", reachableJSON);
 
         System.out.println(output.toString());
 
