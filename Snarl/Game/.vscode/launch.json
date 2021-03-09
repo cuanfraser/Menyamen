@@ -47,7 +47,7 @@
             "request": "launch",
             "mainClass": "org.menyamen.snarl.layout.TestRoom",
             "projectName": "snarl",
-            "args": ["<", "snarl/tests/Room/1-in.json"]
+            "args": ["<", "snarl/tests/Room/2-in.json"]
         }
     ]
 }

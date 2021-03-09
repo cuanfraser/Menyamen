@@ -230,8 +230,8 @@ public class Level {
         belowLeft.translate(-1, 1);
 
         List<Point> testArray = new ArrayList<Point>(Arrays.asList(
-            above,  twoAbove, aboveRight, aboveLeft, 
-            left, right, twoLeft, twoRight, 
+            twoAbove, aboveLeft, above, aboveRight,
+            twoLeft, left,  right, twoRight,
             below, belowRight, belowLeft, twoBelow
         ));
 
