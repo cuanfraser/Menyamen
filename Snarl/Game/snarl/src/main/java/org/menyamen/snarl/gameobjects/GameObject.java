@@ -7,4 +7,10 @@ public interface GameObject {
      * @return Char to represent the GameObject Class.
      */
     char toChar();
+    
+    /**
+     * Get String representing the GameObject type for JSON and Debugging.
+     * @return String representing the GameObject Class.
+     */
+    String toString();
 }

@@ -8,4 +8,9 @@ public class ExitPortal implements GameObject {
     public char toChar() {
         return 'O';
     }
+
+    @Override
+    public String toString() {
+        return "exit";
+    }
 }

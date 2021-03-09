@@ -8,4 +8,9 @@ public class Key implements GameObject {
     public char toChar() {
         return 'K';
     }
+
+    @Override
+    public String toString() {
+        return "key";
+    }
 }

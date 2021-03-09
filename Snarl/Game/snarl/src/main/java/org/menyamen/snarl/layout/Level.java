@@ -260,6 +260,11 @@ public class Level {
         map.put(pos, tile);
     }
 
+    /**
+     * Return Room containing given Point.
+     * @param point Point to get Room for.
+     * @return Room containing Point.
+     */
     protected Room getRoomForPoint(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
@@ -290,13 +295,41 @@ public class Level {
             return false;
         }
     }
+    
+    /**
+     * Returns List of origins of Rooms that are immediatly reachable from given Room using Hallways.
+     * @param room Room to check from.
+     * @return List of Origins of Rooms.
+     */
+    public List<Point> reachableFromRoom(Room room) {
+        List<Point> output = new ArrayList<Point>();
+
+        for (Hallway hallway : hallways) {
+            Point start = hallway.getStart();
+            Point end = hallway.getEnd();
+            if (room.inRoom(start)) {
+                Room roomStart = getRoomForPoint(end);
+                if (roomStart != null) {
+                    output.add(roomStart.getOrigin());
+                }
+            }
+            else if (room.inRoom(end)) {
+                Room roomEnd = getRoomForPoint(start);
+                if (roomEnd != null) {
+                    output.add(roomEnd.getOrigin());
+                }
+            }
+        }
+
+        return output;
+    }
 
     /**
      * Returns List of origins of Rooms that are immediatly reachable from Point's Hallway/Room.
      * @param point Point to check from.
      * @return List of Origins of Rooms.
      */
-    public List<Point> reachable(Point point) {
+    public List<Point> reachableFromPoint(Point point) {
         List<Point> output = new ArrayList<Point>();
         Tile tile = map.get(point);
         if (tile == null) {
@@ -304,23 +337,29 @@ public class Level {
         }
         for (Room room : rooms) {
             if (room.inRoom(point)) {
-
-                return null;
-
+                output.addAll(reachableFromRoom(room));
             }
         }
         for (Hallway hallway : hallways) {
             if (hallway.inHallwayAsOpenTile(point)) {
                 Point start = hallway.getStart();
                 Point end = hallway.getEnd();
-
-
-                return null;
+                Room startRoom = getRoomForPoint(start);
+                Room endRoom = getRoomForPoint(end);
+                output.add(startRoom.getOrigin());
+                output.add(endRoom.getOrigin());
+                break;
             }
         }
 
+        List<Point> outputNoDup = new ArrayList<Point>();
+        for (Point currentPoint : output) {
+            if (!outputNoDup.contains(currentPoint)) {
+                outputNoDup.add(currentPoint);
+            }
+        }
 
-        return output;
+        return outputNoDup;
     }
 
     public GameObject getObject(Point point) {
@@ -331,6 +370,11 @@ public class Level {
         return tile.getGameObject();
     }
 
+    /**
+     * Return String representation of where given Point is.
+     * @param point Point to check location.
+     * @return String of where Point is.
+     */
     public String whereIsPoint(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
