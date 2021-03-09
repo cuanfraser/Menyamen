@@ -6,6 +6,7 @@ public class Adversary {
 
     private Point pos;
     
+    //Adversary instructions to be provided 
     public Adversary(){}
 
     public Point getPos() {
