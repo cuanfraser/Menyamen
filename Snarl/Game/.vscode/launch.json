@@ -4,6 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "type": "java",
             "name": "Launch Current File",
@@ -38,6 +40,14 @@
             "request": "launch",
             "mainClass": "org.menyamen.snarl.layout.TestRoom",
             "projectName": "snarl"
+        },
+        {
+            "type": "java",
+            "name": "Launch TestRoom w/ Example",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.layout.TestRoom",
+            "projectName": "snarl",
+            "args": ["<", "snarl/tests/Room/1-in.json"]
         }
     ]
 }
