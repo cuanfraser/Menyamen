@@ -138,6 +138,11 @@ public class Room {
         return false;
     }
 
+    /**
+     * Add Door at Specified Point in Room.
+     * @param point Point to add Door at.
+     * @return True if Door is added successfully, false otherwise.
+     */
     public Boolean addDoor(Point point) {
         Door door = new Door(point);
         for(int i = 0; i < tiles.size(); i++) {
@@ -155,6 +160,9 @@ public class Room {
         return false;
     }
 
+    /**
+     * @see Room#addDoor(Point)
+     */
     public Boolean addDoor(int x, int y) {
         return this.addDoor(new Point(x, y));
     }
