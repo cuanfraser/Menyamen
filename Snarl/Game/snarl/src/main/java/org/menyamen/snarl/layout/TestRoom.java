@@ -7,6 +7,9 @@ import java.awt.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import static org.menyamen.snarl.util.Util.fromRowCol;
+import static org.menyamen.snarl.util.Util.toRowCol;
+
 /**
  * Class for TestRoom
  */
@@ -79,19 +82,5 @@ public final class TestRoom {
         }
 
         System.out.println(outputArray.toString());
-    }
-
-    public static JSONArray toRowCol(Point point) {
-        JSONArray converted = new JSONArray();
-        converted.put(point.y);
-        converted.put(point.x);
-        return converted;
-    }
-
-    public static Point fromRowCol(JSONArray rowCol) {
-        int row = rowCol.getInt(0);
-        int col = rowCol.getInt(1);
-        Point converted = new Point(col, row);
-        return converted;
     }
 }

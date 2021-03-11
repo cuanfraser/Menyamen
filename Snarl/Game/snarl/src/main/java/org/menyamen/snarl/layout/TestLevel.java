@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import org.menyamen.snarl.gameobjects.ExitPortal;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.gameobjects.Key;
+import static org.menyamen.snarl.util.Util.fromRowCol;
+import static org.menyamen.snarl.util.Util.toRowCol;
 
 public class TestLevel {
 
@@ -93,30 +95,6 @@ public class TestLevel {
 
         //System.out.println(level.print());
 
-    }
-
-    /**
-     * Convert Point to (point) JSON
-     * @param point
-     * @return
-     */
-    public static JSONArray toRowCol(Point point) {
-        JSONArray converted = new JSONArray();
-        converted.put(point.y);
-        converted.put(point.x);
-        return converted;
-    }
-
-    /**
-     * Convert (point) JSON to Point
-     * @param rowCol
-     * @return
-     */
-    public static Point fromRowCol(JSONArray rowCol) {
-        int row = rowCol.getInt(0);
-        int col = rowCol.getInt(1);
-        Point converted = new Point(col, row);
-        return converted;
     }
 
     /**
