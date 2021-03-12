@@ -36,6 +36,36 @@ public class TestLevel {
         // (point) input
         Point testPoint = fromRowCol(arrayInput.getJSONArray(1));
 
+        Level level = jsonToLevel(levelJSON);
+
+        // Output
+        Boolean traversable = level.isTraversable(testPoint);
+        GameObject object = level.getObject(testPoint);
+        String type = level.whereIsPoint(testPoint);
+        List<Point> reachable = level.reachableFromPoint(testPoint);
+        JSONArray reachableJSON = new JSONArray();
+        for (Point curPoint : reachable) {
+            reachableJSON.put(toRowCol(curPoint));
+        }
+
+        JSONObject output = new JSONObject();
+        output.put("traversable", traversable);
+        if (object == null) {
+            output.put("object", JSONObject.NULL);
+        }
+        else {
+            output.put("object", object.toString());
+        }
+        output.put("type", type);
+        output.put("reachable", reachableJSON);
+
+        System.out.println(output.toString());
+
+        //System.out.println(level.print());
+
+    }
+
+    public static Level jsonToLevel(JSONObject levelJSON) {
         // break up (level)
         JSONArray roomList = levelJSON.getJSONArray("rooms");
         JSONArray hallwayList = levelJSON.getJSONArray("hallways");
@@ -70,31 +100,7 @@ public class TestLevel {
         level.addObject(key, keyPoint);
         level.addObject(exit, exitPoint);
 
-        // Output
-        Boolean traversable = level.isTraversable(testPoint);
-        GameObject object = level.getObject(testPoint);
-        String type = level.whereIsPoint(testPoint);
-        List<Point> reachable = level.reachableFromPoint(testPoint);
-        JSONArray reachableJSON = new JSONArray();
-        for (Point curPoint : reachable) {
-            reachableJSON.put(toRowCol(curPoint));
-        }
-
-        JSONObject output = new JSONObject();
-        output.put("traversable", traversable);
-        if (object == null) {
-            output.put("object", JSONObject.NULL);
-        }
-        else {
-            output.put("object", object.toString());
-        }
-        output.put("type", type);
-        output.put("reachable", reachableJSON);
-
-        System.out.println(output.toString());
-
-        //System.out.println(level.print());
-
+        return level;
     }
 
     /**

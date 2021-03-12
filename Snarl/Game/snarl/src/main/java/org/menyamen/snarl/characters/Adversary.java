@@ -9,6 +9,10 @@ public class Adversary {
     //Adversary instructions to be provided 
     public Adversary(){}
 
+    public Adversary(Point pos) {
+        this.pos = pos;
+    }
+
     public Point getPos() {
         return this.pos;
     }
