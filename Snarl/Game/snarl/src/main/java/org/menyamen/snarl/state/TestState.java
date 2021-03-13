@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
 
 import static org.menyamen.snarl.util.Util.fromRowCol;
@@ -51,6 +52,10 @@ public class TestState {
         List<Adversary> adversaryList = convertAdversariesList(adversaryJSONArray);
         Level level = jsonToLevel(levelJSON);
         FullState state = new FullState(level, playerList, adversaryList);
+
+        MoveResult result = state.move(name, testPoint);
+
+        System.out.println(result);
 
     }
 

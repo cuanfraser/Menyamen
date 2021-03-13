@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
@@ -251,6 +252,12 @@ public class Level {
         return output;
     }
 
+    /**
+     * Add given GameObject at specified Point position.
+     * @param object GameObject to add.
+     * @param position Point where to add GameObject in Level.
+     * @return True if successful, False otherwise.
+     */
     public Boolean addObject(GameObject object, Point position) {
         if (map.containsKey(position)) {
             if (map.get(position) instanceof OpenTile) {

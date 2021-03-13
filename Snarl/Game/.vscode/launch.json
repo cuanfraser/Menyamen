@@ -48,6 +48,14 @@
             "mainClass": "org.menyamen.snarl.layout.TestRoom",
             "projectName": "snarl",
             "args": ["<", "snarl/tests/InstructorRoom/6-in.json"]
+        },
+        {
+            "type": "java",
+            "name": "Launch TestState w/ Example",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.state.TestState",
+            "projectName": "snarl",
+            "args": ["<", "snarl/tests/ExampleState/1-in.json"]
         }
     ]
 }
