@@ -11,6 +11,7 @@ import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
+import org.menyamen.snarl.util.Util;
 
 import static org.menyamen.snarl.util.Util.fromRowCol;
 import static org.menyamen.snarl.util.Util.toRowCol;
@@ -55,7 +56,51 @@ public class TestState {
 
         MoveResult result = state.move(name, testPoint);
 
-        System.out.println(result);
+        stateJSON.put("players", playersToJSON(state.getPlayers()));
+        stateJSON.put("exit-locked", state.getExitLocked());
+
+        /*
+        { 
+            "type": "state",
+            "level": (level),
+            "players": (actor-position-list),
+            "adversaries": (actor-position-list),
+            "exit-locked": (boolean)
+        }
+        */
+        JSONArray output = new JSONArray();
+        if (result == MoveResult.SUCCESS || result == MoveResult.KEY) {
+            output.put(0, result.toString());
+            output.put(1, stateJSON);
+        }
+        else if (result == MoveResult.EJECTED) {
+            output.put(0, "Success");
+            output.put(1, "Player ");
+            output.put(2, name);
+            output.put(3, " was ejected.");
+            output.put(4, stateJSON);
+        }
+        else if (result == MoveResult.EXIT) {
+            output.put(0, "Success");
+            output.put(1, "Player ");
+            output.put(2, name);
+            output.put(3, " exited.");
+            output.put(4, stateJSON);
+        }
+        else if (result == MoveResult.INVALID) {
+            output.put(0, "Failure");
+            output.put(1, "Player ");
+            output.put(2, name);
+            output.put(3, " is not a part of the game.");
+        }
+        else if (result == MoveResult.NOTTRAVERSABLE) {
+            output.put(0, "Failure");
+            output.put(1, "The destination position ");
+            output.put(2, Util.toRowCol(testPoint));
+            output.put(3, " is invalid.");
+        }
+
+        System.out.println(output.toString());
 
     }
 
@@ -108,6 +153,18 @@ public class TestState {
         }
 
         return adversaryList;
+    }
+
+    private static JSONArray playersToJSON(List<Player> players) {
+        JSONArray output = new JSONArray();
+        for (Player currentPlayer : players) {
+            JSONObject currentJSON = new JSONObject();
+            currentJSON.put("type", "player");
+            currentJSON.put("name", currentPlayer.getName());
+            currentJSON.put("position", Util.toRowCol(currentPlayer.getPos()));
+            output.put(currentJSON);
+        }
+        return output;
     }
 
 }

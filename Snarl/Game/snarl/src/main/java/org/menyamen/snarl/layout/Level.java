@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
@@ -20,10 +19,12 @@ public class Level {
     private HashMap<Point, Tile> map;
     private int sizeX;
     private int sizeY;
+    private Boolean exitLocked = true;
 
     /**
      * Construct Level from single Room.
-     * @param rooms Rooms to add to Level.
+     * 
+     * @param rooms    Rooms to add to Level.
      * @param hallways Hallways to add to Level.
      */
     public Level(Room room) {
@@ -31,13 +32,14 @@ public class Level {
         temp.add(room);
         this.rooms = temp;
         this.hallways = new ArrayList<Hallway>();
-        this.map = new HashMap<Point,Tile>();
+        this.map = new HashMap<Point, Tile>();
         this.generate();
     }
 
     /**
      * Construct Level from Rooms, Hallways.
-     * @param rooms Rooms to add to Level.
+     * 
+     * @param rooms    Rooms to add to Level.
      * @param hallways Hallways to add to Level.
      */
     public Level(List<Room> rooms, List<Hallway> hallways) {
@@ -439,5 +441,13 @@ public class Level {
             }
         }
         return builder.toString();
+    }
+
+    public Boolean getExitLocked() {
+        return exitLocked;
+    }
+
+    public void setExitLocked(Boolean exitLocked) {
+        this.exitLocked = exitLocked;
     }
 }

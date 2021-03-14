@@ -13,4 +13,9 @@ public class Key implements GameObject {
     public String toString() {
         return "key";
     }
+
+    @Override
+    public GameObjectType getType() {
+        return GameObjectType.KEY;
+    }
 }
