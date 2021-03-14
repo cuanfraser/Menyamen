@@ -2,7 +2,9 @@ package org.menyamen.snarl.manage;
 
 import java.util.List;
 
+import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
 
 /**
@@ -17,16 +19,18 @@ public class GameManager {
         this.state = state;
     }
 
+    public GameManager(Level level) {
+        this.state = new FullState(level);
+    }
+
     /**
      * Void function that starts the game with a single level
      *
-     * @param players List of valid players registered with unique names
-     * @param level   The single level at which the game starts
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  an invalid name
      */
-     void startGame () throws IllegalArgumentException {
-    
+    void startGame() throws IllegalArgumentException {
+        
     }
 
     /**
@@ -34,16 +38,39 @@ public class GameManager {
      * players)
      *
      * @param player Player whose name is going to validated
+     * @throws IllegalStateException when already 4 players or player already exists.
      */
-   public void register(Player player){}
- 
+    public void registerPlayer(Player player) throws IllegalStateException {
+        List<Player> playersList = state.getPlayers();
+        if (playersList.size() > 4) {
+            throw new IllegalStateException("Maximum of 4 Players");
+        }
+        
+        if (playersList.contains(player)) {
+            throw new IllegalStateException("Player already exists in list.");
+        }
+
+        playersList.add(player);
+        
+    }
+
     /**
-    * Void function that acts like a switch case that updates the game as the Player makes moves.
-    *
-    * @return the updated game state
-    * @throws IllegalArgumentException if the game state is invalid
-    */
-    public void update() throws IllegalArgumentException{}
- 
- 
- }
+     * Registers an Adversary.
+     *
+     * @param adversary Adversary to add.
+     */
+    public void registerAdversary(Adversary adversary) {
+        state.getAdversaries().add(adversary);
+    }
+
+    /**
+     * Void function that acts like a switch case that updates the game as the
+     * Player makes moves.
+     *
+     * @return the updated game state
+     * @throws IllegalArgumentException if the game state is invalid
+     */
+    public void update() throws IllegalArgumentException {
+    }
+
+}
