@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
@@ -45,9 +47,11 @@ public class Level {
     public Level(List<Room> rooms, List<Hallway> hallways) {
         this.rooms = rooms;
         this.hallways = hallways;
-        this.map = new HashMap<Point,Tile>();
+        this.map = new HashMap<Point, Tile>();
         this.generate();
     }
+
+    // Level Creation
 
     /**
      * Generates map for Level from List of Rooms and List of Hallways.
@@ -71,12 +75,11 @@ public class Level {
         }
 
         // Add Hallways
-        for (Hallway singleHallway: hallways) {
+        for (Hallway singleHallway : hallways) {
             if (!validHallwayPlacement(singleHallway)) {
-                throw new IllegalStateException("Hallway illegal placement. Start: " + 
-                    singleHallway.getStart().toString());
-            }
-            else {
+                throw new IllegalStateException(
+                        "Hallway illegal placement. Start: " + singleHallway.getStart().toString());
+            } else {
                 List<Tile> tiles = singleHallway.getTiles();
                 for (Tile singleTile : tiles) {
                     Point currentPoint = singleTile.getPos();
@@ -93,6 +96,7 @@ public class Level {
 
     /**
      * Checks if Room has a valid placement in current Level.
+     * 
      * @param room Room to test.
      * @return True if valid, false if invalid.
      */
@@ -114,22 +118,22 @@ public class Level {
 
     /**
      * Checks if Hallway has a valid placement in current Level.
+     * 
      * @param hallway Hallway to test.
      * @return True if valid, false if invalid.
      */
     public Boolean validHallwayPlacement(Hallway hallway) {
         List<Tile> tilesNeeded = hallway.getTiles();
 
-        if (! (map.get(hallway.getStart()) instanceof Door)) {
+        if (!(map.get(hallway.getStart()) instanceof Door)) {
             return false;
         }
 
-        if (! (map.get(hallway.getEnd()) instanceof Door)) {
+        if (!(map.get(hallway.getEnd()) instanceof Door)) {
             System.out.println(map.get(hallway.getEnd()).toChar());
 
             return false;
         }
-
 
         for (Tile currentTile : tilesNeeded) {
             Point currentPos = currentTile.getPos();
@@ -142,8 +146,7 @@ public class Level {
                 }
                 if (currentPos.equals(hallway.getEnd())) {
                     continue;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
@@ -152,10 +155,11 @@ public class Level {
     }
 
     /**
-     * Is given Point in map next to a Tile of the same Class as given tile (above, below, left
-     * or right of given Point).
+     * Is given Point in map next to a Tile of the same Class as given tile (above,
+     * below, left or right of given Point).
+     * 
      * @param point Point to check around on map.
-     * @param tile Tile of Class type to check for (e.g. Wall, OpenTile, Door).
+     * @param tile  Tile of Class type to check for (e.g. Wall, OpenTile, Door).
      * @return True if specified type is found, False if not.
      */
     private Boolean nextTo(Point point, Tile tile) {
@@ -196,13 +200,59 @@ public class Level {
 
     }
 
+    /**
+     * Add given GameObject at specified Point position.
+     * 
+     * @param object   GameObject to add.
+     * @param position Point where to add GameObject in Level.
+     * @return True if successful, False otherwise.
+     */
+    public Boolean addObject(GameObject object, Point position) {
+        if (map.containsKey(position)) {
+            if (map.get(position) instanceof OpenTile) {
+                return map.get(position).setGameObject(object);
+            }
+        }
+        return false;
+    }
 
     /**
-     * Returns List<Point> of Traversable Points within a Cardinal move.
+     * Utilty function to add tile to map.
+     * 
+     * @param tile Tile to add.
+     */
+    protected void addTile(Tile tile) {
+        Point pos = tile.getPos();
+        map.put(pos, tile);
+    }
+
+    public void addPlayers(List<Player> players) {
+        for (Player player : players) {
+            Point pos = player.getPos();
+            if (isOccupied(pos)) {
+                throw new IllegalArgumentException("Players have same position");
+            }
+            map.get(pos).setPlayer(player);
+        }
+    }
+
+    public void addAdversaries(List<Adversary> adversaries) {
+        for (Adversary adversary : adversaries) {
+            Point pos = adversary.getPos();
+            map.get(pos).setAdversary(adversary);
+        }
+    }
+
+    // Validation
+
+    /**
+     * Returns List<Point> of Traversable Points within 1 or 2 Cardinal move.
+     * 
      * @param point Point to check from.
+     * @param moves How many cardinal moves.
      * @return List<Point> of Traversable Points.
      */
-    public List<Point> traversablePoints(Point point) {
+    public List<Point> cardinalMove(Point point, int moves) {
 
         List<Point> output = new ArrayList<Point>();
 
@@ -231,18 +281,18 @@ public class Level {
         Point belowLeft = new Point(point);
         belowLeft.translate(-1, 1);
 
-        List<Point> testArray = new ArrayList<Point>(Arrays.asList(
-            //twoAbove,
-            //, aboveLeft, 
-            above, 
-            //aboveRight,
-            //twoLeft, 
-            left,  right,
-            //twoRight,
-            below
-            //belowRight, belowLeft, 
-            //twoBelow
-        ));
+        List<Point> testArray = new ArrayList<Point>();
+        if (moves == 1) {
+            testArray.add(above);
+            testArray.add(left);
+            testArray.add(right);
+            testArray.add(below);
+        } else if (moves == 2) {
+            testArray = new ArrayList<Point>(Arrays.asList(twoAbove, aboveLeft, above, aboveRight, twoLeft, left, right,
+                    twoRight, below, belowRight, belowLeft, twoBelow));
+        } else {
+            throw new IllegalArgumentException("1 or 2 Cardinal Moves only");
+        }
 
         for (Point curPoint : testArray) {
             Tile curTile = map.get(curPoint);
@@ -255,31 +305,8 @@ public class Level {
     }
 
     /**
-     * Add given GameObject at specified Point position.
-     * @param object GameObject to add.
-     * @param position Point where to add GameObject in Level.
-     * @return True if successful, False otherwise.
-     */
-    public Boolean addObject(GameObject object, Point position) {
-        if (map.containsKey(position)) {
-            if (map.get(position) instanceof OpenTile) {
-                return map.get(position).setGameObject(object);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Utilty function to add tile to map.
-     * @param tile Tile to add.
-     */
-    protected void addTile(Tile tile) {
-        Point pos = tile.getPos();
-        map.put(pos, tile);
-    }
-
-    /**
      * Return Room containing given Point.
+     * 
      * @param point Point to get Room for.
      * @return Room containing Point.
      */
@@ -296,9 +323,10 @@ public class Level {
         return null;
     }
 
-
     /**
-     * Returns List of origins of Rooms that are immediatly reachable from given Room using Hallways.
+     * Returns List of origins of Rooms that are immediatly reachable from given
+     * Room using Hallways.
+     * 
      * @param room Room to check from.
      * @return List of Origins of Rooms.
      */
@@ -313,8 +341,7 @@ public class Level {
                 if (roomStart != null) {
                     output.add(roomStart.getOrigin());
                 }
-            }
-            else if (room.inRoom(end)) {
+            } else if (room.inRoom(end)) {
                 Room roomEnd = getRoomForPoint(start);
                 if (roomEnd != null) {
                     output.add(roomEnd.getOrigin());
@@ -327,6 +354,7 @@ public class Level {
 
     /**
      * Returns True if Tile at given Point is OpenTile or Door.
+     * 
      * @param point Point to test.
      * @return True if OpenTile or Door, False otherwise.
      */
@@ -337,14 +365,15 @@ public class Level {
         }
         if (tile instanceof OpenTile || tile instanceof Door) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     /**
-     * Returns List of origins of Rooms that are immediatly reachable from Point's Hallway/Room.
+     * Returns List of origins of Rooms that are immediatly reachable from Point's
+     * Hallway/Room.
+     * 
      * @param point Point to check from.
      * @return List of Origins of Rooms.
      */
@@ -381,6 +410,11 @@ public class Level {
         return outputNoDup;
     }
 
+    /**
+     * Get GameObject at Point.
+     * @param point Point to get from.
+     * @return GameObject or Null.
+     */
     public GameObject getObject(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
@@ -389,6 +423,11 @@ public class Level {
         return tile.getGameObject();
     }
 
+    /**
+     * Is Point in Room/Hallway/Void.
+     * @param point Point to check.
+     * @return String of "room", "hallway", or "void".
+     */
     public String whereIsPoint(Point point) {
         Tile tile = map.get(point);
         if (tile == null) {
@@ -409,29 +448,26 @@ public class Level {
 
     /**
      * Print Level as ASCII String.
+     * 
      * @return Level as ASCII String.
      */
     public String print() {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < sizeY; i++) {
+        for (int i = 0; i < sizeY; i++) {
             for (int j = 0; j < sizeX; j++) {
                 Point pos = new Point(j, i);
                 if (map.containsKey(pos)) {
                     Tile curTile = map.get(pos);
                     if (curTile.getPlayer() != null) {
                         builder.append(curTile.getPlayer().toChar());
-                    }
-                    else if(curTile.getAdversary() != null) {
+                    } else if (curTile.getAdversary() != null) {
                         builder.append(curTile.getAdversary().toChar());
-                    }
-                    else if (curTile.getGameObject() != null) {
+                    } else if (curTile.getGameObject() != null) {
                         builder.append(curTile.getGameObject().toChar());
-                    }
-                    else {
+                    } else {
                         builder.append(curTile.toChar());
                     }
-                }
-                else {
+                } else {
                     builder.append(' ');
                 }
 
@@ -449,5 +485,14 @@ public class Level {
 
     public void setExitLocked(Boolean exitLocked) {
         this.exitLocked = exitLocked;
+    }
+
+    public Boolean isOccupied(Point point) {
+        if (map.get(point).getPlayer() == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

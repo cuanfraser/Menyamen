@@ -86,9 +86,8 @@ public class OpenTile implements Tile {
     }
 
     @Override
-    public Boolean setPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
-        return true;
     }
 
     @Override
@@ -97,8 +96,7 @@ public class OpenTile implements Tile {
     }
 
     @Override
-    public Boolean setAdversary(Adversary adversary) {
+    public void setAdversary(Adversary adversary) {
         this.adversary = adversary;
-        return true;
     }
 }

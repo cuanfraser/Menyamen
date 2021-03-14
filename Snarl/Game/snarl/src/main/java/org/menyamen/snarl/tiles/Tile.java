@@ -43,11 +43,11 @@ public interface Tile {
     Player getPlayer();
 
     /**
-     * Adds Player to Tile. Returns true if added, false if not valid for Class.
+     * Adds Player to Tile.
      * @param player Player to add.
-     * @return True if added, false if not valid for Class.
+     * @throws IllegalArgumentException if not valid for Class.
      */
-    Boolean setPlayer(Player player);
+    void setPlayer(Player player) throws IllegalArgumentException;
 
     /**
      * Get Adversary from Tile.
@@ -56,10 +56,10 @@ public interface Tile {
     Adversary getAdversary();
 
     /**
-     * Adds Adversary to Tile. Returns true if added, false if not valid for Class.
+     * Adds Adversary to Tile.
      * @param adversary Adversary to add.
-     * @return True if added, false if not valid for Class.
+     * @throws IllegalArgumentException if not valid for Class.
      */
-    Boolean setAdversary(Adversary adversary);
+    void setAdversary(Adversary adversary) throws IllegalArgumentException;
 
 }

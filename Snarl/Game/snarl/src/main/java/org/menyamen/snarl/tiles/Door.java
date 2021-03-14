@@ -8,6 +8,8 @@ import org.menyamen.snarl.gameobjects.GameObject;
 
 public class Door implements Tile {
     private Point pos;
+    private Player player;
+    private Adversary adversary;
 
     public Door(int x, int y) {
         this.pos = new Point(x, y);
@@ -39,22 +41,22 @@ public class Door implements Tile {
 
     @Override
     public Player getPlayer() {
-        return null;
+        return this.player;
     }
 
     @Override
-    public Boolean setPlayer(Player player) {
-        return false;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
     public Adversary getAdversary() {
-        return null;
+        return this.adversary;
     }
 
     @Override
-    public Boolean setAdversary(Adversary adversary) {
-        return false;
+    public void setAdversary(Adversary adversary) {
+        this.adversary = adversary;
     }
     
 }

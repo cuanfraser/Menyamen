@@ -1,8 +1,9 @@
-package org.menyamen.snarl.layout;
+package org.menyamen.snarl.manage;
 
 import java.util.List;
 
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.state.FullState;
 
 /**
  * Specifies The class for the Game Manager which: - validates and accepts
@@ -10,8 +11,11 @@ import org.menyamen.snarl.characters.Player;
  * level, which will be provided.
  */
 public class GameManager {
-    private Player player;
-    private Level level;
+    private FullState state;
+
+    public GameManager(FullState state) {
+        this.state = state;
+    }
 
     /**
      * Void function that starts the game with a single level
@@ -21,24 +25,8 @@ public class GameManager {
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  an invalid name
      */
-     void startGame (List<Player> players, Level level) throws IllegalArgumentException {
+     void startGame () throws IllegalArgumentException {
     
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(final Level level) {
-        this.level = level;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(final Player player) {
-        this.player = player;
     }
 
     /**

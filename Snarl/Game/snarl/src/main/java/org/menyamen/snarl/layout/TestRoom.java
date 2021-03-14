@@ -59,7 +59,7 @@ public final class TestRoom {
         JSONArray outputArray = new JSONArray();
 
         if (room.inRoom(testPoint)) {
-            List<Point> traversable = level.traversablePoints(testPoint);
+            List<Point> traversable = level.cardinalMove(testPoint, 1);
             JSONArray roomTraversable = new JSONArray();
             for (Point curPoint : traversable) {
                 if (room.inRoom(curPoint)) {

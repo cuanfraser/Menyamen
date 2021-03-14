@@ -13,8 +13,6 @@ import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.util.Util;
 
-import static org.menyamen.snarl.util.Util.fromRowCol;
-import static org.menyamen.snarl.util.Util.toRowCol;
 import static org.menyamen.snarl.layout.TestLevel.jsonToLevel;
 
 public class TestState {
@@ -40,7 +38,7 @@ public class TestState {
         // (name) String input
         String name = inputJSONArray.getString(1);
         // (point) input
-        Point testPoint = fromRowCol(inputJSONArray.getJSONArray(2));
+        Point testPoint = Util.fromRowCol(inputJSONArray.getJSONArray(2));
 
         // break up (state)
         JSONObject levelJSON = stateJSON.getJSONObject("level");
@@ -120,7 +118,7 @@ public class TestState {
                 throw new IllegalArgumentException(
                         "Expected Player in players list, found: " + currentPlayer.getString("type"));
             }
-            Point point = fromRowCol(currentPlayer.getJSONArray("position"));
+            Point point = Util.fromRowCol(currentPlayer.getJSONArray("position"));
             Player player = new Player(currentPlayer.getString("name"), point);
             playerList.add(player);
         }
@@ -147,7 +145,7 @@ public class TestState {
             //     throw new IllegalArgumentException(
             //             "Expected Player in players list, found: " + currentPlayer.getString("type"));
             // }
-            Point point = fromRowCol(currentPlayer.getJSONArray("position"));
+            Point point = Util.fromRowCol(currentPlayer.getJSONArray("position"));
             Adversary adversary = new Adversary(point);
             adversaryList.add(adversary);
         }

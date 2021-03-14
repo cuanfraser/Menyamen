@@ -69,8 +69,8 @@ public class Wall implements Tile {
     }
 
     @Override
-    public Boolean setPlayer(Player player) {
-        return false;
+    public void setPlayer(Player player) throws IllegalArgumentException {
+        throw new IllegalArgumentException("Can't set Player for Wall.");
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Wall implements Tile {
     }
 
     @Override
-    public Boolean setAdversary(Adversary adversary) {
-        return false;
+    public void setAdversary(Adversary adversary) throws IllegalArgumentException {
+        throw new IllegalArgumentException("Can't set Adversary for Wall.");
     }
 }

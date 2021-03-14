@@ -4,12 +4,10 @@ import java.awt.Point;
 
 public class Player {
     private String name;
-    private Boolean isExpelled;
     private Point pos;
 
     public Player(String name) {
         this.name = name;
-        this.isExpelled = false;
     }
 
     public Player(String name, Point pos) {

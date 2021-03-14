@@ -3,7 +3,6 @@ package org.menyamen.snarl.state;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Point;
-import java.security.Key;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
@@ -27,6 +26,7 @@ public class FullState {
 
     // Intermediate Game State
     public FullState(int currentLevel, List<Level> levels, List<Player> players, List<Adversary> adversaries) {
+        // TODO
         this.currentLevel = currentLevel;
         this.levels = levels;
         this.players = players;
@@ -37,6 +37,8 @@ public class FullState {
     public FullState(Level level, List<Player> players, List<Adversary> adversaries, Boolean exitLocked) {
         this.levels = new ArrayList<Level>();
         level.setExitLocked(exitLocked);
+        level.addPlayers(players);
+        level.addAdversaries(adversaries);
         this.levels.add(level);
         this.players = players;
         this.adversaries = adversaries;
@@ -99,12 +101,22 @@ public class FullState {
     }
 
     // Getters & Setters
-    protected List<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return this.players;
     }
 
-    protected Boolean getExitLocked() {
+    public List<Adversary> getAdversaries() {
+        return this.adversaries;
+    }
+
+    public Boolean getExitLocked() {
         return this.levels.get(0).getExitLocked();
     }
+
+    public Level getCurrentLevel() {
+        return this.levels.get(currentLevel);
+    }
+
+
 
 }
