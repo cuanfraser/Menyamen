@@ -34,8 +34,9 @@ public class FullState {
     }
 
     // Intermediate Game State for 1 Level
-    public FullState(Level level, List<Player> players, List<Adversary> adversaries) {
+    public FullState(Level level, List<Player> players, List<Adversary> adversaries, Boolean exitLocked) {
         this.levels = new ArrayList<Level>();
+        level.setExitLocked(exitLocked);
         this.levels.add(level);
         this.players = players;
         this.adversaries = adversaries;

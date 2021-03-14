@@ -52,7 +52,7 @@ public class TestState {
         List<Player> playerList = convertPlayerList(playerJSONArray);
         List<Adversary> adversaryList = convertAdversariesList(adversaryJSONArray);
         Level level = jsonToLevel(levelJSON);
-        FullState state = new FullState(level, playerList, adversaryList);
+        FullState state = new FullState(level, playerList, adversaryList, exitLocked);
 
         MoveResult result = state.move(name, testPoint);
 

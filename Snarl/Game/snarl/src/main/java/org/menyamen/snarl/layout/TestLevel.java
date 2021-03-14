@@ -75,30 +75,27 @@ public class TestLevel {
         List<Room> rooms = jsonToListRoom(roomList);
         List<Hallway> hallways = jsonToListHallways(hallwayList);
 
+        Level level = new Level(rooms, hallways);
 
         // JSONObjects
-
-        JSONObject keyJSON = objectList.getJSONObject(0);
-        JSONObject exitJSON = objectList.getJSONObject(1);
-
-        if (!keyJSON.getString("type").equals("key")) {
-            throw new IllegalArgumentException("Wrong type of object. Expected key, got: " + 
-                keyJSON.getString("type"));
+        for (int i = 0; i < objectList.length(); i++) {
+            JSONObject currentJSON = objectList.getJSONObject(i);
+            String type = currentJSON.getString("type");
+            if (type.equals("key")) {
+                GameObject key = new Key();
+                Point keyPoint = new Point(fromRowCol(currentJSON.getJSONArray("position")));
+                level.addObject(key, keyPoint);
+            }
+            else if (type.equals("exit")) {
+                GameObject exit = new ExitPortal();
+                Point exitPoint = new Point(fromRowCol(currentJSON.getJSONArray("position")));
+                level.addObject(exit, exitPoint);
+            }
+            else {
+                throw new IllegalArgumentException("Wrong type of object. Expected key/exit, got: " + 
+                    type);
+            }
         }
-        
-        if (!exitJSON.getString("type").equals("exit")) {
-            throw new IllegalArgumentException("Wrong type of object. Expected exit, got: " + 
-                keyJSON.getString("type"));
-        }
-
-        GameObject key = new Key();
-        Point keyPoint = new Point(fromRowCol(keyJSON.getJSONArray("position")));
-        GameObject exit = new ExitPortal();
-        Point exitPoint = new Point(fromRowCol(exitJSON.getJSONArray("position")));
-
-        Level level = new Level(rooms, hallways);
-        level.addObject(key, keyPoint);
-        level.addObject(exit, exitPoint);
 
         return level;
     }
