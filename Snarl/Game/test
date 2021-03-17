@@ -1,0 +1,3 @@
+#!/bin/bash
+cd snarl
+java -jar target/snarl-1.0-SNAPSHOT-jar-with-dependencies.jar
