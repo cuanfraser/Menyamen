@@ -1,5 +1,5 @@
 # Milestone 6 - Refactoring Report
-**Team members: Manvi Tandon and Cuan Fraser**
+**Team members: Manvi Tandon and Cuan Fraser**  
 **Menyamen/p6-refactoring:**
 ## Plan
 - Add instructor tests for TestLevel to fix 4-in.json, 5-in.json, and 6-in.json 
