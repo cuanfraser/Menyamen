@@ -36,6 +36,14 @@
         },
         {
             "type": "java",
+            "name": "Launch TestLevel w/ InstructorLevel",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.layout.TestLevel",
+            "projectName": "snarl",
+            "args": ["<", "snarl/tests/InstructorLevel/4-in.json"]
+        },
+        {
+            "type": "java",
             "name": "Launch TestRoom",
             "request": "launch",
             "mainClass": "org.menyamen.snarl.layout.TestRoom",
