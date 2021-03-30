@@ -1,66 +1,51 @@
 package org.menyamen.snarl.characters;
 
 import java.awt.Point;
+import java.util.Scanner;
 
-public class Player {
-    private String name;
-    private Point pos;
+import org.menyamen.snarl.state.FullState;
 
-    public Player(String name) {
-        this.name = name;
-    }
+public interface Player {
 
-    public Player(String name, Point pos) {
-        this(name);
-        this.pos = pos;
-    }
+    /**
+     * Gets the username of Player as String.
+     * @return String for Player username.
+     */
+     String getName();
 
-    public Player(String name, int x, int y) {
-        this(name);
-        this.pos = new Point(x, y);
-    }
+     /**
+     * Gets the (X,Y) position of Player as @see Point.
+     * @return Point for position of Player.
+     */
+     Point getPos();
 
+     /**
+     * Sets the (X,Y) position of Player as @see Point.
+     * @return Point for new position of Player.
+     */
+    void setPos(Point pos);
 
-    public String getName() {
-        return name;
-    }
-
-    public Point getPos() {
-        return this.pos;
-    }
-
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
-
+     /**
+     * Returns if this Player exists or not.
+     * @return boolean if Player equals other Object.
+     */
     // https://www.geeksforgeeks.org/overriding-equals-method-in-java/
-    public boolean equals(Object o) { 
-  
-        // If the object is compared with itself then return true   
-        if (o == this) { 
-            return true; 
-        } 
-  
-        /* Check if o is an instance of Complex or not 
-          "null instanceof [type]" also returns false */
-        if (!(o instanceof Player)) { 
-            return false; 
-        } 
-          
-        // typecast o to Complex so that we can compare data members  
-        Player c = (Player) o; 
-          
-        // Compare the data members and return accordingly  
-        return name.equals(c.name);
-    } 
-
+     boolean equals(Object o);
 
     /**
      * Get Char representing the Player for ASCII Representation.
      * 
      * @return Char to represent the Player.
      */
-    public char toChar() {
-        return 'P';
-    }
+    public char toChar();
+
+    /**
+     * Receive an update containing the player avatar’s position in the level and the current state of
+     * their immediate surroundings. 
+     * @param pos current position of player
+     * @param state current state of immediate surroundings
+     */
+    public String update(Point pos, FullState state);
+
+    public Point userMove(Scanner scanner, Player user);
 }

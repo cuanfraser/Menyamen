@@ -121,6 +121,11 @@ public class FullState {
 
     }
 
+    //renders to console the current state of the level
+    public String print(){
+        return this.levels.get(currentLevel).print();
+    }
+
     // Getters & Setters
     public List<Player> getPlayers() {
         return this.players;
