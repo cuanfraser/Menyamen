@@ -5,9 +5,33 @@ import java.awt.Point;
 public class Adversary {
 
     private Point pos;
-    
-    //Adversary instructions to be provided 
-    public Adversary(){}
+    private String type;
+    private String name;
+
+    // Adversary instructions to be provided
+    public Adversary() {
+    }
+
+    public Adversary(Point pos, String type) {
+        this.pos = pos;
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Adversary(Point pos) {
         this.pos = pos;

@@ -64,6 +64,14 @@
             "mainClass": "org.menyamen.snarl.state.TestState",
             "projectName": "snarl",
             "args": ["<", "snarl/tests/ExampleState/2-in.json"]
+        },
+        {
+            "type": "java",
+            "name": "Launch TestManager w/ Example",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.manage.TestManager",
+            "projectName": "snarl",
+            "args": ["<", "snarl/tests/Manager/1-in.json"]
         }
     ]
 }

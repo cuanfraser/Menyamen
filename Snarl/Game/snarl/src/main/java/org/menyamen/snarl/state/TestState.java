@@ -9,11 +9,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
-import org.menyamen.snarl.util.Util;
 
-import static org.menyamen.snarl.layout.TestLevel.jsonToLevel;
+import static org.menyamen.snarl.util.TestingUtil.fromRowCol;
+import static org.menyamen.snarl.util.TestingUtil.toRowCol;
+import static org.menyamen.snarl.util.TestingUtil.jsonToLevel;
+import static org.menyamen.snarl.util.TestingUtil.playerListToJSON;
 
 public class TestState {
 
@@ -38,7 +41,7 @@ public class TestState {
         // (name) String input
         String name = inputJSONArray.getString(1);
         // (point) input
-        Point testPoint = Util.fromRowCol(inputJSONArray.getJSONArray(2));
+        Point testPoint = fromRowCol(inputJSONArray.getJSONArray(2));
 
         // break up (state)
         JSONObject levelJSON = stateJSON.getJSONObject("level");
@@ -52,9 +55,10 @@ public class TestState {
         Level level = jsonToLevel(levelJSON);
         FullState state = new FullState(level, playerList, adversaryList, exitLocked);
 
-        MoveResult result = state.move(name, testPoint);
+        Move move = new Move(testPoint);
+        MoveResult result = state.move(name, move);
 
-        stateJSON.put("players", playersToJSON(state.getPlayers()));
+        stateJSON.put("players", playerListToJSON(state.getPlayers()));
         stateJSON.put("exit-locked", state.getExitLocked());
 
         /*
@@ -94,7 +98,7 @@ public class TestState {
         else if (result == MoveResult.NOTTRAVERSABLE) {
             output.put(0, "Failure");
             output.put(1, "The destination position ");
-            output.put(2, Util.toRowCol(testPoint));
+            output.put(2, toRowCol(testPoint));
             output.put(3, " is invalid.");
         }
 
@@ -118,7 +122,7 @@ public class TestState {
                 throw new IllegalArgumentException(
                         "Expected Player in players list, found: " + currentPlayer.getString("type"));
             }
-            Point point = Util.fromRowCol(currentPlayer.getJSONArray("position"));
+            Point point = fromRowCol(currentPlayer.getJSONArray("position"));
             Player player = new Player(currentPlayer.getString("name"), point);
             playerList.add(player);
         }
@@ -145,7 +149,7 @@ public class TestState {
             //     throw new IllegalArgumentException(
             //             "Expected Player in players list, found: " + currentPlayer.getString("type"));
             // }
-            Point point = Util.fromRowCol(currentPlayer.getJSONArray("position"));
+            Point point = fromRowCol(currentPlayer.getJSONArray("position"));
             Adversary adversary = new Adversary(point);
             adversaryList.add(adversary);
         }
@@ -153,16 +157,6 @@ public class TestState {
         return adversaryList;
     }
 
-    private static JSONArray playersToJSON(List<Player> players) {
-        JSONArray output = new JSONArray();
-        for (Player currentPlayer : players) {
-            JSONObject currentJSON = new JSONObject();
-            currentJSON.put("type", "player");
-            currentJSON.put("name", currentPlayer.getName());
-            currentJSON.put("position", Util.toRowCol(currentPlayer.getPos()));
-            output.put(currentJSON);
-        }
-        return output;
-    }
+
 
 }

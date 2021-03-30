@@ -7,8 +7,8 @@ import java.awt.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static org.menyamen.snarl.util.Util.fromRowCol;
-import static org.menyamen.snarl.util.Util.toRowCol;
+import static org.menyamen.snarl.util.TestingUtil.fromRowCol;
+import static org.menyamen.snarl.util.TestingUtil.toRowCol;
 
 /**
  * Class for TestRoom

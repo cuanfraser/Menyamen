@@ -5,6 +5,7 @@ import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
@@ -16,6 +17,8 @@ import org.menyamen.snarl.state.FullState;
  */
 public class GameManager {
     private FullState state;
+    private int turns = 100;
+    private List<List<Move>> movesList;
 
     public GameManager(FullState state) {
         this.state = state;
@@ -25,23 +28,41 @@ public class GameManager {
         this.state = new FullState(level);
     }
 
+    public GameManager(Level level, int turns, List<List<Move>> movesList) {
+        this.state = new FullState(level);
+        this.turns = turns;
+        this.movesList = movesList;
+    }
+
     /**
      * Void function that starts the game with a single level
      *
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  an invalid name
      */
-    void startGame() throws IllegalArgumentException {
+    public void startGame() throws IllegalArgumentException {
 
         Boolean gameOver = false;
 
-        while (state.getPlayers().size() > 0 && !gameOver) {
-            for (Player player : state.getPlayers()) {
+        while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
+            List<Player> players = state.getPlayers();
+            for (int i = 0; i < players.size(); i++) {
+                Player currentPlayer = players.get(i);
                 //request move from player
-                // Point point = client.getMove() etc.
-                Point point = new Point();
-                MoveResult result = state.move(player.getName(), point);
-                // client.send(result);
+                List<Move> playerMoves = movesList.get(i);
+                // Attempt Move and repeat until valid Move.
+                MoveResult result;
+                do {
+                    if (playerMoves.size() == 0) {
+                        return;
+                    }
+                    result = state.move(currentPlayer.getName(), playerMoves.get(0));
+                    playerMoves.remove(0);
+                }
+                while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
+
+                // TODO: Update Players
+                
 
                 // As it is only level for now, exit means game over
                 if (result == MoveResult.EXIT) {
@@ -50,6 +71,7 @@ public class GameManager {
                     break;
                 }
             }
+            turns--;
         }
         
 
@@ -83,6 +105,10 @@ public class GameManager {
      */
     public void registerAdversary(Adversary adversary) {
         state.getAdversaries().add(adversary);
+    }
+
+    protected FullState getFullState() {
+        return this.state;
     }
 
 }

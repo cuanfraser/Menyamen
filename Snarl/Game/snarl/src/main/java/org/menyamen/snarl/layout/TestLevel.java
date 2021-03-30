@@ -1,17 +1,15 @@
 package org.menyamen.snarl.layout;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.awt.Point;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.menyamen.snarl.gameobjects.ExitPortal;
 import org.menyamen.snarl.gameobjects.GameObject;
-import org.menyamen.snarl.gameobjects.Key;
-import static org.menyamen.snarl.util.Util.fromRowCol;
-import static org.menyamen.snarl.util.Util.toRowCol;
+import static org.menyamen.snarl.util.TestingUtil.fromRowCol;
+import static org.menyamen.snarl.util.TestingUtil.toRowCol;
+import static org.menyamen.snarl.util.TestingUtil.jsonToLevel;
 
 public class TestLevel {
 
@@ -63,114 +61,5 @@ public class TestLevel {
 
         //System.out.println(level.print());
 
-    }
-
-    public static Level jsonToLevel(JSONObject levelJSON) {
-        // break up (level)
-        JSONArray roomList = levelJSON.getJSONArray("rooms");
-        JSONArray hallwayList = levelJSON.getJSONArray("hallways");
-        JSONArray objectList = levelJSON.getJSONArray("objects");
-
-        // Convert JSON Lists
-        List<Room> rooms = jsonToListRoom(roomList);
-        List<Hallway> hallways = jsonToListHallways(hallwayList);
-
-        Level level = new Level(rooms, hallways);
-
-        // JSONObjects
-        for (int i = 0; i < objectList.length(); i++) {
-            JSONObject currentJSON = objectList.getJSONObject(i);
-            String type = currentJSON.getString("type");
-            if (type.equals("key")) {
-                GameObject key = new Key();
-                Point keyPoint = new Point(fromRowCol(currentJSON.getJSONArray("position")));
-                level.addObject(key, keyPoint);
-            }
-            else if (type.equals("exit")) {
-                GameObject exit = new ExitPortal();
-                Point exitPoint = new Point(fromRowCol(currentJSON.getJSONArray("position")));
-                level.addObject(exit, exitPoint);
-            }
-            else {
-                throw new IllegalArgumentException("Wrong type of object. Expected key/exit, got: " + 
-                    type);
-            }
-        }
-
-        return level;
-    }
-
-    /**
-     * Convert JSONArray of room-list to List<Room>
-     * @param roomList
-     * @return
-     * @throws IllegalArgumentException
-     */
-    public static List<Room> jsonToListRoom(JSONArray roomList) throws IllegalArgumentException {
-        List<Room> outputList = new ArrayList<Room>();
-
-        for (int i = 0; i < roomList.length(); i++) {
-            JSONObject currentRoom = roomList.getJSONObject(i);
-
-            // Check all items are Rooms
-            String type = currentRoom.getString("type");
-            if (!type.equals("room")) {
-                throw new IllegalArgumentException("Wrong type of object in room list: " + type);
-            } 
-
-            Point origin = fromRowCol(currentRoom.getJSONArray("origin"));
-            int roomRows = currentRoom.getJSONObject("bounds").getInt("rows");
-            int roomCols = currentRoom.getJSONObject("bounds").getInt("columns");
-
-            // Process layout Array from JSON into 2D int Array
-            JSONArray layoutJSON = currentRoom.getJSONArray("layout");
-            int[][] layout = new int[roomRows][roomCols];
-            for (int k = 0; k < roomRows; k++) {
-                JSONArray currentRow = layoutJSON.getJSONArray(k);
-                for (int m = 0; m < roomCols; m++) {
-                    layout[k][m] = currentRow.getInt(m);
-                }
-            }
-
-            Room newRoom = new Room(origin, roomCols, roomRows, layout);
-            outputList.add(newRoom);
-        }
-
-        return outputList;
-    }
-
-    /**
-     * Convert JSONArray of hallway-list to List<Hallway>
-     * @param hallwayList
-     * @return
-     */
-    public static List<Hallway> jsonToListHallways(JSONArray hallwayList) {
-        List<Hallway> outputList = new ArrayList<Hallway>();
-
-        for (int i = 0; i < hallwayList.length(); i++) {
-            JSONObject currentJSON = hallwayList.getJSONObject(i);
-
-            // Check all items are Rooms
-            String type = currentJSON.getString("type");
-            if (!type.equals("hallway")) {
-                throw new IllegalArgumentException("Wrong type of object in hallway list: " + type);
-            } 
-
-            Point from = fromRowCol(currentJSON.getJSONArray("from"));
-            Point to = fromRowCol(currentJSON.getJSONArray("to"));
-
-            JSONArray waypointsJSON = currentJSON.getJSONArray("waypoints");
-            List<Point> waypoints = new ArrayList<Point>();
-
-            for (int k = 0; k < waypointsJSON.length(); k++) {
-                Point converted = fromRowCol(waypointsJSON.getJSONArray(k));
-                waypoints.add(converted);
-            }
-
-            Hallway hallway = new Hallway(from, to, waypoints);
-            outputList.add(hallway);
-        }
-
-        return outputList;
     }
 }
