@@ -96,7 +96,7 @@ public class PlayerImp implements Player {
         }
 
         System.out.println("Enter the row you would like to move to "); 
-        
+        row = 
 
         return null; 
     }
