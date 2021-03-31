@@ -3,25 +3,22 @@ package org.menyamen.snarl.characters;
 import java.awt.Point;
 import java.util.Scanner;
 
-import org.menyamen.snarl.state.FullState;
-import org.menyamen.snarl.util.TestingUtil;
+import org.menyamen.snarl.state.PlayerState;
 
-public class PlayerImp implements Player {
+public class PlayerImpl implements Player {
     private String name;
     private Point pos;
-    int row = 0;
-    int col = 0;
 
-    public PlayerImp(String name) {
+    public PlayerImpl(String name) {
         this.name = name;
     }
 
-    public PlayerImp(String name, Point pos) {
+    public PlayerImpl(String name, Point pos) {
         this(name);
         this.pos = pos;
     }
 
-    public PlayerImp(String name, int x, int y) {
+    public PlayerImpl(String name, int x, int y) {
         this(name);
         this.pos = new Point(x, y);
     }
@@ -77,8 +74,9 @@ public class PlayerImp implements Player {
      * @param state current state of immediate surroundings
      */
    
-    public String update(Point pos, FullState state){
-       return state.print();   
+    public String update(Point pos, PlayerState state){
+        this.pos = pos;
+        return state.print();   
     }
 
    
@@ -99,10 +97,10 @@ public class PlayerImp implements Player {
         }
 
         System.out.println("Enter the row you would like to move to "); 
-        row = TestingUtil.rowCol(scanner.nextLine());
+        int row = scanner.nextInt();
         System.out.println("Enter the column you would like to move to "); 
-        col = TestingUtil.rowCol(scanner.nextLine());
-        Point newPos = new Point(row, col);
+        int col = scanner.nextInt();
+        Point newPos = new Point(col, row);
 
 
         return newPos; 

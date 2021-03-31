@@ -18,6 +18,7 @@ import static org.menyamen.snarl.util.TestingUtil.convertPointList;
 import static org.menyamen.snarl.util.TestingUtil.convertActorMoveListList;
 import static org.menyamen.snarl.util.TestingUtil.jsonToLevel;
 import static org.menyamen.snarl.util.TestingUtil.fullStateToJSON;
+import static org.menyamen.snarl.util.TestingUtil.traceListToJSON;
 
 public class TestManager {
 
@@ -70,7 +71,7 @@ public class TestManager {
                 adversariesList.add(new Adversary(current, "zombie"));
             }
         }
-        
+
 
         // Create GameManager
         GameManager gameManager = new GameManager(level, maxTurns, movesList);
@@ -83,19 +84,16 @@ public class TestManager {
             gameManager.registerAdversary(currentAdversary);
         }
 
-        // TODO: Update Players
-        // gameManger.updatePlayers();
+        gameManager.updatePlayers();
 
         gameManager.startGame();
 
-
-        // (manager-trace) JSON
-        JSONArray managerTrace = new JSONArray();
-        
         
 
         FullState finalState = gameManager.getFullState();
         JSONObject stateOutput = fullStateToJSON(finalState, levelJSON);
+        // (manager-trace) JSON
+        JSONArray managerTrace = traceListToJSON(gameManager.getTraceList());
 
         JSONArray output = new JSONArray();
         output.put(0, stateOutput);

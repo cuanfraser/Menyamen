@@ -8,11 +8,10 @@ import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
-import org.menyamen.snarl.gameobjects.ExitPortal;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.gameobjects.GameObject.GameObjectType;
 import org.menyamen.snarl.layout.Level;
-
+import org.menyamen.snarl.tiles.Tile;
 
 public class FullState {
     int currentLevel = 0;
@@ -23,6 +22,8 @@ public class FullState {
     public FullState(Level level) {
         this.levels = new ArrayList<Level>();
         this.levels.add(level);
+        this.players = new ArrayList<Player>();
+        this.adversaries = new ArrayList<Adversary>();
     }
 
     // Intermediate Game State
@@ -47,7 +48,8 @@ public class FullState {
 
     /**
      * Moves Player specified by name to Move destination.
-     * @param name String name of Player to attempt to move.
+     * 
+     * @param name            String name of Player to attempt to move.
      * @param destinationMove Move to attempt with Player.
      * @return MoveResult.
      */
@@ -86,7 +88,6 @@ public class FullState {
             }
         }
 
-        
         // Not traversable point
         if (!levels.get(currentLevel).isTraversable(point)) {
             return MoveResult.NOTTRAVERSABLE;
@@ -102,27 +103,55 @@ public class FullState {
         player.setPos(point);
 
         GameObject object = levels.get(currentLevel).getObject(point);
-        if (object.getType() == GameObjectType.EXIT) {
-            if (!levels.get(currentLevel).getExitLocked()) {
-                players.remove(playerIndex);
-                return MoveResult.EXIT;
-            }
-            else {
-                return MoveResult.SUCCESS;
+        if (object != null) {
+            if (object.getType() == GameObjectType.EXIT) {
+                if (!levels.get(currentLevel).getExitLocked()) {
+                    players.remove(playerIndex);
+                    return MoveResult.EXIT;
+                } else {
+                    return MoveResult.SUCCESS;
+                }
+            } else if (object.getType() == GameObjectType.KEY) {
+                levels.get(currentLevel).setExitLocked(false);
+                return MoveResult.KEY;
             }
         }
-        else if (object.getType() == GameObjectType.KEY) {
-            levels.get(currentLevel).setExitLocked(false);
-            return MoveResult.KEY;
-        }
-        
-        return MoveResult.SUCCESS;
 
+        return MoveResult.SUCCESS;
 
     }
 
-    //renders to console the current state of the level
-    public String print(){
+    public PlayerState makePlayerState(Player player) {
+        List<Tile> grid = levels.get(currentLevel).viewable(player.getPos());
+
+        List<Player> viewablePlayers = new ArrayList<Player>();
+        List<Adversary> viewableAdvers = new ArrayList<Adversary>();
+
+        for (Tile tile : grid) {
+            if (tile == null) {
+                continue;
+            }
+            Point currentPos = tile.getPos();
+            for (Player currentPlayer : this.players) {
+                Point playerPos = currentPlayer.getPos();
+                if (playerPos.equals(currentPos)) {
+                    viewablePlayers.add(currentPlayer);
+                }
+            }
+            for (Adversary currentAdversary : this.adversaries) {
+                Point advPos = currentAdversary.getPos();
+                if (advPos.equals(currentPos)) {
+                    viewableAdvers.add(currentAdversary);
+                }
+            }
+        }
+
+        PlayerState output = new PlayerState(player, grid, viewablePlayers, viewableAdvers);
+        return output;
+    }
+
+    // renders to console the current state of the level
+    public String print() {
         return this.levels.get(currentLevel).print();
     }
 
@@ -142,7 +171,5 @@ public class FullState {
     public Level getCurrentLevel() {
         return this.levels.get(currentLevel);
     }
-
-
 
 }

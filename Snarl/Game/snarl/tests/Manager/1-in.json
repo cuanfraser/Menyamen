@@ -40,7 +40,7 @@
     , { "type": "move", "to": [3, 2] } 
     ]
   , [ { "type": "move", "to": [11, 7] }
-    , null
+    , { "type": "move", "to": null }
     , { "type": "move", "to": [12, 7] } 
     ]
   ]

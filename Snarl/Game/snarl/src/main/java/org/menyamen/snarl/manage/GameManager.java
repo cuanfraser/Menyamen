@@ -1,7 +1,7 @@
 package org.menyamen.snarl.manage;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
@@ -9,6 +9,9 @@ import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
+import org.menyamen.snarl.state.PlayerState;
+import org.menyamen.snarl.trace.PlayerUpdateTrace;
+import org.menyamen.snarl.trace.TraceEntry;
 
 /**
  * Specifies The class for the Game Manager which: - validates and accepts
@@ -19,6 +22,7 @@ public class GameManager {
     private FullState state;
     private int turns = 100;
     private List<List<Move>> movesList;
+    private List<TraceEntry> traceList = new ArrayList<TraceEntry>();
 
     public GameManager(FullState state) {
         this.state = state;
@@ -61,8 +65,7 @@ public class GameManager {
                 }
                 while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
-                // TODO: Update Players
-                
+                updatePlayers();
 
                 // As it is only level for now, exit means game over
                 if (result == MoveResult.EXIT) {
@@ -73,8 +76,6 @@ public class GameManager {
             }
             turns--;
         }
-        
-
     }
 
     /**
@@ -107,8 +108,23 @@ public class GameManager {
         state.getAdversaries().add(adversary);
     }
 
+    protected void updatePlayers() {
+        for (Player player : state.getPlayers()) {
+            PlayerState updateState = state.makePlayerState(player);
+            player.update(player.getPos(), updateState);
+
+            // Trace
+            TraceEntry traceEntry = new PlayerUpdateTrace(updateState);
+            traceList.add(traceEntry);
+        }
+    }
+
     protected FullState getFullState() {
         return this.state;
+    }
+
+    public List<TraceEntry> getTraceList() {
+        return this.traceList;
     }
 
 }

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.characters.PlayerImpl;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.layout.Level;
@@ -123,7 +124,7 @@ public class TestState {
                         "Expected Player in players list, found: " + currentPlayer.getString("type"));
             }
             Point point = fromRowCol(currentPlayer.getJSONArray("position"));
-            Player player = new Player(currentPlayer.getString("name"), point);
+            Player player = new PlayerImpl(currentPlayer.getString("name"), point);
             playerList.add(player);
         }
 

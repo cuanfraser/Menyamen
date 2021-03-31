@@ -23,6 +23,20 @@ public class Level {
     private int sizeY;
     private Boolean exitLocked = true;
 
+    public Level(List<Tile> tiles){
+        this.map = new HashMap<Point, Tile>();
+        int largestX = 0;
+        int largestY = 0;
+        for (Tile singleTile : tiles) {
+            Point currentPoint = singleTile.getPos();
+            largestX = currentPoint.x > largestX ? currentPoint.x : largestX;
+            largestY = currentPoint.y > largestY ? currentPoint.y : largestY;
+            map.put(currentPoint, singleTile);
+        }
+        sizeX = largestX + 1;
+        sizeY = largestY + 1;
+    }
+
     /**
      * Construct Level from single Room.
      * 
@@ -487,6 +501,9 @@ public class Level {
         this.exitLocked = exitLocked;
     }
 
+    // Playing
+    // -------------------------------------------------------------------------
+
     public Boolean isOccupied(Point point) {
         if (map.get(point).getPlayer() == null) {
             return false;
@@ -495,4 +512,61 @@ public class Level {
             return true;
         }
     }
+
+    public List<Tile> viewable(Point point) {
+
+        //2 Cardinal
+        Point above = new Point(point);
+        above.translate(0, -1);
+        Point below = new Point(point);
+        below.translate(0, 1);
+        Point left = new Point(point);
+        left.translate(-1, 0);
+        Point right = new Point(point);
+        right.translate(1, 0);
+        Point twoAbove = new Point(point);
+        twoAbove.translate(0, -2);
+        Point twoBelow = new Point(point);
+        twoBelow.translate(0, 2);
+        Point twoLeft = new Point(point);
+        twoLeft.translate(-2, 0);
+        Point twoRight = new Point(point);
+        twoRight.translate(2, 0);
+        Point aboveRight = new Point(point);
+        aboveRight.translate(1, -1);
+        Point aboveLeft = new Point(point);
+        aboveLeft.translate(-1, -1);
+        Point belowRight = new Point(point);
+        belowRight.translate(1, 1);
+        Point belowLeft = new Point(point);
+        belowLeft.translate(-1, 1);
+
+        // Diagonals
+        Point upperLeftDiag = new Point(point);
+        upperLeftDiag.translate(-2, -2);
+        Point upperRightDiag = new Point(point);
+        upperRightDiag.translate(2, -2);
+        Point bottomLeftDiag = new Point(point);
+        bottomLeftDiag.translate(-2, 2);
+        Point bottomRightDiag = new Point(point);
+        bottomRightDiag.translate(2, 2);
+
+        List<Point> testArray = new ArrayList<Point>();
+        testArray = new ArrayList<Point>(Arrays.asList(point, twoAbove, aboveLeft, above, aboveRight, twoLeft, left, right,
+                twoRight, below, belowRight, belowLeft, twoBelow, upperLeftDiag, upperRightDiag, bottomLeftDiag, bottomRightDiag));
+
+        List<Tile> output = new ArrayList<Tile>(25);
+
+        for (Point currentPoint : testArray) {
+            Tile currentTile = this.map.get(currentPoint);
+            if (currentTile != null) {
+                output.add(currentTile);
+            }
+            
+        }
+
+        return output;
+
+    }
+
 }

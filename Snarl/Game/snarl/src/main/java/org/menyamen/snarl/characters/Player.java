@@ -3,7 +3,7 @@ package org.menyamen.snarl.characters;
 import java.awt.Point;
 import java.util.Scanner;
 
-import org.menyamen.snarl.state.FullState;
+import org.menyamen.snarl.state.PlayerState;
 
 public interface Player {
 
@@ -45,7 +45,7 @@ public interface Player {
      * @param pos current position of player
      * @param state current state of immediate surroundings
      */
-    public String update(Point pos, FullState state);
+    public String update(Point pos, PlayerState state);
 
     public Point userMove(Scanner scanner, Player user);
 }

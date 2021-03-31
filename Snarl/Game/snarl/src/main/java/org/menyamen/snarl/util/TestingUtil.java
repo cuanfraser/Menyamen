@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.characters.PlayerImpl;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.gameobjects.ExitPortal;
 import org.menyamen.snarl.gameobjects.GameObject;
@@ -16,6 +17,7 @@ import org.menyamen.snarl.layout.Hallway;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.layout.Room;
 import org.menyamen.snarl.state.FullState;
+import org.menyamen.snarl.trace.TraceEntry;
 
 public final class TestingUtil {
 
@@ -61,12 +63,13 @@ public final class TestingUtil {
             List<Move> currentMoves = new ArrayList<Move>();
             JSONArray currentArray = jsonList.getJSONArray(i);
             for (int k = 0; k < currentArray.length(); k++) {
+                
                 JSONObject currentObject = currentArray.getJSONObject(k);
                 if (!currentObject.getString("type").equals("move")) {
                     throw new IllegalArgumentException("Non 'move' type in (actor-move), type was: " + currentObject.getString("type"));
                 }
 
-                if (currentObject.get("to") == null) {
+                if (currentObject.optJSONArray("to") == null) {
                     currentMoves.add(new Move(null));
                 }
                 else {
@@ -105,7 +108,7 @@ public final class TestingUtil {
     public static List<Player> convertNameList(JSONArray nameList) {
         List<Player> output = new ArrayList<Player>();
         for (int i = 0; i < nameList.length(); i++) {
-            Player currentPlayer = new Player(nameList.getString(i));
+            Player currentPlayer = new PlayerImpl(nameList.getString(i));
             output.add(currentPlayer);
         }
         return output;
@@ -228,6 +231,41 @@ public final class TestingUtil {
     // -------------------------------------------------------------------------
     // TO JSON:
     // -------------------------------------------------------------------------
+
+    /**
+     * Convert Move to (actor-move) JSON.
+     * @param move Move to convert.
+     * @return (actor-move) JSON.
+     */
+    public static JSONObject moveToJSON(Move move) {
+        JSONObject output = new JSONObject();
+        output.put("type", "move");
+        if (move.getStayStill()) {
+            output.put("to", JSONObject.NULL);
+        }
+        else {
+            output.put("to", toRowCol(move.getDestination()));
+        }
+        return output;
+    }
+
+    public static JSONArray objectListToJSON(List<GameObject> objects) {
+        JSONArray output = new JSONArray();
+
+        for (GameObject currentObject : objects) {
+            output.put(currentObject.toString());
+        }
+
+        return output;
+    }
+
+    public static JSONArray traceListToJSON(List<TraceEntry> traceList) {
+        JSONArray output = new JSONArray();
+        for (TraceEntry entry : traceList) {
+            output.put(entry.toJSON());
+        }
+        return output;
+    }
 
     /**
      * Convert List<Player> to (actor-position-list) JSON.
