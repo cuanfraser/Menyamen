@@ -71,7 +71,7 @@
             "request": "launch",
             "mainClass": "org.menyamen.snarl.manage.TestManager",
             "projectName": "snarl",
-            "args": ["<", "snarl/tests/Manager/1-in.json"]
+            "args": ["<", "snarl/tests/Manager/4-in.json"]
         }
     ]
 }

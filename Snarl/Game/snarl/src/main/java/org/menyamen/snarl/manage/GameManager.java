@@ -57,7 +57,7 @@ public class GameManager {
                 // Attempt Move and repeat until valid Move.
                 MoveResult result;
                 do {
-                    if (playerMoves.size() == 0) {
+                    if (playerMoves.size() == 0 || playerMoves == null) {
                         return;
                     }
                     result = state.move(currentPlayer.getName(), playerMoves.get(0));
