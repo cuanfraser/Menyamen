@@ -4,10 +4,13 @@ import java.awt.Point;
 import java.util.Scanner;
 
 import org.menyamen.snarl.state.FullState;
+import org.menyamen.snarl.util.TestingUtil;
 
 public class PlayerImp implements Player {
     private String name;
     private Point pos;
+    int row = 0;
+    int col = 0;
 
     public PlayerImp(String name) {
         this.name = name;
@@ -96,8 +99,12 @@ public class PlayerImp implements Player {
         }
 
         System.out.println("Enter the row you would like to move to "); 
-        row = 
+        row = TestingUtil.rowCol(scanner.nextLine());
+        System.out.println("Enter the column you would like to move to "); 
+        col = TestingUtil.rowCol(scanner.nextLine());
+        Point newPos = new Point(row, col);
 
-        return null; 
+
+        return newPos; 
     }
 }
