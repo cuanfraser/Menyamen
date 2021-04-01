@@ -8,6 +8,7 @@ import java.awt.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Zombie;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.characters.PlayerImpl;
 import org.menyamen.snarl.constraints.Move;
@@ -151,7 +152,7 @@ public class TestState {
             //             "Expected Player in players list, found: " + currentPlayer.getString("type"));
             // }
             Point point = fromRowCol(currentPlayer.getJSONArray("position"));
-            Adversary adversary = new Adversary(point);
+            Adversary adversary = new Zombie(point);
             adversaryList.add(adversary);
         }
 

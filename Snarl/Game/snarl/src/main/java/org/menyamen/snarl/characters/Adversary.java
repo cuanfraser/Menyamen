@@ -2,55 +2,43 @@ package org.menyamen.snarl.characters;
 
 import java.awt.Point;
 
-public class Adversary {
+public interface Adversary {
 
-    private Point pos;
-    private String type;
-    private String name;
+    /**
+     * Get position as Point of Adversary.
+     * @return Point for Adversary's position.
+     */
+    public Point getPos();
 
-    // Adversary instructions to be provided
-    public Adversary() {
-    }
+    /**
+     * Set position as Point for Adversary.
+     * @param pos Point to use as position for Adversary.
+     */
+    public void setPos(Point pos);
+    
+    /**
+     * Get name as String of Adversary.
+     * @return String of Adversary.
+     */
+    public String getName();
 
-    public Adversary(Point pos, String type) {
-        this.pos = pos;
-        this.type = type;
-    }
+    /**
+     * Set name as String for Adversary.
+     * @param pos String to use as name for Adversary.
+     */
+    public void setName(String name);
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Adversary(Point pos) {
-        this.pos = pos;
-    }
-
-    public Point getPos() {
-        return this.pos;
-    }
-
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
+    /**
+     * Return type as String for Adversary.
+     * @return String of Adversary.
+     */
+    public String getType();
 
     /**
      * Get Char representing the Adversary for ASCII Representation.
      * 
      * @return Char to represent the Adversary.
      */
-    public char toChar() {
-        return 'A';
-    }
+    public char toChar();
+
 }

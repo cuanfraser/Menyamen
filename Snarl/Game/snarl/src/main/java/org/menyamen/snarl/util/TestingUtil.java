@@ -52,39 +52,41 @@ public final class TestingUtil {
 
     /**
      * Converts JSONArray of (actor-move-list-list) to List<List<Move>>.
+     * 
      * @param jsonList (actor-move-list-list) JSONArray.
      * @return List<List<Move>>.
      */
     public static List<List<Move>> convertActorMoveListList(JSONArray jsonList) {
 
         List<List<Move>> output = new ArrayList<List<Move>>();
-        
+
         for (int i = 0; i < jsonList.length(); i++) {
             List<Move> currentMoves = new ArrayList<Move>();
             JSONArray currentArray = jsonList.getJSONArray(i);
             for (int k = 0; k < currentArray.length(); k++) {
-                
+
                 JSONObject currentObject = currentArray.getJSONObject(k);
                 if (!currentObject.getString("type").equals("move")) {
-                    throw new IllegalArgumentException("Non 'move' type in (actor-move), type was: " + currentObject.getString("type"));
+                    throw new IllegalArgumentException(
+                            "Non 'move' type in (actor-move), type was: " + currentObject.getString("type"));
                 }
 
                 if (currentObject.optJSONArray("to") == null) {
                     currentMoves.add(new Move(null));
-                }
-                else {
+                } else {
                     Point point = fromRowCol(currentObject.getJSONArray("to"));
                     currentMoves.add(new Move(point));
                 }
             }
             output.add(currentMoves);
         }
-        
+
         return output;
     }
 
     /**
      * Convert JSONArray of (point-list) to List<Point>.
+     * 
      * @param jsonList (point-list) JSONArray.
      * @return List<Point> from jsonList.
      */
@@ -102,6 +104,7 @@ public final class TestingUtil {
 
     /**
      * Convert JSONArray of (name-list) to List<Player>.
+     * 
      * @param nameList (name-list) JSONArray.
      * @return List<Player> from nameList.
      */
@@ -234,6 +237,7 @@ public final class TestingUtil {
 
     /**
      * Convert Move to (actor-move) JSON.
+     * 
      * @param move Move to convert.
      * @return (actor-move) JSON.
      */
@@ -242,8 +246,7 @@ public final class TestingUtil {
         output.put("type", "move");
         if (move.getStayStill()) {
             output.put("to", JSONObject.NULL);
-        }
-        else {
+        } else {
             output.put("to", toRowCol(move.getDestination()));
         }
         return output;
@@ -269,6 +272,7 @@ public final class TestingUtil {
 
     /**
      * Convert List<Player> to (actor-position-list) JSON.
+     * 
      * @param playerList List<Player> to convert.
      * @return (actor-position-list) JSON.
      */
@@ -286,6 +290,7 @@ public final class TestingUtil {
 
     /**
      * Convert List<Adversary> to (actor-position-list) JSON.
+     * 
      * @param adversaryList List<Adversary> to convert.
      * @return (actor-position-list) JSON.
      */
@@ -302,28 +307,29 @@ public final class TestingUtil {
     }
 
     // public static JSONArray hallwayListToJSON(List<Hallway> hallwayList) {
-    //     JSONArray output = new JSONArray();
+    // JSONArray output = new JSONArray();
 
-    //     JSONObject currentObject = new JSONObject();
-    //     currentObject.put("type", "hallway");
-    //     currentObject.put("from", "level");
-    //     currentObject.put("to", "level");
-    //     currentObject.put("waypoints", "level");
-    //     return output;
+    // JSONObject currentObject = new JSONObject();
+    // currentObject.put("type", "hallway");
+    // currentObject.put("from", "level");
+    // currentObject.put("to", "level");
+    // currentObject.put("waypoints", "level");
+    // return output;
     // }
 
     // public static JSONObject levelToJSON(Level level) {
-    //     JSONObject output = new JSONObject();
-    //     output.put("type", "level");
-    //     output.put("rooms", "level");
-    //     output.put("hallways", "level");
-    //     output.put("objects", "level");
-    //     return output;
+    // JSONObject output = new JSONObject();
+    // output.put("type", "level");
+    // output.put("rooms", "level");
+    // output.put("hallways", "level");
+    // output.put("objects", "level");
+    // return output;
     // }
 
     /**
      * Convert FullState to (state) JSON.
-     * @param state FullState to convert.
+     * 
+     * @param state     FullState to convert.
      * @param levelJSON JSONObject (level) for Level.
      * @return (state) JSON.
      */

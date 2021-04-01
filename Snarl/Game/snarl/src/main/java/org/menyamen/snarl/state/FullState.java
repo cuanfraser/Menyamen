@@ -28,7 +28,6 @@ public class FullState {
 
     // Intermediate Game State
     public FullState(int currentLevel, List<Level> levels, List<Player> players, List<Adversary> adversaries) {
-        // TODO
         this.currentLevel = currentLevel;
         this.levels = levels;
         this.players = players;

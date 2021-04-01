@@ -8,6 +8,7 @@ import java.awt.Point;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Zombie;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.layout.Level;
@@ -68,7 +69,7 @@ public class TestManager {
                 playersList.get(i).setPos(current);
             }
             else {
-                adversariesList.add(new Adversary(current, "zombie"));
+                adversariesList.add(new Zombie(current, "placeHolder"));
             }
         }
 
