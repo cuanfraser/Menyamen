@@ -1,6 +1,9 @@
 package org.menyamen.snarl.util;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -229,6 +232,73 @@ public final class TestingUtil {
         }
 
         return level;
+    }
+
+    /**
+     * Convert .levels file containing Level count and (level) JSON to List<Level>.
+     * 
+     * @param path Path to file.
+     * @return List<Level> of Levels from file.
+     */
+    public static List<Level> processLevelFile(String path) {
+
+        int levelCount = 0;
+        BufferedReader br = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            br = new BufferedReader(new FileReader(path));
+
+            String buf;
+            levelCount = Integer.parseInt(br.readLine());
+            while ((buf = br.readLine()) != null) {
+                builder.append(buf);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e2) {
+                System.out.println("Error closing BufferedReader for file");
+            }
+        }
+
+        JSONArray jsonLevels = new JSONArray();
+
+        String input = builder.toString();
+        int openObjects = 0;
+        StringBuilder temp = new StringBuilder();
+        for (int i = 0; i < input.length() && jsonLevels.length() < levelCount; i++) {
+            if (input.charAt(i) == '{') {
+                openObjects++;
+                temp.append(input.charAt(i));
+
+            } else if (input.charAt(i) == '}') {
+                openObjects--;
+                temp.append(input.charAt(i));
+                if (openObjects == 0) {
+                    JSONObject currentObject = new JSONObject(temp.toString());
+                    jsonLevels.put(currentObject);
+                    temp = new StringBuilder();
+                }
+
+            } else {
+                temp.append(input.charAt(i));
+            }
+        }
+
+        List<Level> output = new ArrayList<Level>();
+
+        for (int i = 0; i < jsonLevels.length(); i++) {
+            // (level) JSONObject
+            Level level = jsonToLevel(jsonLevels.getJSONObject(i));
+            output.add(level);
+        }
+
+        return output;
+
     }
 
     // -------------------------------------------------------------------------

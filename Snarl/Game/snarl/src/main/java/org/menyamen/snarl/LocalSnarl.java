@@ -1,9 +1,13 @@
 package org.menyamen.snarl;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.menyamen.snarl.layout.Level;
+
+import static org.menyamen.snarl.util.TestingUtil.processLevelFile;
 
 public class LocalSnarl {
 
@@ -37,5 +41,17 @@ public class LocalSnarl {
                 }
             }
         }
+
+        List<Level> levels = processLevelFile(levelsFile);
+
+        System.out.println("test");
+
+        // // Prompt Player Names
+        // for (int i = 0; i < playerCount; i++) {
+
+        // }
+
+
+
     }
 }

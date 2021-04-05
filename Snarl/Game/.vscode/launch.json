@@ -72,6 +72,14 @@
             "mainClass": "org.menyamen.snarl.manage.TestManager",
             "projectName": "snarl",
             "args": ["<", "snarl/tests/Manager/4-in.json"]
+        },
+        {
+            "type": "java",
+            "name": "Launch LocalSnarl w/ Example",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.LocalSnarl",
+            "projectName": "snarl",
+            "args": ["--levels", "snarl/tests/LocalSnarl/1-in.levels"]
         }
     ]
 }
