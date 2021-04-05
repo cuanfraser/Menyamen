@@ -47,5 +47,5 @@ public interface Player {
      */
     public String update(Point pos, PlayerState state);
 
-    public Point userMove(Scanner scanner, Player user);
+    public Point userMove(Scanner scanner);
 }

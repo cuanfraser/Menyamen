@@ -80,7 +80,7 @@ public class PlayerImpl implements Player {
     }
 
    
-    public Point userMove(Scanner scanner, Player user) {
+    public Point userMove(Scanner scanner) {
 
         System.out.println("Would you like to move your players position? (please enter Y or N)");
         String input = scanner.nextLine();
@@ -93,7 +93,7 @@ public class PlayerImpl implements Player {
 
         //Stays put in current position -> return current position 
         if (input.equalsIgnoreCase("N")) {
-            return user.getPos();
+            return this.getPos();
         }
 
         System.out.println("Enter the row you would like to move to "); 

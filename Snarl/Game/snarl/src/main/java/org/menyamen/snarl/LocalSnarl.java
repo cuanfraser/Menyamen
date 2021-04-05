@@ -1,0 +1,41 @@
+package org.menyamen.snarl;
+
+import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class LocalSnarl {
+
+    public static void main(String[] args) {
+
+        String levelsFile ="snarl.levels";
+        int playerCount = 1;
+        int startLevel = 1;
+        boolean observe = false;
+
+        // Command Line Args
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--levels")) {
+                levelsFile = args[i + 1];
+            }
+            else if (args[i].equals("--players")) {
+                playerCount = Integer.parseInt(args[i + 1]);
+                if (observe && playerCount != 1) {
+                    System.out.println("Cannot have observer and more than 1 players");
+                    return;
+                }
+            }
+            else if (args[i].equals("--start")) {
+                startLevel = Integer.parseInt(args[i + 1]);
+            }
+            else if(args[i].equals("--observer")) {
+                observe = true;
+                if (playerCount != 1) {
+                    System.out.println("Cannot have observer and more than 1 players");
+                    return;
+                }
+            }
+        }
+    }
+}
