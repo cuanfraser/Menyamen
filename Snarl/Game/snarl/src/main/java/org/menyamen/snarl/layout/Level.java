@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.constraints.CharacterEnum;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
@@ -438,6 +439,20 @@ public class Level {
     }
 
     /**
+     * Get Tile at Point.
+     * @param point Point to get from.
+     * @return GameObject or Null.
+     */
+    public Tile getTile(Point point) {
+        Tile tile = map.get(point);
+        if (tile == null) {
+            return null;
+        }
+        return tile;
+    }
+
+
+    /**
      * Is Point in Room/Hallway/Void.
      * @param point Point to check.
      * @return String of "room", "hallway", or "void".
@@ -505,11 +520,23 @@ public class Level {
     // -------------------------------------------------------------------------
 
     public Boolean isOccupied(Point point) {
-        if (map.get(point).getPlayer() == null) {
-            return false;
+        if (map.get(point).getPlayer() != null) {
+            return true;
         }
         else {
             return true;
+        }
+    }
+
+    public CharacterEnum isOccupiedBy(Point point) {
+        if (map.get(point).getAdversary() != null) {
+            return CharacterEnum.ADVERSARY;
+        }
+        if (map.get(point).getPlayer() != null) {
+            return CharacterEnum.PLAYER;
+        }
+        else { 
+            return CharacterEnum.EMPTY;
         }
     }
 
