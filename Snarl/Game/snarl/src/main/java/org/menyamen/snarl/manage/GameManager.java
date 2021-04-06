@@ -105,6 +105,13 @@ public class GameManager {
             }
             turns--;
         }
+                while(state.getAdversaries().size() > 0 && !gameOver){
+            List<Adversary> adversaries = state.getAdversaries();
+            for (int i = 0; i < adversaries.size(); i++) {
+                Adversary currentAdversary = adversaries.get(i);
+                state.moveAdversary(currentAdversary);
+            }
+        }
     }
 
     /**
