@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
-import javax.swing.text.Position;
 
 import java.awt.Point;
 
@@ -140,7 +137,7 @@ public class FullState {
          Level level = getCurrentLevel();
         
         //Possible cardinal moves, one move away from Adversary
-         List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1, true);
+         List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1);
          List<Point> availableMoves = new ArrayList<Point>(possibleMoves);
        
 
