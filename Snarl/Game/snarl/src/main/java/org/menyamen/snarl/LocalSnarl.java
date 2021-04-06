@@ -5,7 +5,9 @@ import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.menyamen.snarl.characters.PlayerImpl;
 import org.menyamen.snarl.layout.Level;
+import org.menyamen.snarl.manage.GameManager;
 
 import static org.menyamen.snarl.util.TestingUtil.processLevelFile;
 
@@ -43,6 +45,16 @@ public class LocalSnarl {
         }
 
         List<Level> levels = processLevelFile(levelsFile);
+
+        GameManager gameManager = new GameManager(startLevel - 1, levels);
+
+        for (int i = 0; i < playerCount; i++) {
+            System.out.print("Enter Player " + i + " Name:");
+            Scanner input = new Scanner(System.in);
+            String name = input.nextLine();
+            gameManager.registerPlayer(new PlayerImpl(name));
+            input.close();
+        }
 
         System.out.println("test");
 

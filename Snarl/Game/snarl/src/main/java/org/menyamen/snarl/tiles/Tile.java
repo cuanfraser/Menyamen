@@ -62,4 +62,6 @@ public interface Tile {
      */
     void setAdversary(Adversary adversary) throws IllegalArgumentException;
 
+    boolean isValidForPlacement();
+
 }

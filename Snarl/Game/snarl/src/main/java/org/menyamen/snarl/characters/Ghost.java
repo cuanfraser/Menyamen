@@ -4,6 +4,10 @@ import java.awt.Point;
 
 public class Ghost extends Adversary {
 
+    public Ghost(String name) {
+        super(name);
+    }
+
     public Ghost(Point pos) {
         super(pos);
     }

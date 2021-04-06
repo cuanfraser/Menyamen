@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
@@ -593,6 +594,54 @@ public class Level {
         }
 
         return output;
+
+    }
+
+    public List<Player> randomPlayersPlacement(List<Player> players) {
+        List<Tile> tiles = new ArrayList<Tile>();
+        for (int i = 0; i < rooms.size(); i++) {
+            tiles.addAll(rooms.get(i).getTiles());
+        }
+        List<Tile> validTiles = new ArrayList<Tile>();
+        for (int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).isValidForPlacement()) {
+                validTiles.add(tiles.get(i));
+            }
+        }
+
+        Random random = new Random();
+        for (Player player : players) {
+            int index = random.nextInt((validTiles.size() - 1) - 0) + 0;
+            Point pos = validTiles.get(index).getPos();
+            player.setPos(pos);
+            map.get(pos).setPlayer(player);
+        }
+
+        return players;        
+
+    }
+
+    public List<Adversary> randomAdversariesPlacement(List<Adversary> advers) {
+        List<Tile> tiles = new ArrayList<Tile>();
+        for (int i = 0; i < rooms.size(); i++) {
+            tiles.addAll(rooms.get(i).getTiles());
+        }
+        List<Tile> validTiles = new ArrayList<Tile>();
+        for (int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).isValidForPlacement()) {
+                validTiles.add(tiles.get(i));
+            }
+        }
+
+        Random random = new Random();
+        for (Adversary ad : advers) {
+            int index = random.nextInt((validTiles.size() - 1) - 0) + 0;
+            Point pos = validTiles.get(index).getPos();
+            ad.setPos(pos);
+            map.get(pos).setAdversary(ad);
+        }
+
+        return advers;        
 
     }
 

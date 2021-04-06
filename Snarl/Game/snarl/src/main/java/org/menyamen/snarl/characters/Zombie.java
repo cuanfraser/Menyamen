@@ -4,6 +4,10 @@ import java.awt.Point;
 
 public class Zombie extends Adversary {
 
+    public Zombie(String name) {
+        super(name);
+    }
+
     public Zombie(Point pos) {
         super(pos);
     }

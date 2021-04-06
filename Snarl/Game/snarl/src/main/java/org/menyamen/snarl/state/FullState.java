@@ -5,7 +5,9 @@ import java.util.List;
 import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Ghost;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.characters.Zombie;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.gameobjects.GameObject;
@@ -24,6 +26,11 @@ public class FullState {
         this.levels.add(level);
         this.players = new ArrayList<Player>();
         this.adversaries = new ArrayList<Adversary>();
+    }
+
+    public FullState(int currentLevel, List<Level> levels) {
+        this.currentLevel = currentLevel;
+        this.levels = levels;
     }
 
     // Intermediate Game State
@@ -169,6 +176,37 @@ public class FullState {
 
     public Level getCurrentLevel() {
         return this.levels.get(currentLevel);
+    }
+
+    public boolean nextLevel() {
+        currentLevel++;
+        if (currentLevel >= levels.size()) {
+            return false;
+        }
+
+        // New Adversaries
+        adversaries = new ArrayList<Adversary>();
+        int zombieCount = Math.floorDiv(currentLevel, 2) + 1;
+        for (int i = 0; i < zombieCount; i++) {
+            Adversary zombie = new Zombie("Zombie" + currentLevel + i);
+            adversaries.add(zombie);
+        }
+        int ghostCount = Math.floorDiv(currentLevel - 1, 2);
+        for (int i = 0; i < ghostCount; i++) {
+            Adversary ghost = new Ghost("Ghost" + currentLevel + i);
+            adversaries.add(ghost);
+        }
+        adversaries = levels.get(currentLevel).randomAdversariesPlacement(adversaries);
+
+        // Players
+        for (Player player : this.players) {
+            player.setIsExpelled(false);
+        }
+
+        players = levels.get(currentLevel).randomPlayersPlacement(players);
+
+        return true;
+        
     }
 
 }

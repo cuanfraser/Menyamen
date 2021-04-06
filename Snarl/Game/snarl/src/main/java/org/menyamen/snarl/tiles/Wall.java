@@ -82,4 +82,9 @@ public class Wall implements Tile {
     public void setAdversary(Adversary adversary) throws IllegalArgumentException {
         throw new IllegalArgumentException("Can't set Adversary for Wall.");
     }
+
+    @Override
+    public boolean isValidForPlacement() {
+        return false;
+    }
 }

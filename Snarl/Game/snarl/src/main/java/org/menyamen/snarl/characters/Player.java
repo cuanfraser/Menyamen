@@ -25,6 +25,10 @@ public interface Player {
      */
     void setPos(Point pos);
 
+    public boolean getIsExpelled();
+
+    public void setIsExpelled(boolean isExpelled);
+
      /**
      * Returns if this Player exists or not.
      * @return boolean if Player equals other Object.

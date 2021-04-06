@@ -8,6 +8,7 @@ import org.menyamen.snarl.state.PlayerState;
 public class PlayerImpl implements Player {
     private String name;
     private Point pos;
+    private boolean isExpelled = false;
 
     public PlayerImpl(String name) {
         this.name = name;
@@ -23,20 +24,33 @@ public class PlayerImpl implements Player {
         this.pos = new Point(x, y);
     }
 
-
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Point getPos() {
         return this.pos;
     }
 
+    @Override
     public void setPos(Point pos) {
         this.pos = pos;
     }
 
+    @Override
+    public boolean getIsExpelled() {
+        return isExpelled;
+    }
+
+    @Override
+    public void setIsExpelled(boolean isExpelled) {
+        this.isExpelled = isExpelled;
+    }
+
     // https://www.geeksforgeeks.org/overriding-equals-method-in-java/
+    @Override
     public boolean equals(Object o) { 
   
         // If the object is compared with itself then return true   
@@ -58,28 +72,18 @@ public class PlayerImpl implements Player {
     } 
 
 
-    /**
-     * Get Char representing the Player for ASCII Representation.
-     * 
-     * @return Char to represent the Player.
-     */
+    @Override
     public char toChar() {
         return 'P';
     }
 
-     /**
-     * Receive an update containing the player avatar’s position in the level and the current state of
-     * their immediate surroundings. 
-     * @param pos current position of player
-     * @param state current state of immediate surroundings
-     */
-   
+    @Override
     public String update(Point pos, PlayerState state){
         this.pos = pos;
         return state.print();   
     }
 
-   
+    @Override
     public Point userMove(Scanner scanner) {
 
         System.out.println("Would you like to move your players position? (please enter Y or N)");

@@ -58,5 +58,10 @@ public class Door implements Tile {
     public void setAdversary(Adversary adversary) {
         this.adversary = adversary;
     }
+
+    @Override
+    public boolean isValidForPlacement() {
+        return false;
+    }
     
 }

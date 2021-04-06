@@ -99,4 +99,13 @@ public class OpenTile implements Tile {
     public void setAdversary(Adversary adversary) {
         this.adversary = adversary;
     }
+
+    @Override
+    public boolean isValidForPlacement() {
+        if (player == null && adversary == null && gameObject == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

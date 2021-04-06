@@ -2,6 +2,8 @@ package org.menyamen.snarl.manage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
@@ -20,7 +22,7 @@ import org.menyamen.snarl.trace.TraceEntry;
  */
 public class GameManager {
     private FullState state;
-    private int turns = 100;
+    private int turns = 99999;
     private List<List<Move>> movesList;
     private List<TraceEntry> traceList = new ArrayList<TraceEntry>();
 
@@ -30,6 +32,10 @@ public class GameManager {
 
     public GameManager(Level level) {
         this.state = new FullState(level);
+    }
+
+    public GameManager(int currentLevel, List<Level> levels) {
+        this.state = new FullState(currentLevel, levels);
     }
 
     public GameManager(Level level, int turns, List<List<Move>> movesList) {
@@ -50,29 +56,52 @@ public class GameManager {
 
         while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
             List<Player> players = state.getPlayers();
-            for (int i = 0; i < players.size(); i++) {
+            for (int i = 0; i < players.size() && !gameOver; i++) {
                 Player currentPlayer = players.get(i);
-                //request move from player
-                List<Move> playerMoves = movesList.get(i);
-                // Attempt Move and repeat until valid Move.
-                MoveResult result;
-                do {
-                    if (playerMoves.size() == 0 || playerMoves == null) {
-                        return;
-                    }
-                    result = state.move(currentPlayer.getName(), playerMoves.get(0));
-                    playerMoves.remove(0);
+                if (currentPlayer.getIsExpelled()) {
+                    continue;
                 }
-                while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
+                //request move from player
+                Move currentMove = getLocalMove(currentPlayer);
+                MoveResult result = state.move(currentPlayer.getName(), currentMove);
+                // TODO:
+                switch (result) {
+                    case SUCCESS:
+                        break;
+                    case EJECTED:
+                        currentPlayer.setIsExpelled(true);
+                        break;
+                    case KEY:
+                    case EXIT: {
+                        System.out.println("Player " + currentPlayer.getName() + " exited.");
+                        if (state.nextLevel()) {
+
+                        }
+                        else {
+                            System.out.println("Game has been won!");
+                            gameOver = true;
+                        }
+                    }
+                    case INVALID:
+                    case NOTTRAVERSABLE:
+
+
+                }
+
+                // List<Move> playerMoves = movesList.get(i);
+                // // Attempt Move and repeat until valid Move.
+                // MoveResult result;
+                // do {
+                //     if (playerMoves.size() == 0 || playerMoves == null) {
+                //         return;
+                //     }
+                //     result = state.move(currentPlayer.getName(), playerMoves.get(0));
+                //     playerMoves.remove(0);
+                // }
+                // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
                 updatePlayers();
 
-                // As it is only level for now, exit means game over
-                if (result == MoveResult.EXIT) {
-                    System.out.println("Game ended");
-                    gameOver = true;
-                    break;
-                }
             }
             turns--;
         }
@@ -125,6 +154,95 @@ public class GameManager {
 
     public List<TraceEntry> getTraceList() {
         return this.traceList;
+    }
+
+    public Move getLocalMove(Player player) throws IllegalArgumentException {
+        String moveInput;
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Would you like to move 1 or 2 cardinal moves?");
+        int moveDistance = Integer.parseInt(input.nextLine());
+        if (moveDistance == 0) {
+            moveInput = "";
+        }
+        else if (moveDistance == 1) {
+            System.out.println("Move commands:");
+            System.out.println("'a': left");
+            System.out.println("'d': right");
+            System.out.println("'w': up");
+            System.out.println("'s': down");
+            System.out.println("Enter move:");
+            moveInput = input.nextLine();
+        }
+        else if (moveDistance == 2) {
+            System.out.println("Move commands:");
+            System.out.println("'a': left 2");
+            System.out.println("'d': right 2");
+            System.out.println("'w': up 2");
+            System.out.println("'s': down 2");
+            System.out.println("'q': up left");
+            System.out.println("'e': up right");
+            System.out.println("'z': down left'");
+            System.out.println("'c': down right");
+            System.out.println("Enter move:");
+            moveInput = input.nextLine();
+        }
+        else {
+            input.close();
+            throw new IllegalArgumentException("Invalid move distance");
+        }
+        input.close();
+
+        Move move = new Move(null);
+        Point playerPos = player.getPos();
+
+        if (moveDistance == 0) {
+            move = new Move(null);
+        }
+        else if (moveDistance == 1) {
+            if (moveInput.equals("a")) {
+                playerPos.translate(-1, 0);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("d")) {
+                playerPos.translate(1, 0);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("w")) {
+                playerPos.translate(0, -1);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("s")) {
+                playerPos.translate(0, 1);
+                move = new Move(playerPos);
+            } 
+        }
+        else if (moveDistance == 2) {
+            if (moveInput.equals("a")) {
+                playerPos.translate(-2, 0);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("d")) {
+                playerPos.translate(2, 0);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("w")) {
+                playerPos.translate(0, -2);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("s")) {
+                playerPos.translate(0, 2);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("q")) {
+                playerPos.translate(-1, -1);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("e")) {
+                playerPos.translate(1, -1);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("z")) {
+                playerPos.translate(-1, 1);
+                move = new Move(playerPos);
+            } else if (moveInput.equals("c")) {
+                playerPos.translate(1, 1);
+                move = new Move(playerPos);
+            } 
+        }
+
+        return move;
     }
 
 }

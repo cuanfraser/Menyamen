@@ -12,6 +12,10 @@ public abstract class Adversary {
     private Level level;
     private List<Player> playerList;
 
+    protected Adversary(String name) {
+        this.name = name;
+    }
+
     protected Adversary(Point pos) {
         this.pos = pos;
     }
