@@ -23,7 +23,7 @@ public class Level {
     private HashMap<Point, Tile> map;
     private int sizeX;
     private int sizeY;
-    private Boolean exitLocked = true;
+    private boolean exitLocked = true;
 
     public Level(List<Tile> tiles){
         this.map = new HashMap<Point, Tile>();
@@ -116,7 +116,7 @@ public class Level {
      * @param room Room to test.
      * @return True if valid, false if invalid.
      */
-    public Boolean validRoomPlacement(Room room) {
+    public boolean validRoomPlacement(Room room) {
         int horizontalSize = room.getHorizontalSize();
         int verticalSize = room.getVerticalSize();
         Point origin = room.getOrigin();
@@ -138,7 +138,7 @@ public class Level {
      * @param hallway Hallway to test.
      * @return True if valid, false if invalid.
      */
-    public Boolean validHallwayPlacement(Hallway hallway) {
+    public boolean validHallwayPlacement(Hallway hallway) {
         List<Tile> tilesNeeded = hallway.getTiles();
 
         if (!(map.get(hallway.getStart()) instanceof Door)) {
@@ -178,7 +178,7 @@ public class Level {
      * @param tile  Tile of Class type to check for (e.g. Wall, OpenTile, Door).
      * @return True if specified type is found, False if not.
      */
-    private Boolean nextTo(Point point, Tile tile) {
+    private boolean nextTo(Point point, Tile tile) {
         Point above = new Point(point);
         above.translate(0, -1);
         Point below = new Point(point);
@@ -223,7 +223,7 @@ public class Level {
      * @param position Point where to add GameObject in Level.
      * @return True if successful, False otherwise.
      */
-    public Boolean addObject(GameObject object, Point position) {
+    public boolean addObject(GameObject object, Point position) {
         if (map.containsKey(position)) {
             if (map.get(position) instanceof OpenTile) {
                 return map.get(position).setGameObject(object);
@@ -520,7 +520,7 @@ public class Level {
     // Playing
     // -------------------------------------------------------------------------
 
-    public Boolean isOccupied(Point point) {
+    public boolean isOccupied(Point point) {
         if (map.get(point).getPlayer() != null) {
             return true;
         }
@@ -540,6 +540,14 @@ public class Level {
             return CharacterEnum.EMPTY;
         }
     }
+
+    public Player getPlayer(Point point) {
+         return map.get(point).getPlayer();
+    }
+
+    public Adversary getAdversary(Point point) {
+        return map.get(point).getAdversary();
+   }
 
     public List<Tile> viewable(Point point) {
 
