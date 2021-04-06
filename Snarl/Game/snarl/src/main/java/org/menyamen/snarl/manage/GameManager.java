@@ -61,42 +61,39 @@ public class GameManager {
                 if (currentPlayer.getIsExpelled()) {
                     continue;
                 }
-                //request move from player
+                // request move from player
                 Move currentMove = getLocalMove(currentPlayer);
                 MoveResult result = state.move(currentPlayer.getName(), currentMove);
                 // TODO:
-                switch (result) {
-                    case SUCCESS:
-                        break;
-                    case EJECTED:
-                        currentPlayer.setIsExpelled(true);
-                        break;
-                    case KEY:
-                    case EXIT: {
-                        System.out.println("Player " + currentPlayer.getName() + " exited.");
-                        if (state.nextLevel()) {
+                if (result == MoveResult.SUCCESS) {
 
-                        }
-                        else {
-                            System.out.println("Game has been won!");
-                            gameOver = true;
-                        }
+                } else if (result == MoveResult.EJECTED) {
+                    System.out.println("Player " + currentPlayer.getName() + "was expelled.");
+
+                } else if (result == MoveResult.KEY) {
+                    System.out.println("Player " + currentPlayer.getName() + "found the key.");
+
+                } else if (result == MoveResult.EXIT) {
+                    System.out.println("Player " + currentPlayer.getName() + " exited.");
+                    if (state.nextLevel()) {
+
+                    } else {
+                        System.out.println("Game has been won!");
+                        gameOver = true;
                     }
-                    case INVALID:
-                    case NOTTRAVERSABLE:
 
-
+                } else if (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE) {
+                    System.out.println("Invali move.");
                 }
-
                 // List<Move> playerMoves = movesList.get(i);
                 // // Attempt Move and repeat until valid Move.
                 // MoveResult result;
                 // do {
-                //     if (playerMoves.size() == 0 || playerMoves == null) {
-                //         return;
-                //     }
-                //     result = state.move(currentPlayer.getName(), playerMoves.get(0));
-                //     playerMoves.remove(0);
+                // if (playerMoves.size() == 0 || playerMoves == null) {
+                // return;
+                // }
+                // result = state.move(currentPlayer.getName(), playerMoves.get(0));
+                // playerMoves.remove(0);
                 // }
                 // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
@@ -105,7 +102,7 @@ public class GameManager {
             }
             turns--;
         }
-                while(state.getAdversaries().size() > 0 && !gameOver){
+        while (state.getAdversaries().size() > 0 && !gameOver) {
             List<Adversary> adversaries = state.getAdversaries();
             for (int i = 0; i < adversaries.size(); i++) {
                 Adversary currentAdversary = adversaries.get(i);
@@ -119,20 +116,21 @@ public class GameManager {
      * players)
      *
      * @param player Player whose name is going to validated
-     * @throws IllegalStateException when already 4 players or player already exists.
+     * @throws IllegalStateException when already 4 players or player already
+     *                               exists.
      */
     public void registerPlayer(Player player) throws IllegalStateException {
         List<Player> playersList = state.getPlayers();
         if (playersList.size() > 4) {
             throw new IllegalStateException("Maximum of 4 Players");
         }
-        
+
         if (playersList.contains(player)) {
             throw new IllegalStateException("Player already exists in list.");
         }
 
         playersList.add(player);
-        
+
     }
 
     /**
@@ -171,8 +169,7 @@ public class GameManager {
         int moveDistance = Integer.parseInt(input.nextLine());
         if (moveDistance == 0) {
             moveInput = "";
-        }
-        else if (moveDistance == 1) {
+        } else if (moveDistance == 1) {
             System.out.println("Move commands:");
             System.out.println("'a': left");
             System.out.println("'d': right");
@@ -180,8 +177,7 @@ public class GameManager {
             System.out.println("'s': down");
             System.out.println("Enter move:");
             moveInput = input.nextLine();
-        }
-        else if (moveDistance == 2) {
+        } else if (moveDistance == 2) {
             System.out.println("Move commands:");
             System.out.println("'a': left 2");
             System.out.println("'d': right 2");
@@ -193,8 +189,7 @@ public class GameManager {
             System.out.println("'c': down right");
             System.out.println("Enter move:");
             moveInput = input.nextLine();
-        }
-        else {
+        } else {
             input.close();
             throw new IllegalArgumentException("Invalid move distance");
         }
@@ -205,8 +200,7 @@ public class GameManager {
 
         if (moveDistance == 0) {
             move = new Move(null);
-        }
-        else if (moveDistance == 1) {
+        } else if (moveDistance == 1) {
             if (moveInput.equals("a")) {
                 playerPos.translate(-1, 0);
                 move = new Move(playerPos);
@@ -219,9 +213,8 @@ public class GameManager {
             } else if (moveInput.equals("s")) {
                 playerPos.translate(0, 1);
                 move = new Move(playerPos);
-            } 
-        }
-        else if (moveDistance == 2) {
+            }
+        } else if (moveDistance == 2) {
             if (moveInput.equals("a")) {
                 playerPos.translate(-2, 0);
                 move = new Move(playerPos);
@@ -246,7 +239,7 @@ public class GameManager {
             } else if (moveInput.equals("c")) {
                 playerPos.translate(1, 1);
                 move = new Move(playerPos);
-            } 
+            }
         }
 
         return move;
