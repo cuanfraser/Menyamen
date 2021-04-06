@@ -106,7 +106,7 @@ public class FullState {
         // Adversaries
         for ( Adversary currentAdv : adversaries) {
             if (currentAdv.getPos().equals(point)) {
-                players.remove(playerIndex);
+                getActivePlayers().remove(player);
                 return MoveResult.EJECTED;
             }
         }
