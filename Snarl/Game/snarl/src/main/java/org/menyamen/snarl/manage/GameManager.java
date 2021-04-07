@@ -50,9 +50,10 @@ public class GameManager {
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  an invalid name
      */
-    public void startGame() throws IllegalArgumentException {
+    public void startGame(Scanner scanner) throws IllegalArgumentException {
 
         Boolean gameOver = false;
+        state.initialiseLevel();
 
         while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
             List<Player> players = state.getPlayers();
@@ -61,8 +62,9 @@ public class GameManager {
                 if (currentPlayer.getIsExpelled()) {
                     continue;
                 }
+                System.out.print(this.state.print());
                 // request move from player
-                Move currentMove = getLocalMove(currentPlayer);
+                Move currentMove = currentPlayer.userMove(scanner);
                 MoveResult result = state.move(currentPlayer.getName(), currentMove);
                 // TODO:
                 if (result == MoveResult.SUCCESS) {
@@ -83,7 +85,7 @@ public class GameManager {
                     }
 
                 } else if (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE) {
-                    System.out.println("Invali move.");
+                    System.out.println("Invalid move.");
                 }
                 // List<Move> playerMoves = movesList.get(i);
                 // // Attempt Move and repeat until valid Move.
@@ -98,8 +100,11 @@ public class GameManager {
                 // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
                 updatePlayers();
-
             }
+            for(int i = 0; i < state.getAdversaries().size(); i++) {
+                state.moveAdversary(state.getAdversaries().get(i));
+            }
+            
             turns--;
         }
         while (state.getAdversaries().size() > 0 && !gameOver) {
@@ -161,12 +166,15 @@ public class GameManager {
         return this.traceList;
     }
 
+    // OUTDATED LEGACY UNUSED
     public Move getLocalMove(Player player) throws IllegalArgumentException {
         String moveInput;
 
         Scanner input = new Scanner(System.in);
         System.out.println("Would you like to move 1 or 2 cardinal moves?");
-        int moveDistance = Integer.parseInt(input.nextLine());
+        boolean hasNext = input.hasNextLine();
+        String inputString = input.nextLine();
+        int moveDistance = Integer.parseInt(inputString);
         if (moveDistance == 0) {
             moveInput = "";
         } else if (moveDistance == 1) {

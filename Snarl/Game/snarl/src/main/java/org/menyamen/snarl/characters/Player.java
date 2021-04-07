@@ -3,6 +3,7 @@ package org.menyamen.snarl.characters;
 import java.awt.Point;
 import java.util.Scanner;
 
+import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.state.PlayerState;
 
 public interface Player {
@@ -51,5 +52,5 @@ public interface Player {
      */
     public String update(Point pos, PlayerState state);
 
-    public Point userMove(Scanner scanner);
+    public Move userMove(Scanner scanner);
 }

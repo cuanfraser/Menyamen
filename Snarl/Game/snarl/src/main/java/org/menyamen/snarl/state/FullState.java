@@ -15,8 +15,6 @@ import org.menyamen.snarl.characters.Zombie;
 import org.menyamen.snarl.constraints.CharacterEnum;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
-import org.menyamen.snarl.gameobjects.GameObject;
-import org.menyamen.snarl.gameobjects.GameObject.GameObjectType;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.Tile;
@@ -38,6 +36,8 @@ public class FullState {
     public FullState(int currentLevel, List<Level> levels) {
         this.currentLevel = currentLevel;
         this.levels = levels;
+        this.players = new ArrayList<Player>();
+        this.adversaries = new ArrayList<Adversary>();
     }
 
     // Intermediate Game State
@@ -89,7 +89,8 @@ public class FullState {
             point = player.getPos();
         }
 
-        // Check if other Player occupies Point
+        // Check if other Player occupies Point in State (DOUBLE POS SITUATION RN)
+        // TODO: DOUBLE POS CHANGE
         for (int i = 0; i < players.size(); i++) {
             Player currentPlayer = players.get(i);
             if (currentPlayer.getName().equals(name)) {
@@ -100,11 +101,6 @@ public class FullState {
                 return MoveResult.NOTTRAVERSABLE;
             }
         }
-
-        // Not traversable point
-        if (!levels.get(currentLevel).isTraversable(point)) {
-            return MoveResult.NOTTRAVERSABLE;
-        }
         // Adversaries
         for (Adversary currentAdv : adversaries) {
             if (currentAdv.getPos().equals(point)) {
@@ -113,25 +109,7 @@ public class FullState {
             }
         }
 
-        player.setPos(point);
-
-        GameObject object = levels.get(currentLevel).getObject(point);
-        if (object != null) {
-            if (object.getType() == GameObjectType.EXIT) {
-                if (!levels.get(currentLevel).getExitLocked()) {
-                    players.remove(playerIndex);
-                    return MoveResult.EXIT;
-                } else {
-                    return MoveResult.SUCCESS;
-                }
-            } else if (object.getType() == GameObjectType.KEY) {
-                levels.get(currentLevel).setExitLocked(false);
-                levels.get(currentLevel).getTile(point).setGameObject(null);
-                return MoveResult.KEY;
-            }
-        }
-
-        return MoveResult.SUCCESS;
+        return levels.get(currentLevel).movePlayer(player, destinationMove);
 
     }
 
@@ -144,6 +122,7 @@ public class FullState {
 
         // Possible cardinal moves, one move away from Adversary
         List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1);
+        possibleMoves.remove(adversary.getPos());
         List<Point> availableMoves = new ArrayList<Point>(possibleMoves);
 
         // look in the allowable moves and if a player is found, move the adversary
@@ -154,26 +133,17 @@ public class FullState {
 
                 // The player needs to be removed
                 player.setIsExpelled(true);
-                // is the players list per level
-                players.remove(player);
                 Tile tile = level.getTile(possiblePosition);
-
+                level.getTile(adversary.getPos()).setAdversary(null);
                 adversary.setPos(possiblePosition);
                 tile.setAdversary(adversary);
                 return;
             } else if (level.isOccupiedBy(possiblePosition) == CharacterEnum.ADVERSARY) {
                 availableMoves.remove(possiblePosition);
             }
-        }
-
-        List<Point> playersPositions = getActivePlayers().stream().map(player -> player.getPos())
-                .collect(Collectors.toList());
-
-        if (!playersPositions.isEmpty()) {
-            Point availablePos = findNearestPlayerPoint(playersPositions, availableMoves);
-            if (availablePos != null) {
-                adversary.setPos(availablePos);
-                return;
+            Tile tile = level.getTile(possiblePosition);
+            if (tile instanceof Door || tile instanceof Wall && adversary.getType() == "zombie") {
+                availableMoves.remove(possiblePosition);
             }
         }
 
@@ -193,6 +163,19 @@ public class FullState {
             }
         }
 
+        List<Point> playersPositions = getActivePlayers().stream().map(player -> player.getPos())
+                .collect(Collectors.toList());
+
+        if (!playersPositions.isEmpty()) {
+            Point availablePos = findNearestPlayerPoint(playersPositions, availableMoves);
+            if (availablePos != null) {
+                level.getTile(adversary.getPos()).setAdversary(null);
+                adversary.setPos(availablePos);
+                Tile tile = level.getTile(availablePos);
+                tile.setAdversary(adversary);
+                return;
+            }
+        }
     }
 
     private Point findNearestPlayerPoint(List<Point> playersPositions, List<Point> availablePositions) {
@@ -277,6 +260,13 @@ public class FullState {
             return false;
         }
 
+        initialiseLevel();
+
+        return true;
+
+    }
+
+    public void initialiseLevel() {
         // New Adversaries
         adversaries = new ArrayList<Adversary>();
         int zombieCount = Math.floorDiv(currentLevel, 2) + 1;
@@ -297,9 +287,6 @@ public class FullState {
         }
 
         players = levels.get(currentLevel).randomPlayersPlacement(players);
-
-        return true;
-
     }
 
 }

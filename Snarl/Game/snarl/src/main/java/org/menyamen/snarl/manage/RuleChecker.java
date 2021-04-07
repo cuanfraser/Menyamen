@@ -3,18 +3,15 @@ package org.menyamen.snarl.manage;
 import java.awt.Point;
 import java.util.List;
 
-import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
-import org.menyamen.snarl.constraints.CharacterEnum;
 import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.gameobjects.GameObject;
 import org.menyamen.snarl.gameobjects.GameObject.GameObjectType;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
-import org.menyamen.snarl.tiles.Door;
-import org.menyamen.snarl.tiles.Tile;
-import org.menyamen.snarl.tiles.Wall;
 
+// UNUSED CLASS 
+// TODO: MOVE THINGS HERE
 public class RuleChecker {
 
     /**

@@ -3,8 +3,6 @@ package org.menyamen.snarl;
 import java.util.List;
 import java.util.Scanner;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.menyamen.snarl.characters.PlayerImpl;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.manage.GameManager;
@@ -48,13 +46,16 @@ public class LocalSnarl {
 
         GameManager gameManager = new GameManager(startLevel - 1, levels);
 
+        Scanner input = new Scanner(System.in);
+
         for (int i = 0; i < playerCount; i++) {
-            System.out.print("Enter Player " + i + " Name:");
-            Scanner input = new Scanner(System.in);
+            System.out.print("Enter Player " + i + " Name: ");
             String name = input.nextLine();
             gameManager.registerPlayer(new PlayerImpl(name));
-            input.close();
         }
+
+        gameManager.startGame(input);
+        input.close();
 
         System.out.println("test");
 

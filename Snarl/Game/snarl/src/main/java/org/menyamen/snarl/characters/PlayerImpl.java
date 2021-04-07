@@ -3,7 +3,10 @@ package org.menyamen.snarl.characters;
 import java.awt.Point;
 import java.util.Scanner;
 
+import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.state.PlayerState;
+
+import static org.menyamen.snarl.util.TestingUtil.toRowCol;
 
 public class PlayerImpl implements Player {
     private String name;
@@ -84,8 +87,9 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public Point userMove(Scanner scanner) {
+    public Move userMove(Scanner scanner) {
 
+        System.out.println("Current Position: " + toRowCol(pos).toString());
         System.out.println("Would you like to move your players position? (please enter Y or N)");
         String input = scanner.nextLine();
 
@@ -97,16 +101,19 @@ public class PlayerImpl implements Player {
 
         //Stays put in current position -> return current position 
         if (input.equalsIgnoreCase("N")) {
-            return this.getPos();
+            return new Move(null);
         }
 
         System.out.println("Enter the row you would like to move to "); 
         int row = scanner.nextInt();
+        scanner.nextLine();
         System.out.println("Enter the column you would like to move to "); 
         int col = scanner.nextInt();
+        scanner.nextLine();
+
         Point newPos = new Point(col, row);
 
 
-        return newPos; 
+        return new Move(newPos); 
     }
 }

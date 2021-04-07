@@ -87,7 +87,7 @@ public class TestManager {
 
         gameManager.updatePlayers();
 
-        gameManager.startGame();
+        //gameManager.startGame();
 
         
 

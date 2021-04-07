@@ -9,7 +9,10 @@ import java.util.Random;
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.constraints.CharacterEnum;
+import org.menyamen.snarl.constraints.Move;
+import org.menyamen.snarl.constraints.MoveResult;
 import org.menyamen.snarl.gameobjects.GameObject;
+import org.menyamen.snarl.gameobjects.GameObject.GameObjectType;
 import org.menyamen.snarl.tiles.Door;
 import org.menyamen.snarl.tiles.OpenTile;
 import org.menyamen.snarl.tiles.Tile;
@@ -299,12 +302,13 @@ public class Level {
 
         List<Point> testArray = new ArrayList<Point>();
         if (moves == 1) {
+            testArray.add(point);
             testArray.add(above);
             testArray.add(left);
             testArray.add(right);
             testArray.add(below);
         } else if (moves == 2) {
-            testArray = new ArrayList<Point>(Arrays.asList(twoAbove, aboveLeft, above, aboveRight, twoLeft, left, right,
+            testArray = new ArrayList<Point>(Arrays.asList(point, twoAbove, aboveLeft, above, aboveRight, twoLeft, left, right,
                     twoRight, below, belowRight, belowLeft, twoBelow));
         } else {
             throw new IllegalArgumentException("1 or 2 Cardinal Moves only");
@@ -493,7 +497,13 @@ public class Level {
                     } else if (curTile.getAdversary() != null) {
                         builder.append(curTile.getAdversary().toChar());
                     } else if (curTile.getGameObject() != null) {
-                        builder.append(curTile.getGameObject().toChar());
+                        if (curTile.getGameObject().getType() == GameObjectType.EXIT && exitLocked) {
+                            builder.append('Ø');
+                        }
+                        else {
+                            builder.append(curTile.getGameObject().toChar());
+                        }
+                        
                     } else {
                         builder.append(curTile.toChar());
                     }
@@ -543,6 +553,49 @@ public class Level {
 
     public Player getPlayer(Point point) {
          return map.get(point).getPlayer();
+    }
+
+    public MoveResult movePlayer(Player player, Move move) {
+        Point pos;
+        if (move.getStayStill()) {
+            pos = player.getPos();
+        }
+        else {
+            pos = move.getDestination();
+        }
+
+        // Not traversable point
+        if (!isTraversable(pos)) {
+            return MoveResult.NOTTRAVERSABLE;
+        }
+
+        List<Point> cardinalMoves = cardinalMove(player.getPos(), 2);
+        if (!cardinalMoves.contains(pos)) {
+            return MoveResult.INVALID;
+        }
+
+        // Change Tiles Player fields
+        getTile(player.getPos()).setPlayer(null);
+        player.setPos(pos);
+        getTile(pos).setPlayer(player);
+
+        GameObject object = getObject(pos);
+        if (object != null) {
+            if (object.getType() == GameObjectType.EXIT) {
+                if (!getExitLocked()) {
+                    return MoveResult.EXIT;
+                } else {
+                    return MoveResult.SUCCESS;
+                }
+            } else if (object.getType() == GameObjectType.KEY) {
+                setExitLocked(false);
+                getTile(pos).setGameObject(null);
+                return MoveResult.KEY;
+            }
+        }
+
+        return MoveResult.SUCCESS;
+        
     }
 
     public Adversary getAdversary(Point point) {
