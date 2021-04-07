@@ -1,4 +1,4 @@
-#How to Play Snarl 
+# How to Play Snarl 
 
 Our game can be played in a terminal locally on your machine. These are the rules to follow in order to play our Snarl game:  
   
