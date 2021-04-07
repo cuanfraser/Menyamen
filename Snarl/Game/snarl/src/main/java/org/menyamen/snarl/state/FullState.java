@@ -117,7 +117,7 @@ public class FullState {
         return players.stream().filter(player -> !player.getIsExpelled()).collect(Collectors.toList());
     }
 
-    public void moveAdversary(Adversary adversary) throws IllegalArgumentException {
+    public Player moveAdversary(Adversary adversary) throws IllegalArgumentException {
         Level level = getCurrentLevel();
 
         // Possible cardinal moves, one move away from Adversary
@@ -137,7 +137,7 @@ public class FullState {
                 level.getTile(adversary.getPos()).setAdversary(null);
                 adversary.setPos(possiblePosition);
                 tile.setAdversary(adversary);
-                return;
+                return player;
             } else if (level.isOccupiedBy(possiblePosition) == CharacterEnum.ADVERSARY) {
                 availableMoves.remove(possiblePosition);
             }
@@ -173,9 +173,11 @@ public class FullState {
                 adversary.setPos(availablePos);
                 Tile tile = level.getTile(availablePos);
                 tile.setAdversary(adversary);
-                return;
+                return null;
             }
         }
+
+        return null;
     }
 
     private Point findNearestPlayerPoint(List<Point> playersPositions, List<Point> availablePositions) {
@@ -252,6 +254,10 @@ public class FullState {
 
     public Level getCurrentLevel() {
         return this.levels.get(currentLevel);
+    }
+
+    public int getCurrentLevelIndex() {
+        return this.currentLevel;
     }
 
     public boolean nextLevel() {

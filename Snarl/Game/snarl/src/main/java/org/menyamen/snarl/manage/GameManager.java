@@ -14,6 +14,7 @@ import org.menyamen.snarl.state.FullState;
 import org.menyamen.snarl.state.PlayerState;
 import org.menyamen.snarl.trace.PlayerUpdateTrace;
 import org.menyamen.snarl.trace.TraceEntry;
+import org.menyamen.snarl.manage.RuleChecker;
 
 /**
  * Specifies The class for the Game Manager which: - validates and accepts
@@ -45,15 +46,16 @@ public class GameManager {
     }
 
     /**
-     * Void function that starts the game with a single level
+     * Void function that starts the game for a local implementation.
      *
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  an invalid name
      */
-    public void startGame(Scanner scanner) throws IllegalArgumentException {
+    public void startGame(Scanner scanner, boolean observer) throws IllegalArgumentException {
 
         Boolean gameOver = false;
         state.initialiseLevel();
+        RuleChecker ruleChecker = new RuleChecker();
 
         while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
             List<Player> players = state.getPlayers();
@@ -62,7 +64,7 @@ public class GameManager {
                 if (currentPlayer.getIsExpelled()) {
                     continue;
                 }
-                System.out.print(this.state.print());
+                System.out.print(printState(currentPlayer, observer));
                 // request move from player
                 Move currentMove = currentPlayer.userMove(scanner);
                 MoveResult result = state.move(currentPlayer.getName(), currentMove);
@@ -100,19 +102,23 @@ public class GameManager {
                 // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
                 updatePlayers();
+                if (ruleChecker.gameOverCheck(state, turns)) {
+                    System.out.println("Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1));
+                    gameOver = true;
+                }
             }
             for(int i = 0; i < state.getAdversaries().size(); i++) {
-                state.moveAdversary(state.getAdversaries().get(i));
+                Player removed = state.moveAdversary(state.getAdversaries().get(i));
+                if (removed != null) {
+                    System.out.println("Player " + removed.getName() + " was expelled.");
+                }
+                if (ruleChecker.gameOverCheck(state, turns)) {
+                    System.out.println("Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1));
+                    gameOver = true;
+                }
             }
             
             turns--;
-        }
-        while (state.getAdversaries().size() > 0 && !gameOver) {
-            List<Adversary> adversaries = state.getAdversaries();
-            for (int i = 0; i < adversaries.size(); i++) {
-                Adversary currentAdversary = adversaries.get(i);
-                state.moveAdversary(currentAdversary);
-            }
         }
     }
 
@@ -164,6 +170,15 @@ public class GameManager {
 
     public List<TraceEntry> getTraceList() {
         return this.traceList;
+    }
+
+    private String printState(Player player, boolean observer) {
+        if (observer) {
+            return this.state.print();
+        }
+        else {
+            return this.state.makePlayerState(player).print();
+        }
     }
 
     // OUTDATED LEGACY UNUSED

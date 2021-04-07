@@ -10,7 +10,6 @@ import org.menyamen.snarl.gameobjects.GameObject.GameObjectType;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
 
-// UNUSED CLASS 
 // TODO: MOVE THINGS HERE
 public class RuleChecker {
 
@@ -56,4 +55,17 @@ public class RuleChecker {
         
     }
 
+    protected boolean gameOverCheck(FullState state, int turns) {
+        if (turns == 0) {
+            return true;
+        }
+
+        List<Player> players = state.getPlayers();
+        for (Player currentPlayer : players) {
+            if (!currentPlayer.getIsExpelled()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

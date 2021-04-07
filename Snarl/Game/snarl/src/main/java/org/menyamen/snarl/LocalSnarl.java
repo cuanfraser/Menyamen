@@ -54,17 +54,8 @@ public class LocalSnarl {
             gameManager.registerPlayer(new PlayerImpl(name));
         }
 
-        gameManager.startGame(input);
+        gameManager.startGame(input, observe);
         input.close();
-
-        System.out.println("test");
-
-        // // Prompt Player Names
-        // for (int i = 0; i < playerCount; i++) {
-
-        // }
-
-
 
     }
 }
