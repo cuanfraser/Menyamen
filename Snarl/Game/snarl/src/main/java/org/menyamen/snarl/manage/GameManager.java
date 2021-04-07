@@ -72,10 +72,10 @@ public class GameManager {
                 if (result == MoveResult.SUCCESS) {
 
                 } else if (result == MoveResult.EJECTED) {
-                    System.out.println("Player " + currentPlayer.getName() + "was expelled.");
+                    System.out.println("Player " + currentPlayer.getName() + " was expelled.");
 
                 } else if (result == MoveResult.KEY) {
-                    System.out.println("Player " + currentPlayer.getName() + "found the key.");
+                    System.out.println("Player " + currentPlayer.getName() + " found the key.");
 
                 } else if (result == MoveResult.EXIT) {
                     System.out.println("Player " + currentPlayer.getName() + " exited.");
