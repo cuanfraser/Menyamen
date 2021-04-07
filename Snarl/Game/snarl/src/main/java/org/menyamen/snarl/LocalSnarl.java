@@ -49,7 +49,7 @@ public class LocalSnarl {
         Scanner input = new Scanner(System.in);
 
         for (int i = 0; i < playerCount; i++) {
-            System.out.print("Enter Player " + i + " Name: ");
+            System.out.print("Enter Player " + (i + 1) + " Name: ");
             String name = input.nextLine();
             gameManager.registerPlayer(new PlayerImpl(name));
         }

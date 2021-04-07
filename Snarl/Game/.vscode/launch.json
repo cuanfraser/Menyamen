@@ -79,7 +79,7 @@
             "request": "launch",
             "mainClass": "org.menyamen.snarl.LocalSnarl",
             "projectName": "snarl",
-            "args": ["--levels", "snarl/tests/LocalSnarl/1-in.levels"]
+            "args": ["--levels", "snarl/tests/LocalSnarl/1-in.levels", "--start", "1"]
         }
     ]
 }
