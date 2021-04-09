@@ -107,7 +107,10 @@ public class GameManager {
                     gameOver = true;
                 }
             }
+            //Once we move all the players we then move all of the adversaries 
+            //TO-DO: add concept of assigning rooms
             for(int i = 0; i < state.getAdversaries().size(); i++) {
+                //move all adversaries, printing out the players that are expelled
                 Player removed = state.moveAdversary(state.getAdversaries().get(i));
                 if (removed != null) {
                     System.out.println("Player " + removed.getName() + " was expelled.");
