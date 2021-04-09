@@ -113,40 +113,53 @@ public class FullState {
 
     }
 
+    //Filtering out the players that are set as expelled to ensure that adversaries always have an up to date list of the players active in a level
     private List<Player> getActivePlayers() {
         return players.stream().filter(player -> !player.getIsExpelled()).collect(Collectors.toList());
     }
 
+    /**
+     * Moves Adversary specified by the Adversary type (Zombie or Ghost)
+     * 
+     * @param adversary Adversary that attempts to move
+     * @return Player that is expelled (if no player is expelled return null).
+     */
     public Player moveAdversary(Adversary adversary) throws IllegalArgumentException {
         Level level = getCurrentLevel();
 
-        // Possible cardinal moves, one move away from Adversary
-        List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1);
+        // Possible cardinal moves, one move away from Adversary, setting the includeWall true for ghosts 
+        List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1, true);
+        //Remove the adversaires own position
         possibleMoves.remove(adversary.getPos());
+        //keeps track of the subset moves that are traversable
         List<Point> availableMoves = new ArrayList<Point>(possibleMoves);
-
-        // look in the allowable moves and if a player is found, move the adversary
-        // there
+        //FIRST LOOP
+        // look in the allowable moves (1 cardinal move away in any direction) and if a player is found, 
+        // move the adversary there
         for (Point possiblePosition : possibleMoves) {
             if (level.isOccupiedBy(possiblePosition) == CharacterEnum.PLAYER) {
-                Player player = level.getPlayer(possiblePosition);
-
                 // The player needs to be removed
+                Player player = level.getPlayer(possiblePosition);
                 player.setIsExpelled(true);
                 Tile tile = level.getTile(possiblePosition);
+                //move the adversary to players position
                 level.getTile(adversary.getPos()).setAdversary(null);
                 adversary.setPos(possiblePosition);
                 tile.setAdversary(adversary);
+                //expelled player is returned otherwise null
                 return player;
+              //Removes other adversary position from available moves
             } else if (level.isOccupiedBy(possiblePosition) == CharacterEnum.ADVERSARY) {
                 availableMoves.remove(possiblePosition);
             }
+            //If the adversary is a zombie then remove doors and walls from available moves 
             Tile tile = level.getTile(possiblePosition);
             if (tile instanceof Door || tile instanceof Wall && adversary.getType() == "zombie") {
                 availableMoves.remove(possiblePosition);
             }
         }
-
+        //SECOND LOOP
+        //Now we iterate through all the available moves to see what the next best move is
         for (Point p : availableMoves) {
             Tile tile = level.getTile(p);
             if (tile instanceof Door || tile instanceof Wall) {
@@ -154,7 +167,7 @@ public class FullState {
                     // zombie can not leave the room it is spawned in
                     continue;
                 }
-
+                //Move ghost to a random room 
                 if (adversary.getType() == "ghost") {
                     List<Adversary> list = new ArrayList<Adversary>();
                     list.add(adversary);
@@ -163,16 +176,20 @@ public class FullState {
             }
         }
 
+        //Get all active players positions (TO-DO: in this particular room) by getPos
         List<Point> playersPositions = getActivePlayers().stream().map(player -> player.getPos())
                 .collect(Collectors.toList());
 
+        //If there are players in the list use the nearest player function that utilizes the distance formula to find the closest player
         if (!playersPositions.isEmpty()) {
             Point availablePos = findNearestPlayerPoint(playersPositions, availableMoves);
+            //If there is a player nearby then move the adversary to the nearest avaiable position
             if (availablePos != null) {
                 level.getTile(adversary.getPos()).setAdversary(null);
                 adversary.setPos(availablePos);
                 Tile tile = level.getTile(availablePos);
                 tile.setAdversary(adversary);
+                //No player was expelled
                 return null;
             }
         }
@@ -180,27 +197,53 @@ public class FullState {
         return null;
     }
 
-    private Point findNearestPlayerPoint(List<Point> playersPositions, List<Point> availablePositions) {
+     /**
+     * Finding the nearest available position from the adversary to a player
+     * 
+     * @param playersPositions List of all the players positions as Points
+     * @param availablePositions List of all the available moves for the adversary 
+     * @return Player that is expelled (if no player is expelled return null).
+     */
+    private Point findNearestPlayerPoint( List<Point> playersPositions,  List<Point> availablePositions) {
+        //creates a hashmap of available points for the adversary and the distance to the closest player from that point 
         HashMap<Point, Double> distanceByPositions = new HashMap<Point, Double>();
 
-        for (Point p : availablePositions) {
-            for (Point pl : playersPositions) {
+
+       for ( Point p : availablePositions) {
+           for ( Point pl : playersPositions) {
                 double distance = calculateDistanceBetweenPoints(p, pl);
-                distanceByPositions.put(p, distance);
-            }
-        }
+                //If the hashmap already haves that key (player = p) 
+                if(distanceByPositions.containsKey(p)){
+                    //Then retrieve that value from the hashmap 
+                   double d = distanceByPositions.get(p);
+                   //If our current value is smaller than the distance given then replace it with the lower distance 
+                   if(d > distance)
+                       distanceByPositions.replace(p, distance);
+                    else
+                       continue;   
+               }
+               //if this is the first time this hashmap receives this key then store it as a new key and value
+               else
+                   distanceByPositions.put(p, distance);
+           }
+       }
 
-        Point x = null;
-        double lowestValue = 2000;
-        for (Map.Entry<Point, Double> en : distanceByPositions.entrySet()) {
-            if (en.getValue() < lowestValue) {
-                lowestValue = en.getValue();
-                x = en.getKey();
-            }
-        }
-        return x;
-    }
+       Point x = null;
+       double lowestValue = 2000;
+       //for each entry in the hashmap 
+       for (Map.Entry<Point, Double> en : distanceByPositions.entrySet()) {
+           //find the smallest value 
+           if (en.getValue() < lowestValue) {
+               lowestValue = en.getValue();
+               x = en.getKey();
+           }
+       }
+       //return the smallest distanced players position 
+       return x;
+   }
 
+
+    //distance formula
     public double calculateDistanceBetweenPoints(Point a, Point b) {
         return Math.sqrt((b.y - a.y) * (b.y - a.y) + (b.x - a.x) * (b.x - a.x));
     }
