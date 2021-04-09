@@ -271,7 +271,7 @@ public class Level {
      * @param moves How many cardinal moves.
      * @return List<Point> of Traversable Points.
      */
-    public List<Point> cardinalMove(Point point, int moves) {
+    public List<Point> cardinalMove(Point point, int moves, boolean includeWall) {
 
         List<Point> output = new ArrayList<Point>();
 
@@ -314,14 +314,26 @@ public class Level {
             throw new IllegalArgumentException("1 or 2 Cardinal Moves only");
         }
 
+        //If it is not an instance of a wall and the boolean includeWall is false then add all other tiles
         for (Point curPoint : testArray) {
             Tile curTile = map.get(curPoint);
-            if (!(curTile instanceof Wall)) {
+            //ghost needs all points
+            if (includeWall) {
+                output.add(curPoint);
+            }
+            //player and zombie can not traverse through walls
+            else if (!(curTile instanceof Wall)) {
                 output.add(curPoint);
             }
         }
 
         return output;
+    }
+    
+    //cardinalMove for player and zombie which sets includeWall to false
+    public List<Point> cardinalMove(Point point, int moves) {
+        return cardinalMove(point, moves, false);
+
     }
 
     /**
@@ -539,6 +551,7 @@ public class Level {
         }
     }
 
+    //Returns the character type for a tile
     public CharacterEnum isOccupiedBy(Point point) {
         if (map.get(point).getAdversary() != null) {
             return CharacterEnum.ADVERSARY;
