@@ -172,7 +172,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.menyamen.snarl.manage.TestManager</mainClass>
+              <mainClass>org.menyamen.snarl.LocalSnarl</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

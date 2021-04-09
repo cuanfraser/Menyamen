@@ -275,12 +275,13 @@ public class FullState {
     public void initialiseLevel() {
         // New Adversaries
         adversaries = new ArrayList<Adversary>();
-        int zombieCount = Math.floorDiv(currentLevel, 2) + 1;
+        int levelNumber = currentLevel + 1;
+        int zombieCount = Math.floorDiv(levelNumber, 2) + 1;
         for (int i = 0; i < zombieCount; i++) {
             Adversary zombie = new Zombie("Zombie" + currentLevel + i);
             adversaries.add(zombie);
         }
-        int ghostCount = Math.floorDiv(currentLevel - 1, 2);
+        int ghostCount = Math.floorDiv(levelNumber - 1, 2);
         for (int i = 0; i < ghostCount; i++) {
             Adversary ghost = new Ghost("Ghost" + currentLevel + i);
             adversaries.add(ghost);
