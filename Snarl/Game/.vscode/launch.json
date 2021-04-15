@@ -80,6 +80,22 @@
             "mainClass": "org.menyamen.snarl.LocalSnarl",
             "projectName": "snarl",
             "args": ["--levels", "snarl/tests/LocalSnarl/1-in.levels", "--start", 3, "--observer"]
+        },
+        {
+            "type": "java",
+            "name": "Launch LocalSnarlServer",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.LocalSnarlServer",
+            "projectName": "snarl",
+            "args": ["--levels", "snarl/tests/LocalSnarl/1-in.levels", "--clients", "3", "--wait", "60","--observer","false","--port","8085"]
+        },
+        {
+            "type": "java",
+            "name": "Launch LocalSnarlClient",
+            "request": "launch",
+            "mainClass": "org.menyamen.snarl.LocalSnarlClient",
+            "projectName": "snarl",
+            "args": ["--address","127.0.0.1","--port","8085"]
         }
     ]
 }
