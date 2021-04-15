@@ -1,4 +1,5 @@
 package org.menyamen.snarl.characters;
+import java.io.Serializable;
 
 import java.awt.Point;
 import java.util.Scanner;
@@ -8,7 +9,11 @@ import org.menyamen.snarl.state.PlayerState;
 
 import static org.menyamen.snarl.util.TestingUtil.toRowCol;
 
-public class PlayerImpl implements Player {
+public class PlayerImpl implements Player, Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private String name;
     private Point pos;
     private boolean isExpelled = false;
