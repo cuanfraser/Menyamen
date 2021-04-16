@@ -1,5 +1,8 @@
 package org.menyamen.snarl.characters;
-import java.io.Serializable;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import java.awt.Point;
 import java.util.Scanner;
@@ -9,11 +12,10 @@ import org.menyamen.snarl.state.PlayerState;
 
 import static org.menyamen.snarl.util.TestingUtil.toRowCol;
 
-public class PlayerImpl implements Player, Serializable {
+public class PlayerImpl implements Player {
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
     private String name;
     private Point pos;
     private boolean isExpelled = false;
@@ -121,4 +123,59 @@ public class PlayerImpl implements Player, Serializable {
 
         return new Move(newPos); 
     }
+
+    @Override
+    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state) throws IOException {
+        
+        String s = state + "\n" + "Current Position: " + toRowCol(pos).toString();
+        s += "\n" + "Would you like to move your players position? (please enter Y or N)";
+        dos.writeUTF(s);
+        String input = dis.readUTF();
+        while (!input.equalsIgnoreCase("N") && !input.equalsIgnoreCase("Y")) {
+            dos.writeUTF("not a valid response." + "\n" + "Would you like to move your players position? (please enter Y or N)");
+            input = dis.readUTF(); 
+        }
+
+        //Stays put in current position -> return current position 
+        if (input.equalsIgnoreCase("N")) {
+            return new Move(null);
+        }
+       
+        int row = 0;
+        int col = 0;
+        boolean validRow = false;
+        String message = "";
+        while(!validRow){
+            try {
+                dos.writeUTF(message + "\n" + "Enter the row you would like to move to "); 
+                row = Integer.parseInt(dis.readUTF());
+                validRow = true;
+                message = "";
+            }
+            catch(NumberFormatException e){
+                 validRow = false;
+                 message = "not a valid response.";
+            }
+        }
+        boolean validCol = false;
+        
+        while(!validCol){
+            try {
+                dos.writeUTF(message + "\n" + "Enter the column you would like to move to "); 
+                col = Integer.parseInt(dis.readUTF());
+                validCol = true;
+            }
+            catch(NumberFormatException e){
+                validCol = false;
+                message = "not a valid response.";
+            }
+        }
+            
+        Point newPos = new Point(col, row);
+
+        return new Move(newPos); 
+    
+    }
+
+
 }
