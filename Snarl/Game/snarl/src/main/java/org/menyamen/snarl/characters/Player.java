@@ -1,6 +1,9 @@
 package org.menyamen.snarl.characters;
 
 import java.awt.Point;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.menyamen.snarl.constraints.Move;
@@ -53,4 +56,6 @@ public interface Player {
     public String update(Point pos, PlayerState state);
 
     public Move userMove(Scanner scanner);
+
+    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state) throws IOException;
 }
