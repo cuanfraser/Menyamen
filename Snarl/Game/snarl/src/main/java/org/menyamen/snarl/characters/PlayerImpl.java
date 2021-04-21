@@ -108,7 +108,7 @@ public class PlayerImpl implements Player {
 
         //Stays put in current position -> return current position 
         if (input.equalsIgnoreCase("N")) {
-            return new Move(null);
+            return new Move(pos);
         }
 
         System.out.println("Enter the row you would like to move to "); 
@@ -125,20 +125,21 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state) throws IOException {
+    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state, String name) throws IOException {
         
         String s = state + "\n" + "Current Position: " + toRowCol(pos).toString();
-        s += "\n" + "Would you like to move your players position? (please enter Y or N)";
+        s += "\n" + "Would you like to move your player, " + name + "'s position? (please enter Y or N)";
         dos.writeUTF(s);
         String input = dis.readUTF();
         while (!input.equalsIgnoreCase("N") && !input.equalsIgnoreCase("Y")) {
-            dos.writeUTF("not a valid response." + "\n" + "Would you like to move your players position? (please enter Y or N)");
+            dos.writeUTF("not a valid response." + "\n" + "Would you like to move your player, " + name + "'s position? (please enter Y or N)");
             input = dis.readUTF(); 
         }
 
         //Stays put in current position -> return current position 
         if (input.equalsIgnoreCase("N")) {
-            return new Move(null);
+           // return new Move(null);
+           return new Move(pos);
         }
        
         int row = 0;
