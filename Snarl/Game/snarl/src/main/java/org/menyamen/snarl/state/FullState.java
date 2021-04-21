@@ -297,6 +297,8 @@ public class FullState {
                 Point playerPos = currentPlayer.getPos();
                 if (playerPos.equals(currentPos)) {
                     viewablePlayers.add(currentPlayer);
+                    if(currentPlayer.getIsExpelled())
+                    continue;
                 }
             }
             for (Adversary currentAdversary : this.adversaries) {
