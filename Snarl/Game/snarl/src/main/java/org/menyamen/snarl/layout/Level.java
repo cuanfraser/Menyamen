@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.characters.RemoteAdversary;
 import org.menyamen.snarl.constraints.CharacterEnum;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
@@ -611,6 +612,45 @@ public class Level {
         
     }
 
+    public MoveResult moveAdversary(RemoteAdversary adversary, Move move) {
+        Point pos;
+        if (move.getStayStill()) {
+            pos = adversary.getPos();
+        }
+        else {
+            pos = move.getDestination();
+        }
+
+        // Not traversable point
+        if (adversary.getType().equals("zombie") && !isTraversable(pos)) {
+            return MoveResult.NOTTRAVERSABLE;
+        }
+
+        List<Point> cardinalMoves = cardinalMove(pos, 1);
+        if (!cardinalMoves.contains(pos)) {
+            return MoveResult.INVALID;
+        }
+
+        Tile tile = getTile(pos);
+        if (tile instanceof Door || tile instanceof Wall) {
+              //Move ghost to a random room and zombie cannot move
+            if (adversary.getType() == "ghost") {
+                List<Adversary> list = new ArrayList<Adversary>();
+                list.add(adversary);
+                randomAdversariesPlacement(list);
+            }
+
+        }
+        else{
+            getTile(adversary.getPos()).setAdversary(null);
+            adversary.setPos(pos);
+            tile.setAdversary(adversary);
+      
+           
+        }
+        return MoveResult.SUCCESS;     
+    }
+
     public Adversary getAdversary(Point point) {
         return map.get(point).getAdversary();
    }
@@ -715,6 +755,34 @@ public class Level {
             map.get(pos).setAdversary(ad);
         }
 
+        return advers;        
+
+    }
+    public List<Adversary> randomAdversariesPlacement(List<Adversary> advers, List<RemoteAdversary> remoteAdversaries) {
+        List<Tile> tiles = new ArrayList<Tile>();
+        for (int i = 0; i < rooms.size(); i++) {
+            tiles.addAll(rooms.get(i).getTiles());
+        }
+        List<Tile> validTiles = new ArrayList<Tile>();
+        for (int i = 0; i < tiles.size(); i++) {
+            if (tiles.get(i).isValidForPlacement()) {
+                validTiles.add(tiles.get(i));
+            }
+        }
+
+        Random random = new Random();
+        for (Adversary ad : advers) {
+            int index = random.nextInt((validTiles.size() - 1) - 0) + 0;
+            Point pos = validTiles.get(index).getPos();
+            ad.setPos(pos);
+            map.get(pos).setAdversary(ad);
+        }
+        for (RemoteAdversary rd : remoteAdversaries) {
+            int index = random.nextInt((validTiles.size() - 1) - 0) + 0;
+            Point pos = validTiles.get(index).getPos();
+            rd.setPos(pos);
+            map.get(pos).setAdversary(rd);
+        }
         return advers;        
 
     }
