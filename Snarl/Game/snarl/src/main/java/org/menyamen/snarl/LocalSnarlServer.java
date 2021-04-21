@@ -89,7 +89,7 @@ public class LocalSnarlServer {
                         if(numConnection > clients)
                             System.out.println("limit exceeded");
                         if(timeout)
-                            System.out.println("timeout elapsed");
+                            System.out.println("timeout elapsed, client not connected");
                         numConnection--;
                         socket.close();
                     }   
@@ -123,8 +123,8 @@ class ServerConnection extends Thread
     final String levelsFile;
     int startLevel = 1;
     int numConnection; 
-    int playerCount = 3;
-    int remoteAdvesariesCount = 3;
+    int playerCount = 2;
+    int remoteAdvesariesCount = 1;
     boolean observe = false;
     int wait;
 
