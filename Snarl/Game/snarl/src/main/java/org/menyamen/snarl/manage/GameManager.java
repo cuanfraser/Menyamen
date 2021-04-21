@@ -10,8 +10,10 @@ import java.io.IOException;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.Player;
+import org.menyamen.snarl.characters.RemoteAdversary;
 import org.menyamen.snarl.constraints.Move;
 import org.menyamen.snarl.constraints.MoveResult;
+import org.menyamen.snarl.constraints.PlayerScore;
 import org.menyamen.snarl.layout.Level;
 import org.menyamen.snarl.state.FullState;
 import org.menyamen.snarl.state.PlayerState;
@@ -26,7 +28,7 @@ import static org.menyamen.snarl.util.TestingUtil.toRowCol;
  */
 public class GameManager {
     private FullState state;
-    private int turns = 99999;
+    private int turns = 2;
     private List<List<Move>> movesList;
     private List<TraceEntry> traceList = new ArrayList<TraceEntry>();
 
@@ -54,7 +56,7 @@ public class GameManager {
      * @throws IllegalArgumentException if the level is not possible or a Player has
      *                                  
      */
-    public String startGameOnServer(boolean observer, DataInputStream dis, DataOutputStream dos, String message) throws IllegalArgumentException, IOException {
+    public String startGameOnServer(boolean observer, DataInputStream dis, DataOutputStream dos, String message, List<PlayerScore> playerScores) throws IllegalArgumentException, IOException {
 
         Boolean gameOver = false;
         state.initialiseLevel();
@@ -62,83 +64,135 @@ public class GameManager {
         
         int maxTurns = turns;
         String gameOverMessage = "";
-        String ret = "";
+        String returnMessage = "";
         while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
            
             List<Player> players = state.getPlayers();
-            for (int i = 0; i < players.size() && !gameOver; i++) {
+            for (int i = 0; i <= players.size() && !gameOver; i++) {
                 Player currentPlayer = players.get(i);
+
                 if (currentPlayer.getIsExpelled()) {
                     continue;
                 }
+
+                PlayerScore playerScore = playerScores.stream()
+                .filter(p -> p.getName().equals(currentPlayer.getName()))
+                .findAny()
+                .orElse(null);
+
                 String cumulatedMessage = "";
                 if(i == 0 && turns == maxTurns)
                     cumulatedMessage = message + "\n" + printState(currentPlayer, observer);
                 else 
-                    cumulatedMessage = ret + "\n" + printState(currentPlayer, observer);
+                    cumulatedMessage = returnMessage + "\n" + printState(currentPlayer, observer);
                
-                ret = "";    
+                returnMessage = "";    
                 // request move from player
                 Point originalPosition = currentPlayer.getPos();
-                Move currentMove = currentPlayer.userMoveOnServer(dis, dos, cumulatedMessage);
+                Move currentMove = currentPlayer.userMoveOnServer(dis, dos, cumulatedMessage, currentPlayer.getName());
+               
                 MoveResult result = state.move(currentPlayer.getName(), currentMove);
                 
                 if (result == MoveResult.SUCCESS) {
-                    ret += "\n" + "Player " + currentPlayer.getName() + " was moved from " + toRowCol(originalPosition).toString() + " to " + toRowCol(currentMove.getDestination()).toString();
+                    returnMessage += "\n" + "Player " + currentPlayer.getName() + " was moved from " + toRowCol(originalPosition).toString() + " to " + toRowCol(currentMove.getDestination()).toString();
 
                 } else if (result == MoveResult.EJECTED) {
-                    ret += "\n" + "Player " + currentPlayer.getName() + " was expelled.";
+                    returnMessage += "\n" + "Player " + currentPlayer.getName() + " was expelled.";
+                    if(playerScore != null){
+                        playerScore.addEjects(1);
+                    }
 
                 } else if (result == MoveResult.KEY) {
-                    ret += "\n" +  "Player " + currentPlayer.getName() + " found the key.";
+                    returnMessage += "\n" +  "Player " + currentPlayer.getName() + " found the key.";
+                    if(playerScore != null){
+                        playerScore.addkeys(1);
+                    }
 
                 } else if (result == MoveResult.EXIT) {
-                    ret += "\n" + "Player " + currentPlayer.getName() + " exited.";
+                    returnMessage += "\n" + "Player " + currentPlayer.getName() + " exited.";
+                    if(playerScore != null){
+                        playerScore.addExits(1);
+                    }
                     if (state.nextLevel()) {
-
+                        returnMessage += "\n" + "Player " + currentPlayer.getName() + " moved to next level.";
                     } else {
-                        gameOverMessage += "\n" + ret + "\n" + "Game has been won!";
+                        gameOverMessage += "\n" + returnMessage + "\n" + "Game has been won!";
                         gameOver = true;
                     }
 
                 } else if (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE) {
-                    ret = "\n" + "Invalid move.";
+                    returnMessage = "\n" + "Invalid move.";
                 }
-                // List<Move> playerMoves = movesList.get(i);
-                // // Attempt Move and repeat until valid Move.
-                // MoveResult result;
-                // do {
-                // if (playerMoves.size() == 0 || playerMoves == null) {
-                // return;
-                // }
-                // result = state.move(currentPlayer.getName(), playerMoves.get(0));
-                // playerMoves.remove(0);
-                // }
-                // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
 
                 updatePlayers();
                 if (ruleChecker.gameOverCheck(state, turns)) {
-                    gameOverMessage += "\n" + ret + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
+                    gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
                     gameOver = true;
                 }
             }
+
+            if(gameOver)
+                break;
             //Once we move all the players we then move all of the adversaries 
-            //TO-DO: add concept of assigning rooms
+            //move remote adversaries first 
+            List<RemoteAdversary> remoteAdverseries= state.getPlacedRemoteAdversaries();
+            for(int i = 0; i <= remoteAdverseries.size(); i++) {
+                RemoteAdversary currentAdversary = remoteAdverseries.get(i);
+                // request move from adversary
+                Point originalPosition = currentAdversary.getPos();
+                //move from input - remote adversary
+                Move currentMove = currentAdversary.adversaryMoveOnServer(dis, dos, currentAdversary.getName(), originalPosition, returnMessage);
+                returnMessage = "";
+                MoveResult result = ruleChecker.moveCheckAdversary(state, currentAdversary, currentMove.getDestination());
+                if(result != MoveResult.SUCCESS){
+                    returnMessage += "\n" + "Adversary cannot move, invalid position";
+                }
+                else{
+                    //move local adversary 
+                    Player removed = state.moveAdversary(currentAdversary, currentMove);
+                    if (removed != null) {
+                        PlayerScore playerScore = playerScores.stream()
+                            .filter(p -> p.getName().equals(removed.getName()))
+                            .findAny()
+                            .orElse(null);
+                        if(playerScore != null){
+                            playerScore.addEjects(1);
+                        }
+                        returnMessage += "\n" + "Player " + removed.getName() + " was expelled.";
+                    }
+                    if (ruleChecker.gameOverCheck(state, turns)) {
+                        gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
+                        gameOver = true;
+                    }
+                }
+            }
+
             for(int i = 0; i < state.getAdversaries().size(); i++) {
                 //move all adversaries, printing out the players that are expelled
                 Player removed = state.moveAdversary(state.getAdversaries().get(i));
                 if (removed != null) {
-                    ret += "\n" + "Player " + removed.getName() + " was expelled.";
+                    PlayerScore playerScore = playerScores.stream()
+                        .filter(p -> p.getName().equals(removed.getName()))
+                        .findAny()
+                        .orElse(null);
+                    if(playerScore != null){
+                        playerScore.addEjects(1);
+                    }
+                    returnMessage += "\n" + "Player " + removed.getName() + " was expelled.";
                 }
                 if (ruleChecker.gameOverCheck(state, turns)) {
-                    gameOverMessage += "\n" + ret + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
+                    gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
                     gameOver = true;
                 }
             }
             
             turns--;
         }
-        return gameOverMessage;
+        String scores = "Player Scores";
+        for (PlayerScore playerScore : playerScores) {
+            scores += "\n" + playerScore.printPlayerScore();
+        }
+        return gameOverMessage + "\n" + scores;
         
     }
 
@@ -165,7 +219,7 @@ public class GameManager {
                 // request move from player
                 Move currentMove = currentPlayer.userMove(scanner);
                 MoveResult result = state.move(currentPlayer.getName(), currentMove);
-                // TODO:
+          
                 if (result == MoveResult.SUCCESS) {
 
                 } else if (result == MoveResult.EJECTED) {
@@ -186,23 +240,15 @@ public class GameManager {
                 } else if (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE) {
                     System.out.println("Invalid move.");
                 }
-                // List<Move> playerMoves = movesList.get(i);
-                // // Attempt Move and repeat until valid Move.
-                // MoveResult result;
-                // do {
-                // if (playerMoves.size() == 0 || playerMoves == null) {
-                // return;
-                // }
-                // result = state.move(currentPlayer.getName(), playerMoves.get(0));
-                // playerMoves.remove(0);
-                // }
-                // while (result == MoveResult.INVALID || result == MoveResult.NOTTRAVERSABLE);
-
+               
                 updatePlayers();
                 if (ruleChecker.gameOverCheck(state, turns)) {
                     System.out.println("Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1));
                     gameOver = true;
                 }
+            }
+            if (gameOver) {
+                break;
             }
             //Once we move all the players we then move all of the adversaries 
             //TO-DO: add concept of assigning rooms
@@ -246,18 +292,14 @@ public class GameManager {
     }
 
      /**
-     * Registers a Player only after validating if the username is unique (only 1-4
-     * players)
+     * Registers a Player only after validating if the username is unique 
      *
      * @param player Player whose name is going to validated
-     * @throws IllegalStateException when already 4 players or player already
-     *                               exists.
+     * @param numPlayers maximum players 
+     * @return String message to post to client 
      */
-    public String registerPlayerOnServer(Player player, int numPlayers) {
+    public String registerPlayerOnServer(Player player, List<PlayerScore> playerScores) {
         List<Player> playersList = state.getPlayers();
-        if (playersList.size() > numPlayers) {
-            return "Maximum of 4 Players";
-        }
 
         if (playersList.contains(player)) {
             return "Player already exists in list.";
@@ -265,10 +307,31 @@ public class GameManager {
 
         playersList.add(player);
 
+        playerScores.add( new PlayerScore(player.getName()));
+
         return "Player: '" + player.getName() + "' succesfully registered";
 
     }
+    /**
+     * Registers an adversary only after validating if the adversary name is unique 
+     *
+     * @param player name
+     * @param numPlayers maximum players 
+     * @return String message to post to client 
+     */
+    public String registerAdversaryOnServer(String name, String type) {
+        RemoteAdversary adversary = RemoteAdversary.CreateAdversary(name, type);
+     
+        List<RemoteAdversary> adversaries = state.getRemoteAdversaries();
 
+        if (adversaries.contains(adversary)) {
+            return "Adversary already exists in list.";
+        }
+
+        adversaries.add(adversary);
+
+        return "Adversary: '" + name + "' succesfully registered";
+    }
     /**
      * Registers an Adversary.
      *f
