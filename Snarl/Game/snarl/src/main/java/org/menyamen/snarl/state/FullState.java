@@ -2,16 +2,13 @@
 package org.menyamen.snarl.state;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
 import org.menyamen.snarl.characters.RemoteAdversary;
-import org.menyamen.snarl.characters.RemoteZombie;
 import org.menyamen.snarl.characters.Ghost;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.characters.Zombie;
@@ -119,7 +116,7 @@ public class FullState {
 
     }
 
-    public Player moveAdversary(RemoteAdversary adversary, Move destinationMove) {
+    public Player moveRemoteAdversary(RemoteAdversary adversary, Move destinationMove) {
         
         Point point = destinationMove.getDestination();
 
@@ -361,8 +358,8 @@ public class FullState {
     }
 
     public void initialiseLevel() {
-        //Depending on the rule of placement, not all remore adversaries registered may get placed.
-        List<RemoteAdversary> placedRemoteAdversaries = new ArrayList<RemoteAdversary>();
+        //Depending on the rule of placement, not all remote adversaries registered may get placed.
+        placedRemoteAdversaries = new ArrayList<RemoteAdversary>();
         // New Adversaries
         adversaries = new ArrayList<Adversary>();
 
@@ -383,7 +380,7 @@ public class FullState {
                 //remote adversaries take the place of local adversaries
                 if(remoteZombiesCount > 0)
                     placedRemoteAdversaries.addAll(remoteZombies);
-                zombieCount =- remoteZombiesCount;
+                zombieCount -= remoteZombiesCount;
                 for (int i = 0; i < zombieCount; i++) {
                     Adversary zombie = new Zombie("Zombie" + currentLevel + i);
                     adversaries.add(zombie);
@@ -402,7 +399,7 @@ public class FullState {
             {
                 if(remoteGhostsCount > 0)
                     placedRemoteAdversaries.addAll(remoteGhosts);
-                    ghostCount =- remoteGhostsCount;
+                    ghostCount -= remoteGhostsCount;
                     for (int i = 0; i < ghostCount; i++) {
                         Adversary ghost = new Ghost("Ghost" + currentLevel + i);
                         adversaries.add(ghost);
