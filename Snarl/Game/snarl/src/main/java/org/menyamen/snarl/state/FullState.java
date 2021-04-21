@@ -1,3 +1,4 @@
+
 package org.menyamen.snarl.state;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.RemoteAdversary;
+import org.menyamen.snarl.characters.RemoteZombie;
 import org.menyamen.snarl.characters.Ghost;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.characters.Zombie;
@@ -25,19 +28,22 @@ public class FullState {
     List<Level> levels;
     List<Player> players;
     List<Adversary> adversaries;
+    List<RemoteAdversary> remoteAdversaries;
+    List<RemoteAdversary> placedRemoteAdversaries;
 
     public FullState(Level level) {
         this.levels = new ArrayList<Level>();
         this.levels.add(level);
         this.players = new ArrayList<Player>();
         this.adversaries = new ArrayList<Adversary>();
+        this.remoteAdversaries = new ArrayList<RemoteAdversary>();
     }
 
     public FullState(int currentLevel, List<Level> levels) {
         this.currentLevel = currentLevel;
         this.levels = levels;
         this.players = new ArrayList<Player>();
-        this.adversaries = new ArrayList<Adversary>();
+        this.remoteAdversaries = new ArrayList<RemoteAdversary>();
     }
 
     // Intermediate Game State
@@ -113,6 +119,49 @@ public class FullState {
 
     }
 
+    public Player moveAdversary(RemoteAdversary adversary, Move destinationMove) {
+        
+        Point point = destinationMove.getDestination();
+
+        if (destinationMove.getStayStill()) {
+            point = adversary.getPos();
+        }
+        Level level = getCurrentLevel();
+        if (level.isOccupiedBy(point) == CharacterEnum.PLAYER) {
+            // The player needs to be removed
+            Player player = level.getPlayer(point);
+            player.setIsExpelled(true);
+            Tile tile = level.getTile(point);
+            //move the adversary to players position
+            level.getTile(adversary.getPos()).setAdversary(null);
+            adversary.setPos(point);
+            tile.setAdversary(adversary);
+            //expelled player is returned otherwise null
+            return player;
+          
+        }
+        
+        Tile tile = level.getTile(point);
+        if (tile instanceof Door || tile instanceof Wall) {
+              //Move ghost to a random room and zombie cannot move
+            if (adversary.getType() == "ghost") {
+                List<Adversary> list = new ArrayList<Adversary>();
+                list.add(adversary);
+                level.randomAdversariesPlacement(list);
+            }
+        }
+        else{
+            //set new adversary position 
+            level.getTile(adversary.getPos()).setAdversary(null);
+            adversary.setPos(point);
+            tile.setAdversary(adversary);
+     
+           
+        }
+       return null;
+
+    }
+
     //Filtering out the players that are set as expelled to ensure that adversaries always have an up to date list of the players active in a level
     private List<Player> getActivePlayers() {
         return players.stream().filter(player -> !player.getIsExpelled()).collect(Collectors.toList());
@@ -129,7 +178,7 @@ public class FullState {
 
         // Possible cardinal moves, one move away from Adversary, setting the includeWall true for ghosts 
         List<Point> possibleMoves = level.cardinalMove(adversary.getPos(), 1, true);
-        //Remove the adversaires own position
+        //Remove the adversaries own position
         possibleMoves.remove(adversary.getPos());
         //keeps track of the subset moves that are traversable
         List<Point> availableMoves = new ArrayList<Point>(possibleMoves);
@@ -158,24 +207,31 @@ public class FullState {
                 availableMoves.remove(possiblePosition);
             }
         }
-        //SECOND LOOP
-        //Now we iterate through all the available moves to see what the next best move is
-        for (Point p : availableMoves) {
-            Tile tile = level.getTile(p);
+        
+        //If we have only one available move, then move the adversary there and return
+        if(availableMoves.size() == 1){
+            Point availablePos = availableMoves.get(0);
+            Tile tile = level.getTile(availablePos);
             if (tile instanceof Door || tile instanceof Wall) {
-                if (adversary.getType() == "zombie") {
-                    // zombie can not leave the room it is spawned in
-                    continue;
-                }
-                //Move ghost to a random room 
+                  //Move ghost to a random room and zombie cannot move
+                  //Todo instead of random room, find the room nearest to the player
                 if (adversary.getType() == "ghost") {
                     List<Adversary> list = new ArrayList<Adversary>();
                     list.add(adversary);
                     level.randomAdversariesPlacement(list);
                 }
+                 //No player was expelled
+                 return null;
+            }
+            else{
+                level.getTile(adversary.getPos()).setAdversary(null);
+                adversary.setPos(availablePos);
+                tile.setAdversary(adversary);
+                //No player was expelled
+                return null;
             }
         }
-
+       
         //Get all active players positions (TO-DO: in this particular room) by getPos
         List<Point> playersPositions = getActivePlayers().stream().map(player -> player.getPos())
                 .collect(Collectors.toList());
@@ -205,41 +261,22 @@ public class FullState {
      * @return Player that is expelled (if no player is expelled return null).
      */
     private Point findNearestPlayerPoint( List<Point> playersPositions,  List<Point> availablePositions) {
-        //creates a hashmap of available points for the adversary and the distance to the closest player from that point 
-        HashMap<Point, Double> distanceByPositions = new HashMap<Point, Double>();
-
-
+        Point nearestPosition = null;
+        Double nearestDistance = null;
+        
        for ( Point p : availablePositions) {
            for ( Point pl : playersPositions) {
                 double distance = calculateDistanceBetweenPoints(p, pl);
-                //If the hashmap already haves that key (player = p) 
-                if(distanceByPositions.containsKey(p)){
-                    //Then retrieve that value from the hashmap 
-                   double d = distanceByPositions.get(p);
-                   //If our current value is smaller than the distance given then replace it with the lower distance 
-                   if(d > distance)
-                       distanceByPositions.replace(p, distance);
-                    else
-                       continue;   
-               }
-               //if this is the first time this hashmap receives this key then store it as a new key and value
-               else
-                   distanceByPositions.put(p, distance);
-           }
-       }
-
-       Point x = null;
-       double lowestValue = 2000;
-       //for each entry in the hashmap 
-       for (Map.Entry<Point, Double> en : distanceByPositions.entrySet()) {
-           //find the smallest value 
-           if (en.getValue() < lowestValue) {
-               lowestValue = en.getValue();
-               x = en.getKey();
-           }
-       }
-       //return the smallest distanced players position 
-       return x;
+                if(nearestDistance != null && nearestDistance < distance) {
+                    continue;
+                }
+                else {
+                     nearestPosition = p;
+                     nearestDistance = distance;
+                }
+            }
+        }
+        return nearestPosition;
    }
 
 
@@ -291,6 +328,14 @@ public class FullState {
         return this.adversaries;
     }
 
+    public List<RemoteAdversary> getRemoteAdversaries() {
+        return this.remoteAdversaries;
+    }
+
+    public List<RemoteAdversary> getPlacedRemoteAdversaries() {
+        return this.placedRemoteAdversaries;
+    }
+
     public Boolean getExitLocked() {
         return this.levels.get(0).getExitLocked();
     }
@@ -316,20 +361,56 @@ public class FullState {
     }
 
     public void initialiseLevel() {
+        //Depending on the rule of placement, not all remore adversaries registered may get placed.
+        List<RemoteAdversary> placedRemoteAdversaries = new ArrayList<RemoteAdversary>();
         // New Adversaries
         adversaries = new ArrayList<Adversary>();
+
         int levelNumber = currentLevel + 1;
+        
+        List<RemoteAdversary> remoteZombies = remoteAdversaries.stream().filter(r -> r.getType().equals("zombie")).collect(Collectors.toList());
+        List<RemoteAdversary> remoteGhosts = remoteAdversaries.stream().filter(r -> r.getType().equals("ghost")).collect(Collectors.toList());
+
+        //zombie placement
         int zombieCount = Math.floorDiv(levelNumber, 2) + 1;
-        for (int i = 0; i < zombieCount; i++) {
-            Adversary zombie = new Zombie("Zombie" + currentLevel + i);
-            adversaries.add(zombie);
+        int remoteZombiesCount = remoteZombies != null ? remoteZombies.size() : 0;
+        if(zombieCount > 0){
+            if(remoteZombiesCount > zombieCount){
+                placedRemoteAdversaries.addAll(remoteZombies.subList(0, zombieCount));
+            }
+            else
+            {
+                //remote adversaries take the place of local adversaries
+                if(remoteZombiesCount > 0)
+                    placedRemoteAdversaries.addAll(remoteZombies);
+                zombieCount =- remoteZombiesCount;
+                for (int i = 0; i < zombieCount; i++) {
+                    Adversary zombie = new Zombie("Zombie" + currentLevel + i);
+                    adversaries.add(zombie);
+                }
+            }
         }
+ 
+        //ghost placement
         int ghostCount = Math.floorDiv(levelNumber - 1, 2);
-        for (int i = 0; i < ghostCount; i++) {
-            Adversary ghost = new Ghost("Ghost" + currentLevel + i);
-            adversaries.add(ghost);
+        int remoteGhostsCount = remoteGhosts!= null ? remoteGhosts.size() : 0;
+        if(ghostCount > 0){
+            if(remoteGhostsCount > ghostCount){
+                placedRemoteAdversaries.addAll(remoteGhosts.subList(0, ghostCount));
+            }
+            else
+            {
+                if(remoteGhostsCount > 0)
+                    placedRemoteAdversaries.addAll(remoteGhosts);
+                    ghostCount =- remoteGhostsCount;
+                    for (int i = 0; i < ghostCount; i++) {
+                        Adversary ghost = new Ghost("Ghost" + currentLevel + i);
+                        adversaries.add(ghost);
+                    }
+            }
         }
-        adversaries = levels.get(currentLevel).randomAdversariesPlacement(adversaries);
+        // randomly place both local and remote adversaries
+        levels.get(currentLevel).randomAdversariesPlacement(adversaries, placedRemoteAdversaries);
 
         // Players
         for (Player player : this.players) {
