@@ -57,5 +57,5 @@ public interface Player {
 
     public Move userMove(Scanner scanner);
 
-    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state) throws IOException;
+    public Move userMoveOnServer(DataInputStream dis, DataOutputStream dos, String state, String name) throws IOException;
 }
