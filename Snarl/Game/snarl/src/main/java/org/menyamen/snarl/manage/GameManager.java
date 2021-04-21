@@ -28,7 +28,7 @@ import static org.menyamen.snarl.util.TestingUtil.toRowCol;
  */
 public class GameManager {
     private FullState state;
-    private int turns = 2;
+    private int turns = 5;
     private List<List<Move>> movesList;
     private List<TraceEntry> traceList = new ArrayList<TraceEntry>();
 
@@ -68,7 +68,7 @@ public class GameManager {
         while (state.getPlayers().size() > 0 && !gameOver && turns > 0) {
            
             List<Player> players = state.getPlayers();
-            for (int i = 0; i <= players.size() && !gameOver; i++) {
+            for (int i = 0; i < players.size() && !gameOver; i++) {
                 Player currentPlayer = players.get(i);
 
                 if (currentPlayer.getIsExpelled()) {
@@ -136,20 +136,47 @@ public class GameManager {
             //Once we move all the players we then move all of the adversaries 
             //move remote adversaries first 
             List<RemoteAdversary> remoteAdverseries= state.getPlacedRemoteAdversaries();
-            for(int i = 0; i <= remoteAdverseries.size(); i++) {
-                RemoteAdversary currentAdversary = remoteAdverseries.get(i);
-                // request move from adversary
-                Point originalPosition = currentAdversary.getPos();
-                //move from input - remote adversary
-                Move currentMove = currentAdversary.adversaryMoveOnServer(dis, dos, currentAdversary.getName(), originalPosition, returnMessage);
-                returnMessage = "";
-                MoveResult result = ruleChecker.moveCheckAdversary(state, currentAdversary, currentMove.getDestination());
-                if(result != MoveResult.SUCCESS){
-                    returnMessage += "\n" + "Adversary cannot move, invalid position";
+            if(remoteAdverseries == null || remoteAdverseries.size() == 0){
+                returnMessage += "\n" + "No remote Adversaries were placed";
+            }
+            else{
+                for(int i = 0; i < remoteAdverseries.size(); i++) {
+                    RemoteAdversary currentAdversary = remoteAdverseries.get(i);
+                    // request move from adversary
+                    Point originalPosition = currentAdversary.getPos();
+                    //move from input - remote adversary
+                    Move currentMove = currentAdversary.adversaryMoveOnServer(dis, dos, currentAdversary.getName(), originalPosition, returnMessage);
+                    returnMessage = "";
+                    MoveResult result = ruleChecker.moveCheckAdversary(state, currentAdversary, currentMove.getDestination());
+                    if(result != MoveResult.SUCCESS){
+                        returnMessage += "\n" + "Adversary cannot move, invalid position";
+                    }
+                    else{
+                        //move remote adversary 
+                        Player removed = state.moveRemoteAdversary(currentAdversary, currentMove);
+                        if (removed != null) {
+                            PlayerScore playerScore = playerScores.stream()
+                                .filter(p -> p.getName().equals(removed.getName()))
+                                .findAny()
+                                .orElse(null);
+                            if(playerScore != null){
+                                playerScore.addEjects(1);
+                            }
+                            returnMessage += "\n" + "Player " + removed.getName() + " was expelled.";
+                        }
+                        if (ruleChecker.gameOverCheck(state, turns)) {
+                            gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
+                            gameOver = true;
+                        }
+                    }
                 }
-                else{
-                    //move local adversary 
-                    Player removed = state.moveAdversary(currentAdversary, currentMove);
+            }
+
+            List<Adversary> localAdversaries = state.getAdversaries();
+            if(localAdversaries != null && localAdversaries.size() > 0){
+                for(int i = 0; i < localAdversaries.size(); i++) {
+                    //move all adversaries, printing out the players that are expelled
+                    Player removed = state.moveAdversary(localAdversaries.get(i));
                     if (removed != null) {
                         PlayerScore playerScore = playerScores.stream()
                             .filter(p -> p.getName().equals(removed.getName()))
@@ -164,25 +191,6 @@ public class GameManager {
                         gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
                         gameOver = true;
                     }
-                }
-            }
-
-            for(int i = 0; i < state.getAdversaries().size(); i++) {
-                //move all adversaries, printing out the players that are expelled
-                Player removed = state.moveAdversary(state.getAdversaries().get(i));
-                if (removed != null) {
-                    PlayerScore playerScore = playerScores.stream()
-                        .filter(p -> p.getName().equals(removed.getName()))
-                        .findAny()
-                        .orElse(null);
-                    if(playerScore != null){
-                        playerScore.addEjects(1);
-                    }
-                    returnMessage += "\n" + "Player " + removed.getName() + " was expelled.";
-                }
-                if (ruleChecker.gameOverCheck(state, turns)) {
-                    gameOverMessage += "\n" + returnMessage + "\n" + "Game Over. Failed on Level " + (state.getCurrentLevelIndex() + 1);
-                    gameOver = true;
                 }
             }
             
