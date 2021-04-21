@@ -505,7 +505,7 @@ public class Level {
                 Point pos = new Point(j, i);
                 if (map.containsKey(pos)) {
                     Tile curTile = map.get(pos);
-                    if (curTile.getPlayer() != null) {
+                    if (curTile.getPlayer() != null && !curTile.getPlayer().getIsExpelled()) {
                         builder.append(curTile.getPlayer().toChar());
                     } else if (curTile.getAdversary() != null) {
                         builder.append(curTile.getAdversary().toChar());
