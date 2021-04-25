@@ -3,11 +3,13 @@ package org.menyamen.snarl.tiles;
 import java.awt.Point;
 
 import org.menyamen.snarl.characters.Adversary;
+import org.menyamen.snarl.characters.Ghost;
 import org.menyamen.snarl.characters.Player;
 import org.menyamen.snarl.gameobjects.GameObject;
 
 public class Wall implements Tile {
     private Point pos;
+    private Ghost ghost;
 
     public Wall() {
     }
@@ -80,7 +82,7 @@ public class Wall implements Tile {
 
     @Override
     public void setAdversary(Adversary adversary) throws IllegalArgumentException {
-        throw new IllegalArgumentException("Can't set Adversary for Wall.");
+        this.ghost = (Ghost) adversary;
     }
 
     @Override

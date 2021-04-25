@@ -10,6 +10,7 @@ public class LocalSnarlClient
 {
     private static String address = "127.0.0.1";
     private static int port = 4568;
+    
   
     public static void main(String[] args) throws IOException 
     {
@@ -28,7 +29,7 @@ public class LocalSnarlClient
               
             // Create a connection with server
             Socket s = new Socket(address, port);
-            System.out.println("Connected to server on: " + "adrress=" + address + " port=" + port);
+            System.out.println("Connected to server on: " + "address=" + address + " port=" + port);
       
             // obtaining input and out streams
             DataInputStream dis = new DataInputStream(s.getInputStream());

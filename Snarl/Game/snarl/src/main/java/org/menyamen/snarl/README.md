@@ -8,4 +8,8 @@ To play the game simply answer y or n (yes or no) whether you want to move your 
 
 The client and the server’s observer can be used in a terminal. Both will launch external terminals in order to listen to or play the game. To change the observer to false simply change the argument in the launch.json configuration. This will allow the game to toggle between the Observer and Player view.  
 
-Enjoy! 
+For multi-threaded multi-games the server must be started before any clients attempt to start a game.  
+To add Remote Adversaries, first register Players and then respond to prompt asking to add remote adversaries with "y".  
+Remote Adversaries require both a name and type (Z or G for Zombie or Ghost).  
+
+Enjoy!

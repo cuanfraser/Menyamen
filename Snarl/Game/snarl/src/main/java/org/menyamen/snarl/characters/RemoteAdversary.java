@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.awt.Point;
 
 import org.menyamen.snarl.constraints.Move;
+import static org.menyamen.snarl.util.TestingUtil.toRowCol;
 
 //multiple inheritance 
 public abstract class RemoteAdversary extends Adversary{
@@ -32,7 +33,7 @@ public abstract class RemoteAdversary extends Adversary{
     
     public Move adversaryMoveOnServer(DataInputStream dis, DataOutputStream dos, String name, Point pos, String messages) throws IOException {
         
-        String  s = messages + "\n" + "Would you like to move your adversary, " + name + "'s position? (please enter Y or N)";
+        String  s = messages + "\n" + "Would you like to move your adversary, " + name + "'s position? (please enter Y or N) + \n" + toRowCol(this.getPos()).toString();
         dos.writeUTF(s);
         String input = dis.readUTF();
         while (!input.equalsIgnoreCase("N") && !input.equalsIgnoreCase("Y")) {

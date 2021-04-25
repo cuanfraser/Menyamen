@@ -172,7 +172,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.menyamen.snarl.LocalSnarl</mainClass>
+              <mainClass>org.menyamen.snarl.LocalSnarlServer</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

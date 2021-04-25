@@ -28,7 +28,7 @@ import static org.menyamen.snarl.util.TestingUtil.toRowCol;
  */
 public class GameManager {
     private FullState state;
-    private int turns = 5;
+    private int turns = 900;
     private List<List<Move>> movesList;
     private List<TraceEntry> traceList = new ArrayList<TraceEntry>();
 
